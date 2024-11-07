@@ -2,12 +2,12 @@
 Contributors: easynolo
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo, axerve, iframe, direct payment gateway
 Requires at least: 4.0.1
-Tested up to: 6.6.1
-Stable tag: 20240823
+Tested up to: 6.6.2
+Stable tag: 20241107
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 3.0
-WC tested up to: 9.1.4
+WC tested up to: 9.3.3
 
 Axerve Free Plugin for Woocommerce extends WooCommerce providing the payment gateway Axerve.
 
@@ -71,6 +71,13 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Axerve](https://docs.gestpay.it/soap/plugins/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
 
 == Changelog ==
+
+= 20241107 =
+* Fix: Payment icons visualization problem
+* Security: Nothing added 
+* Improvement: Nothing added
+* Checks: Verified compatibility with Wordpress 6.6.2, WooCommerce 9.3.3
+* Note: Nothing added
 
 = 20240823 =
 * Security: Nothing added 
