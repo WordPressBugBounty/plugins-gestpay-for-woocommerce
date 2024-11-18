@@ -54,12 +54,12 @@ class Gestpay_Subscriptions {
      */
     public function append_card_params( &$params ) {
 
-        $params->cardNumber = $this->Helper->get_post( 'gestpay-cc-number' );
-        $params->expiryMonth = $this->Helper->get_post( 'gestpay-cc-exp-month' );
-        $params->expiryYear = $this->Helper->get_post( 'gestpay-cc-exp-year' );  // 2 digits
+        $params->cardNumber = $this->Helper->get_post_params( 'gestpay-cc-number' );
+        $params->expiryMonth = $this->Helper->get_post_params( 'gestpay-cc-exp-month' );
+        $params->expiryYear = $this->Helper->get_post_params( 'gestpay-cc-exp-year' );  // 2 digits
 
         if ( $this->Gestpay->is_cvv_required ) {
-            $params->cvv = $this->Helper->get_post( 'gestpay-cc-cvv' );
+            $params->cvv = $this->Helper->get_post_params( 'gestpay-cc-cvv' );
         }
     }
 
@@ -71,7 +71,7 @@ class Gestpay_Subscriptions {
     public function maybe_use_buyer( &$params ) {
 
         if ( $this->Gestpay->param_buyer_name ) {
-            $bn = $this->Helper->get_post( 'gestpay-cc-buyer-name' );
+            $bn = $this->Helper->get_post_params( 'gestpay-cc-buyer-name' );
             if ( !empty( $bn ) ) {
                 $params->buyerName = $bn;
             }
@@ -282,7 +282,12 @@ class Gestpay_Subscriptions {
                 // -- Phase I: authorization request OK
                 if ( ! empty( $xml_response->TransactionKey ) ) {
                     // Store the Transaction Key, which will be used in the Phase 3
-                    update_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, (string)$xml_response->TransactionKey );
+
+                    // HPOS upgrade start
+                    // Old code: update_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, (string)$xml_response->TransactionKey );
+                    $order->update_meta_data(  GESTPAY_ORDER_META_TRANS_KEY, (string)$xml_response->TransactionKey );
+                    $order->save();
+                    // HPOS upgrade end                    
                 }
                 else {
                     $this->Helper->log_add( '[ATTENZIONE]: Impossibile ricevere la TransactionKey in fase di autorizzazione. Verificare che il parametro sia abilitato nella risposta' );
@@ -305,7 +310,12 @@ class Gestpay_Subscriptions {
 
                     // We are here because something get wrong in the first payment.
                     // If we saved the token let's cancel it.
-                    delete_post_meta( $order_id, GESTPAY_META_TOKEN );
+
+                    // HPOS upgrade start
+                    // Old code: delete_post_meta( $order_id, GESTPAY_META_TOKEN );
+                    $order->delete_meta_data(  GESTPAY_META_TOKEN );
+                    $order->save();
+                    // HPOS upgrade end
                 }
 
                 // Allow actors to add additional code after order is failed

@@ -52,7 +52,7 @@ class Gestpay_S2S {
     function validate_payment_fields() {
 
         // Skip validation if reusing a token
-        $cc_token = $this->Helper->get_post( 'gestpay-s2s-cc-token' );
+        $cc_token = $this->Helper->get_post_params( 'gestpay-s2s-cc-token' );
         if ( !empty( $cc_token ) && $cc_token != 'new-card' ) {
             return TRUE;
         }
@@ -67,11 +67,11 @@ class Gestpay_S2S {
 
         $is_valid = TRUE;
 
-        $buyer_name = $this->Helper->get_post( 'gestpay-cc-buyer-name' );
-        $cc_number = $this->Helper->get_post( 'gestpay-cc-number' );
-        $cc_month = $this->Helper->get_post( 'gestpay-cc-exp-month' );
-        $cc_year = $this->Helper->get_post( 'gestpay-cc-exp-year' );
-        $cc_cvv = $this->Helper->get_post( 'gestpay-cc-cvv' );
+        $buyer_name = $this->Helper->get_post_params( 'gestpay-cc-buyer-name' );
+        $cc_number = $this->Helper->get_post_params( 'gestpay-cc-number' );
+        $cc_month = $this->Helper->get_post_params( 'gestpay-cc-exp-month' );
+        $cc_year = $this->Helper->get_post_params( 'gestpay-cc-exp-year' );
+        $cc_cvv = $this->Helper->get_post_params( 'gestpay-cc-cvv' );
 
         // Validate card number
         $cc_number = str_replace( array( ' ', '-' ), '', $cc_number );
@@ -111,7 +111,7 @@ class Gestpay_S2S {
 
         if ( $this->Gestpay->save_token ) {
 
-            $token = $this->Helper->get_post( 'gestpay-s2s-cc-token' );
+            $token = $this->Helper->get_post_params( 'gestpay-s2s-cc-token' );
             if ( ! empty( $token ) && $token != 'new-card' ) {
 
                 $this->Helper->log_add( '[reusing token]: ' . $token );

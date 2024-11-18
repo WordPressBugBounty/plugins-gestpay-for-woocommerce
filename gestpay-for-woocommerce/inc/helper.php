@@ -348,8 +348,12 @@ class WC_Gateway_GestPay_Helper {
             $fix_message = "Addebito di ".$amount." ".$order_currency." per evitare errore per importo nullo su Gestpay. Si proverà a stornare tale importo automaticamente.";
             $this->log_add( $fix_message );
             $order->add_order_note( $fix_message );
-            update_post_meta( $order->get_id(), GESTPAY_ORDER_META_AMOUNT, $amount );
-
+            
+            // HPOS upgrade start
+            // Old code: update_post_meta( $order->get_id(), GESTPAY_ORDER_META_AMOUNT, $amount );
+            $order->update_meta_data(  GESTPAY_ORDER_META_AMOUNT, $amount );
+            $order->save();
+            // HPOS upgrade end
             $maybe_amount_fix = $amount;
         }
         $this->log_add( "[order_amount_0] update_post_meta ".GESTPAY_ORDER_META_AMOUNT." per id ordine: " . $order->get_id() . ' -> amount: ' . $maybe_amount_fix );
@@ -394,7 +398,13 @@ class WC_Gateway_GestPay_Helper {
             }
 
             // Remove order meta so it will not be processed anymore (even if refund is failed).
-            delete_post_meta( $order_id, GESTPAY_ORDER_META_AMOUNT );
+
+            // HPOS upgrade start
+            // Old code: delete_post_meta( $order_id, GESTPAY_ORDER_META_AMOUNT );
+            $order->delete_meta_data(  GESTPAY_ORDER_META_AMOUNT );
+            $order->save();
+            // HPOS upgrade end            
+            
             $this->log_add( "[order_amount_0] delete_post_meta per id:" . $order_id . ' meta: ' . GESTPAY_ORDER_META_AMOUNT );
 
             $add_order_error = !function_exists( 'wcs_is_subscription' ) || !wcs_is_subscription( $order );
@@ -518,8 +528,13 @@ class WC_Gateway_GestPay_Helper {
             return FALSE;
         }
 
-        $res = update_post_meta( $order_id, GESTPAY_META_TOKEN, $token );
-
+        // HPOS upgrade start
+        // Old code: $res = update_post_meta( $order_id, GESTPAY_META_TOKEN, $token );
+        $order = wc_get_order( $order_id );
+        $order->update_meta_data( GESTPAY_META_TOKEN, $token);
+        $res = $order->save();
+        // HPOS upgrade end     
+        
         if ( empty( $res ) ) {
             $this->log_add( "FAILED to set token for order: " . $order_id );
         }
@@ -622,19 +637,34 @@ class WC_Gateway_GestPay_Helper {
             // This is required for order actions.
             $txn_details['bt_id'] = (string)$xml->BankTransactionID;
             $order_note = "Bank TID: " . $txn_details['bt_id'];
-            update_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, $txn_details['bt_id'] );
+            // HPOS upgrade start
+            // Old code: update_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, $txn_details['bt_id'] );
+            $order = wc_get_order( $order_id );
+            $order->update_meta_data(  GESTPAY_ORDER_META_BANK_TID, $txn_details['bt_id'] );
+            $order->save();
+            // HPOS upgrade end           
         }
 
         if ( ! empty( $xml->AuthorizationCode ) ) {
             $txn_details['auth_code'] = (string)$xml->AuthorizationCode;
             $order_note.= " / Auth code: " . $txn_details['auth_code'];
-            update_post_meta( $order_id, GESTPAY_ORDER_META_AUTH_CODE, $txn_details['auth_code'] );
+            // HPOS upgrade start
+            // Old code: update_post_meta( $order_id, GESTPAY_ORDER_META_AUTH_CODE, $txn_details['auth_code'] );
+            $order = wc_get_order( $order_id );
+            $order->update_meta_data(  GESTPAY_ORDER_META_AUTH_CODE, $txn_details['auth_code'] );
+            $order->save();
+            // HPOS upgrade end            
         }
 
         if ( ! empty( $xml->TransactionKey ) ) {
             $txn_details['tr_key'] = (string)$xml->TransactionKey;
             $order_note.= " / Trans Key: " . $txn_details['tr_key'];
-            update_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, $txn_details['tr_key'] );
+            // HPOS upgrade start
+            // Old code: update_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, $txn_details['tr_key'] );
+            $order = wc_get_order( $order_id );
+            $order->update_meta_data(  GESTPAY_ORDER_META_TRANS_KEY, $txn_details['tr_key'] );
+            $order->save();
+            // HPOS upgrade end            
         }
 
         $order->add_order_note( $order_note );
@@ -942,7 +972,7 @@ HTML;
     /**
      * Safely get and trim data from $_POST
      */
-    function get_post( $key ) {
+    function get_post_params( $key ) {
 
         return isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
     }

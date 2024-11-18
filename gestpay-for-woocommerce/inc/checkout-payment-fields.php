@@ -29,7 +29,7 @@ if ( $this->Gestpay->is_sandbox ) : ?>
     <p id="gestpay-s2s-sandbox">
         <small>
             <strong>Test Mode</strong><br>
-            <a href="http://docs.gestpay.it/test/test-credit-cards.html" target="_blank">gestpay test cards</a>
+            <a href="https://docs.axerve.com/en/testing/testing-cards" target="_blank">gestpay test cards</a>
         </small>
     </p>
 

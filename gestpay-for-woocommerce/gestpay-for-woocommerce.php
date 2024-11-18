@@ -4,12 +4,12 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20241107
+ * Version: 20241118
  * Author: Axerve (Gruppo Banca Sella)
  * Author URI: https://www.axerve.com
  *
  * WC requires at least: 3.0
- * WC tested up to: 9.3.3
+ * WC tested up to: 9.4.1
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2022 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -63,6 +63,13 @@ require_once 'inc/class-gestpay-cards.php';
 require_once 'inc/class-gestpay-3DS2.php';
 
 add_action( 'plugins_loaded', 'init_wc_gateway_gestpay' );
+
+add_action( 'before_woocommerce_init', function() {
+	if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+	}
+} );
+
 function init_wc_gateway_gestpay() {
 
     if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
@@ -88,7 +95,7 @@ function init_wc_gateway_gestpay() {
             $this->add_actions();
         }
 
-         /**
+        /**
          * Return the gateway's icon.
          *
          * @return string
@@ -684,7 +691,12 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
                 // Woocommerce ordering, loosing all the references between an order and the id
                 // of a transaction in the Gestpay backoffice. At least we'll have the ability
                 // to inspect the order meta to identify the original order id.
-                update_post_meta( $order_id, '_gestpay_raw_order_id', $raw_order_id );
+
+                // HPOS upgrade start
+                // update_post_meta( $order_id, '_gestpay_raw_order_id', $raw_order_id );
+                $order->update_meta_data( '_gestpay_raw_order_id', $raw_order_id );
+                $order->save();
+                // HPOS upgrade end                
             }
 
             $order_status = $order->get_status();
