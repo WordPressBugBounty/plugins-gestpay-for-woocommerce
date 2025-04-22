@@ -5,9 +5,10 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)    
+ * 
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -75,8 +76,8 @@ if ( $this->Gestpay->is_sandbox ) : ?>
 
         <a class="button"
             style="width: 100%; text-align: center; margin: 0px 0 10px;"
-            href="<?php echo $endpoint; ?>"
-            target="_blank"><?php echo $this->Gestpay->strings['s2s_manage_cards']; ?></a>
+            href="<?php echo esc_url( $endpoint ); ?>"
+            target="_blank"><?php echo esc_html( $this->Gestpay->strings['s2s_manage_cards'] ); ?></a>
 
         <div class="clear"></div>
         <?php
@@ -106,7 +107,7 @@ if ( $this->Gestpay->is_sandbox ) : ?>
                 style="width:auto;display:inline-block;"
                 value="<?php echo esc_attr( $card['token']); ?>" <?php checked( $this_cc_is_checked ); ?> />
 
-            <label style="display:inline;" for="gestpay-s2s-cc-token-<?php echo esc_attr( $card['token'] ); ?>"><?php echo $expir_str; ?></label>
+            <label style="display:inline;" for="gestpay-s2s-cc-token-<?php echo esc_attr( $card['token'] ); ?>"><?php echo esc_html( $expir_str ); ?></label>
             <br />
 
         <?php endforeach; ?>
@@ -117,7 +118,7 @@ if ( $this->Gestpay->is_sandbox ) : ?>
             style="width:auto;display:inline-block;"
             value="new-card" />
 
-        <label style="display:inline;" for="gestpay-s2s-use-new-card"><?php echo $this->Gestpay->strings['s2s_use_new_card']; ?></label>
+        <label style="display:inline;" for="gestpay-s2s-use-new-card"><?php echo esc_html( $this->Gestpay->strings['s2s_use_new_card'] ); ?></label>
     </p>
 
 <?php endif; // end if $has_cards ?>
@@ -128,7 +129,7 @@ if ( $this->Gestpay->is_sandbox ) : ?>
     <div id="gestpay-inner-freeze-pane" class="gestpay-off">
         <div id="gestpay-inner-freeze-pane-text"></div>
     </div>
-    <div id="gestpay-error-box" class="gestpay-off"><?php echo $this->Gestpay->strings['s2s_error']; ?></div>
+    <div id="gestpay-error-box" class="gestpay-off"><?php echo esc_html( $this->Gestpay->strings['s2s_error'] ); ?></div>
 
     <form name="gestpay-cc-form" method="post" id="gestpay-cc-form" onsubmit="return gestpayCheckCC();" class="gestpay-off" autocomplete="off">
 
@@ -186,19 +187,19 @@ if ( $this->Gestpay->is_sandbox ) : ?>
 
     <p class="form-row validate-required">
 
-        <label for="gestpay-cc-exp-date"><?php echo $this->Gestpay->strings['s2s_card_exp_date']; ?> <span class="required">*</span></label>
+        <label for="gestpay-cc-exp-date"><?php echo esc_html( $this->Gestpay->strings['s2s_card_exp_date'] ); ?> <span class="required">*</span></label>
 
         <select name="gestpay-cc-exp-month" id="gestpay-cc-exp-month" class="woocommerce-select" style="width:auto;" data-encrypted-name="month">
-            <option value=""><?php echo $this->Gestpay->strings['s2s_card_exp_month']; ?></option>
+            <option value=""><?php echo esc_html( $this->Gestpay->strings['s2s_card_exp_month'] ); ?></option>
             <?php foreach ( range( 1, 12 ) as $month ) : ?>
-                <option value="<?php printf( '%02d', $month ) ?>"><?php printf( '%02d', $month ) ?></option>
+                <option value="<?php printf( '%02d', esc_attr( $month ) ) ?>"><?php printf( '%02d', esc_attr( $month ) ) ?></option>
             <?php endforeach; ?>
         </select>
 
         <select name="gestpay-cc-exp-year" id="gestpay-cc-exp-year" class="woocommerce-select" style="width:auto;" data-encrypted-name="year">
-            <option value=""><?php echo $this->Gestpay->strings['s2s_card_exp_year']; ?></option>
-            <?php foreach ( range( date( 'Y' ), date( 'Y' ) + 15 ) as $year ) : ?>
-                <option value="<?php echo substr( $year, -2 ); ?>"><?php echo $year ?></option>
+            <option value=""><?php echo esc_html( $this->Gestpay->strings['s2s_card_exp_year'] ); ?></option>
+            <?php foreach ( range( gmdate( 'Y' ), gmdate( 'Y' ) + 15 ) as $year ) : ?>
+                <option value="<?php echo esc_attr( substr( $year , -2 ) ); ?>"><?php echo esc_html( $year ); ?></option>
             <?php endforeach; ?>
         </select>
 
@@ -217,38 +218,38 @@ if ( $this->Gestpay->is_sandbox ) : ?>
         <p class="form-row validate-required" id="gestpay-cc-cvv_field">
 
             <label for="gestpay-cc-cvv" class="">
-                <?php echo $this->Gestpay->strings['s2s_card_cvv']; ?> <abbr class="required" title="required">*</abbr>
+                <?php echo esc_html( $this->Gestpay->strings['s2s_card_cvv'] ); ?> <abbr class="required" title="required">*</abbr>
             </label>
 
             <input type="text" class="input-text" name="gestpay-cc-cvv" id="gestpay-cc-cvv" placeholder="" value="" autocomplete="nope" data-encrypted-name="cvv" style="width:60px;" maxlength="4">
 
             <span class="description">
-                <?php echo apply_filters( 'gestpay_cvv_fancybox', $fancy_info ); ?>
+                <?php echo esc_html( apply_filters( 'gestpay_cvv_fancybox', $fancy_info ) ); ?>
             </span>
 
         </p>
 
         <div style="display: none; width: 50%" id="gestpay-fancybox-cvv-modal">
             <div class="gestpay-fancybox-section">
-                <h1><?php echo $this->Gestpay->strings['gestpay_cvv_help_h1_title']; ?></h1>
-                <p><?php echo $this->Gestpay->strings['gestpay_cvv_help_h1_text']; ?></p>
+                <h1><?php echo esc_html( $this->Gestpay->strings['gestpay_cvv_help_h1_title'] ); ?></h1>
+                <p><?php echo esc_html( $this->Gestpay->strings['gestpay_cvv_help_h1_text'] ); ?></p>
             </div>
             <div class="gestpay-fancybox-section">
-                <h3><?php echo $this->Gestpay->strings['gestpay_cvv_help_visa_title']; ?></h3>
+                <h3><?php echo esc_html( $this->Gestpay->strings['gestpay_cvv_help_visa_title'] ); ?></h3>
                 <p>
                     <p class="gestpay-fancybox-cvv-textcard-text">
-                        <?php echo $this->Gestpay->strings['gestpay_cvv_help_visa_text']; ?>
+                        <?php echo esc_html( $this->Gestpay->strings['gestpay_cvv_help_visa_text'] ); ?>
                     </p>
-                    <p class="gestpay-fancybox-cvv-textcard-card"><img src="<?php echo $img_url; ?>/images/CVV2.gif"></p>
+                    <p class="gestpay-fancybox-cvv-textcard-card"><img src="<?php echo esc_url( $img_url . '/images/CVV2.gif' ); ?>"></p>
                 </p>
             </div>
             <div class="gestpay-fancybox-section">
-                <h3><?php echo $this->Gestpay->strings['gestpay_cvv_help_amex_title']; ?></h3>
+                <h3><?php echo esc_html( $this->Gestpay->strings['gestpay_cvv_help_amex_title'] ); ?></h3>
                 <p>
                     <p class="gestpay-fancybox-cvv-textcard-text">
-                        <?php echo $this->Gestpay->strings['gestpay_cvv_help_amex_text']; ?>
+                        <?php echo esc_html( $this->Gestpay->strings['gestpay_cvv_help_amex_text'] ); ?>
                     </p>
-                    <p class="gestpay-fancybox-cvv-textcard-card"><img src="<?php echo $img_url; ?>/images/4DBC.gif"></p>
+                    <p class="gestpay-fancybox-cvv-textcard-card"><img src="<?php echo esc_url( $img_url . '/images/4DBC.gif' ); ?>"></p>
                 </p>
             </div>
         </div>
@@ -264,12 +265,12 @@ if ( $this->Gestpay->is_sandbox ) : ?>
 <?php if ( $this->Gestpay->is_iframe ) : ?>
 
         <p class="form-row">
-            <input type="submit" value="<?php echo $this->Gestpay->strings['s2s_proceed']; ?>" id="gestpay-submit" />
+            <input type="submit" value="<?php echo esc_attr( $this->Gestpay->strings['s2s_proceed'] ); ?>" id="gestpay-submit" />
         </p>
 
     </form><!-- end #gestpay-cc-form -->
 
-    <a href="javascript:window.location.reload(true)" id="iframe-reload-btn" class="btn" style="display: none;"><?php echo __( 'Retry', 'gestpay-for-woocommerce' ); ?></a>
+    <a href="javascript:window.location.reload(true)" id="iframe-reload-btn" class="btn" style="display: none;"><?php echo esc_html( __( 'Retry', 'gestpay-for-woocommerce' ) ); ?></a>
 
 <?php endif; // end if $this->Gestpay->is_iframe ?>
 

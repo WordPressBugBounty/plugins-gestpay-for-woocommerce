@@ -1,23 +1,22 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Gestpay for WooCommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * 
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-/*
- * This file is an example useful when someone want to use the same
- * GestPay Pro account on more than one site. In this example a new
- * parameter called "SITE" must be defined into the backoffice.
- * Each site must have the same IP address in order to be accepted
- * as source of payment from the same GestPay account.
- * Here you have to adjust the code as your needs, because this file
- * is for example purposes only.
+/**
+ * Questo è un file di esempio che dimostra come gestire il routing dei pagamenti
+ * in una configurazione multi-sito. I domini utilizzati sono puramente dimostrativi.
+ * 
+ * NON utilizzare questo file in produzione senza prima averlo adattato alle proprie necessità.
  */
 
 if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
@@ -27,8 +26,8 @@ if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
 
   // Set parameters to be decrypted
   $params = new stdClass();
-  $params->shopLogin = $_GET['a'];
-  $params->CryptedString = $_GET['b'];
+  $params->shopLogin = sanitize_text_field( wp_unslash( $_GET['a'] ) );
+  $params->CryptedString = sanitize_text_field( wp_unslash( $_GET['b'] ) );
 
   $crypt_url = $is_test
     ? "https://sandbox.gestpay.net/gestpay/GestPayWS/WsCryptDecrypt.asmx?WSDL"
@@ -38,7 +37,7 @@ if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
     $client = new SoapClient( $crypt_url );
   }
   catch ( Exception $e ) {
-    echo "Soap Client error: " . $e->getMessage();
+    echo "Soap Client error: " . esc_html( $e->getMessage() );
     exit( 1 );
   }
 
@@ -46,7 +45,7 @@ if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
     $objectresult = $client->Decrypt( $params );
   }
   catch ( Exception $e ) {
-    echo "GestPay Decrypt error: " . $e->getMessage();
+    echo "GestPay Decrypt error: " . esc_html( $e->getMessage() );
     exit( 1 );
   }
 
@@ -54,12 +53,12 @@ if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
 
   $src = ( string ) $xml->CustomInfo; // for example "SITE=something"
 
-  if ( ! empty( $src ) && $src == 'SITE=site1' ) {
-    $url = "http://www.site1.it/";
-  }
-  else {
-    $url = "http://www.site2.it/";
-  }
+if ( ! empty( $src ) && $src == 'SITE=site1' ) {
+    $url = "https://example-site-1.test/"; // Example domain for demonstration purposes only
+}
+else {
+    $url = "https://example-site-2.test/"; // Example domain for demonstration purposes only
+}
 
   // Process the Payment into the right website.
   $full_url = $url . "?wc-api=WC_Gateway_Gestpay&a=" . $params->shopLogin . "&b=" . $params->CryptedString;

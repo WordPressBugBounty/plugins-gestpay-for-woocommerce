@@ -1,25 +1,28 @@
 <?php
-
 /**
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20241121
- * Author: Axerve (Gruppo Banca Sella)
- * Author URI: https://www.axerve.com
+ * Version: 20240418
+ * Requires at least: 4.7
+ * Requires PHP: 7.0
+ * Author: Fabrick (Gruppo Banca Sella)
+ * Author URI: https://www.fabrick.com
  *
  * WC requires at least: 3.0
  * WC tested up to: 9.4.2
+ * Requires Plugins: woocommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2022 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
  *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -30,6 +33,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/
  */
+
+ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 
 // Gestpay account types
 define( 'GESTPAY_STARTER', 0 );
@@ -62,7 +68,7 @@ require_once 'inc/class-wc-settings-tab-gestpay.php';
 require_once 'inc/class-gestpay-cards.php';
 require_once 'inc/class-gestpay-3DS2.php';
 
-add_action( 'plugins_loaded', 'init_wc_gateway_gestpay' );
+add_action( 'plugins_loaded', 'gestpay_init_wc_gateway_gestpay' );
 
 add_action( 'before_woocommerce_init', function() {
 	if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
@@ -70,7 +76,7 @@ add_action( 'before_woocommerce_init', function() {
 	}
 } );
 
-function init_wc_gateway_gestpay() {
+function gestpay_init_wc_gateway_gestpay() {
 
     if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 
@@ -320,9 +326,9 @@ function init_wc_gateway_gestpay() {
 
             if ( function_exists( 'is_checkout' ) && is_checkout() ) {
                 // Include TLS js by Gestpay
-                wp_enqueue_script( 'gestpay-TLSCHK_TE', 'https://sandbox.gestpay.net/pagam/javascript/TLSCHK_TE.js', array(), '201804', true );
-                wp_enqueue_script( 'gestpay-TLSCHK_PRO', 'https://ecomm.sella.it/pagam/javascript/TLSCHK_PRO.js', array(), '201804', true );
-                wp_enqueue_script( 'gestpay-checkBrowser', 'https://www.gestpay.it/checkbrowser/checkBrowser.js', array(), '201804', true );
+                wp_enqueue_script( 'gestpay-TLSCHK_TE', '//sandbox.gestpay.net/pagam/javascript/TLSCHK_TE.js', array(), '201804', true );
+                wp_enqueue_script( 'gestpay-TLSCHK_PRO', '//ecomm.sella.it/pagam/javascript/TLSCHK_PRO.js', array(), '201804', true );
+                wp_enqueue_script( 'gestpay-checkBrowser', '//www.gestpay.it/checkbrowser/checkBrowser.js', array(), '201804', true );
             }
 
             add_action( 'woocommerce_review_order_before_payment', array( $this, 'check_tls12' ) );
@@ -350,8 +356,8 @@ function init_wc_gateway_gestpay() {
 ?><script type="text/javascript">
 jQuery( document.body ).on( 'updated_checkout payment_method_selected', function() {
     if ( typeof GestPay !== 'undefined' && typeof GestPay.ChkTLS !== 'undefined' && ! GestPay.ChkTLS.enabled ) {
-        var method = "payment_method_" + '<?php echo $this->id; ?>';
-        var tls_err_str = '<?php echo $this->strings['tls_text_error']; ?>';
+        var method = "payment_method_" + '<?php echo esc_js( $this->id ); ?>';
+        var tls_err_str = '<?php echo esc_js( $this->strings['tls_text_error'] ); ?>';
         var button = jQuery( '#place_order[name="woocommerce_checkout_place_order"]' );
         var el = document.getElementsByClassName( 'payment_box ' + method );
         var buttonChecked = jQuery( 'input#' + method + ':checked' ).val();
@@ -404,7 +410,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         function admin_options() {
 
             echo '<h2>' . esc_html( $this->get_method_title() );
-            wc_back_link( __( 'Return to payments', 'woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=checkout' ) );
+            wc_back_link( __( 'Return to payments', 'gestpay-for-woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=checkout' ) );
             echo '</h2>';
 
             $err = $this->is_valid_for_use();
@@ -412,14 +418,14 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
             if ( is_array( $err ) && ! empty( $err['error'] ) ) : ?>
 
             <div class="inline error">
-                <p><strong><?php _e( 'Gateway Disabled', 'woocommerce' ); ?></strong>: <?php echo $err['error']; ?></p>
+                <p><strong><?php esc_html_e( 'Gateway Disabled', 'gestpay-for-woocommerce' ); ?></strong>: <?php echo esc_html( $err['error'] ); ?></p>
             </div>
 
             <?php else : ?>
 
             <div class="gestpay-admin-main">
                 <div class="gestpay-message">
-                    <img src="<?php echo $this->logo; ?>" id="gestpay-logo"/>
+                    <img src="<?php echo esc_url( $this->logo ); ?>" id="gestpay-logo"/>
                     <h3>
                         <a href="https://www.gestpay.it/" target="_blank">Gestpay</a> by <a href="https://www.axerve.com/" target="_blank">Axerve S.p.A. - Gruppo Banca Sella</a>
                     </h3>
@@ -443,9 +449,9 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
          * Output a payment box, maybe containing your direct payment form.
          */
         function payment_fields() {
-
             if ( $this->description ) {
-                echo wpautop( wptexturize( wp_kses_post( __( $this->description ) ) ) );
+                $description = $this->get_option('description');
+                echo wp_kses_post( wpautop( wptexturize( $description ) ) );
             }
 
             if ( $this->is_s2s && $this->paymentType == 'CREDITCARD' ) {
@@ -547,7 +553,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
                         $this->Helper->log_add( "[ERROR] Check the GestPay configuration." );
                     }
                     else {
-                        echo $ret;
+                        echo wp_kses_post( $ret );
                     }
                 }
             }
@@ -634,8 +640,8 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
             }
 
             $params = new stdClass();
-            $params->shopLogin = $_GET['a'];
-            $params->CryptedString = $_GET['b'];
+            $params->shopLogin = sanitize_text_field( wp_unslash( $_GET['a'] ) );
+            $params->CryptedString = sanitize_text_field( wp_unslash( $_GET['b'] ) );
 
             if ( ! empty( $this->apikey ) ) {
                 $params->apikey = $this->apikey;
@@ -665,7 +671,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
             // Check if the order ID is correct.
             if ( empty( $raw_order_id ) ) {
                 $err = "[ERROR] check_gateway_response - Order id is empty." . var_export( $xml, true );
-                echo $err;
+                echo esc_html( $err );
                 $this->Helper->log_add( $err );
                 die();
             }
@@ -679,7 +685,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
 
             if ( empty( $order ) ) {
                 $err = "[ERROR] check_gateway_response - Order is empty." . var_export( $xml, true );
-                echo $err;
+                echo esc_html( $err );
                 $this->Helper->log_add( $err );
                 die();
             }
@@ -776,7 +782,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         function thankyou_page() {
 
             if ( $description = $this->get_description() ) {
-                echo wpautop( wptexturize( wp_kses_post( $description ) ) );
+                echo wp_kses_post( wpautop( wptexturize( $description ) ) );
             }
 
         }
@@ -908,7 +914,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
     // Add GestPay and other payment types.
     include_once 'inc/gestpay-pro-payment-types.php';
 
-} // end init_wc_gateway_gestpay()
+} // end gestpay_init_wc_gateway_gestpay()
 
 
 /**

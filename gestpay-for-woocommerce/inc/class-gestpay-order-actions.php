@@ -5,9 +5,10 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)    
+ * 
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -124,7 +125,11 @@ class Gestpay_Order_Actions {
             wp_die();
         }
 
-        $order_id = absint( $_POST['order_id'] );
+        if ( ! isset( $_POST['order_id'] ) ) {
+            wp_send_json_error( array( 'error' => 'Order ID is required' ) );
+        }
+
+        $order_id = absint( sanitize_text_field( wp_unslash( $_POST['order_id'] ) ) );
 
         $res = $this->settle( $order_id );
 
@@ -204,7 +209,11 @@ class Gestpay_Order_Actions {
             wp_die();
         }
 
-        $order_id = absint( $_POST['order_id'] );
+        if ( ! isset( $_POST['order_id'] ) ) {
+            wp_send_json_error( array( 'error' => 'Order ID is required' ) );
+        }
+
+        $order_id = absint( sanitize_text_field( wp_unslash( $_POST['order_id'] ) ) );
 
         $client = $this->Helper->get_soap_client( $this->Gestpay->ws_S2S_url );
         if ( empty( $client ) ) {
@@ -347,7 +356,7 @@ class Gestpay_Order_Actions {
         // If we are here, there is separation between authorization and financial transaction
         // so we need to handle the order status changed manually.
         // We first need to check if the transaction is authorized, see:
-        // https://docs.gestpay.it/soap/s2s/query-transaction-status/
+        // https://docs.axerve.com/it/plugin/woocommerce/
 
         $order = wc_get_order( $order_id );
         $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, TRUE );
@@ -492,12 +501,12 @@ function gestpay_order_actions_add_action_buttons( $order ) {
     $gp_strings = include 'translatable-strings.php';
     ?>
 
-    <button type="button" class="button gestpay-settle-items"><?php echo $gp_strings['button_settle']; ?>
-        <?php echo wc_help_tip( $gp_strings['tip_settle'] ); ?>
+    <button type="button" class="button gestpay-settle-items"><?php echo esc_html( $gp_strings['button_settle'] ); ?>
+        <?php echo wp_kses_post( wc_help_tip( $gp_strings['tip_settle'] ) ); ?>
     </button>
 
-    <button type="button" class="button gestpay-delete-items"><?php echo $gp_strings['button_delete']; ?>
-        <?php echo wc_help_tip( $gp_strings['tip_delete'] ); ?>
+    <button type="button" class="button gestpay-delete-items"><?php echo esc_html( $gp_strings['button_delete'] ); ?>
+        <?php echo wp_kses_post( wc_help_tip( $gp_strings['tip_delete'] ) ); ?>
     </button>
 
     <script>
@@ -530,12 +539,12 @@ function gestpay_order_actions_add_action_buttons( $order ) {
 
         $( '#woocommerce-order-items' )
             .on( 'click', 'button.gestpay-settle-items', function() {
-                if ( window.confirm( "<?php echo $gp_strings['confirm_settle']; ?>" ) ) {
+                if ( window.confirm( "<?php echo esc_js( $gp_strings['confirm_settle'] ); ?>" ) ) {
                     gestpay_ajax_call( 'gestpay_settle_s2s' );
                 }
             })
             .on( 'click', 'button.gestpay-delete-items', function() {
-                if ( window.confirm( "<?php echo $gp_strings['confirm_delete']; ?>" ) ) {
+                if ( window.confirm( "<?php echo esc_js( $gp_strings['confirm_delete'] ); ?>" ) ) {
                     gestpay_ajax_call( 'gestpay_delete_s2s' );
                 }
             });

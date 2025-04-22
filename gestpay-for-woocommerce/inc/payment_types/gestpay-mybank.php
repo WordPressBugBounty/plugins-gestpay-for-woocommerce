@@ -5,8 +5,8 @@
  *
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
  *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -24,7 +24,7 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
         $this->title = 'MyBank';
         $this->description = '';
         $this->has_fields = true; // required to display the content of payment fields.
-        $this->icon = $this->plugin_url . '/images/MyBank_logo_positive.jpg';
+        $this->icon = $this->plugin_url . 'images/MyBank_logo_positive.jpg';
 
         // Bank selection is required on mobile. Can be also required on desktop if configured.
         $this->required_selection = wp_is_mobile() || "yes" == $this->get_option( 'param_mybank_select_required_on_desktop' );
@@ -134,8 +134,8 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
         echo '<div id="mybank-container">';
 
         $mybank_url = '<a href="https://mybank.eu" target="_blank" title="MyBank"><strong>mybank.eu</strong></a>';
-        $mybank_banner = '<div id="mybank-container-img"><a href="https://mybank.eu" target="_blank"><img src=""https://www.mybank.eu/brand/mybank-tagline-positive-it.png" style="background-color:#fff!important"/></a></div>';
-        echo $mybank_banner . '<p>' . $this->strings['mybank_payoff'] . ' ' . $mybank_url . '</p>';
+        $mybank_banner = '<div id="mybank-container-img"><a href="https://mybank.eu" target="_blank"><img src="'.esc_url( $this->plugin_url . 'images/mybank-tagline-positive-it.png' ).'" style="background-color:#fff!important"/></a></div>';
+        echo wp_kses_post( $mybank_banner ) . '<p>' . esc_html( $this->strings['mybank_payoff'] ) . ' ' . wp_kses_post( $mybank_url ) . '</p>';
 
         if ( $this->required_selection ) {
             $banks = $this->get_mybanks();
@@ -145,7 +145,7 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
                     $this->show_banks_as_select( $banks );
                 }
                 else {
-                    echo $banks['error_message'];
+                    echo esc_html( $banks['error_message'] );
                 }
             }
         }
@@ -158,14 +158,14 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
      */
     public function show_banks_as_select( $banks ) {
 
-        echo '<p><i>'. $this->strings['gestpay_mybank_list_intro'] . '</i>:</p>';
+        echo '<p><i>'. esc_html( $this->strings['gestpay_mybank_list_intro'] ) . '</i>:</p>';
         echo '<p><select name="gestpay_mybank_bank" class="woocommerce-select" id="gestpay-mybank-banklist">';
-        echo '<option value="">--- ' . __( 'Choose an option', 'woocommerce' ) . ' ---</option>';
+        echo '<option value="">--- ' . esc_html( __( 'Choose an option', 'gestpay-for-woocommerce' ) ) . ' ---</option>';
         foreach ( $banks as $bank_code => $bank_name ) {
-            echo '<option value="' . $bank_code . '">' . $bank_name . '</option>';
+            echo '<option value="' . esc_attr( $bank_code ) . '">' . esc_html( $bank_name ) . '</option>';
         }
         echo '</select> <span class="required">*</span></p>';
-        echo '<p><a href="https://mybank.eu/faq/" target="_blank">' . $this->strings['gestpay_mybank_list_notfound'] . '</a></p>';
+        echo '<p><a href="https://mybank.eu/faq/" target="_blank">' . esc_html( $this->strings['gestpay_mybank_list_notfound'] ) . '</a></p>';
     }
 
     /**
@@ -187,7 +187,7 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
             }
 
             $params->paymentTypeDetail = array(
-                'MyBankBankCode' => $_POST['gestpay_mybank_bank']
+                'MyBankBankCode' => sanitize_text_field( wp_unslash( $_POST['gestpay_mybank_bank'] ) )
             );
         }
 
@@ -204,7 +204,7 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
             return;
         }
 
-        echo '<a href="https://mybank.eu/" target="_blank"><img src=""https://www.mybank.eu/brand/mybank-tagline-positive-it.png" /></a>';
+        echo '<a href="https://mybank.eu/" target="_blank"><img src="'.esc_url( $this->plugin_url . 'images/mybank-tagline-positive-it.png' ).'" /></a>';
     }
 
 }

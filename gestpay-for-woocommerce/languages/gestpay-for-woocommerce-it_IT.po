@@ -213,3 +213,12 @@ msgstr "È necessario selezionare una banca/istituto per pagare con MyBank."
 
 msgid "Secure payments through your online banking account.<br>Learn more"
 msgstr "Pagamenti sicuri attraverso il servizio di home banking della propria banca.<br>Per saperne di più"
+
+msgid " -- Select -- "
+msgstr " -- Seleziona -- "
+
+msgid "Gestpay S2S Error: %s"
+msgstr "Errore Gestpay S2S: %s"
+
+msgid "Via %s"
+msgstr "Con %s"

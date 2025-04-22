@@ -5,9 +5,9 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -106,7 +106,7 @@ class Gestpay_Iframe {
         }
         else {
             // Second call
-            return $_COOKIE['GestPayEncString'];
+            return sanitize_text_field( wp_unslash( $_COOKIE['GestPayEncString'] ) );
         }
     }
 
@@ -118,14 +118,14 @@ class Gestpay_Iframe {
         $encString = $this->retrieve_encoded_string( $order );
 
         // Maybe get the paRes parameter for 2nd call, due to 3D enrolled credit card
-        $paRes = ! empty( $_REQUEST["PaRes"] ) ? $_REQUEST["PaRes"] : "";
-        $transKey = ! empty( $_COOKIE['TransKey'] ) ? $_COOKIE['TransKey'] : "";
+        $paRes = ! empty( $_REQUEST["PaRes"] ) ? sanitize_text_field( wp_unslash( $_REQUEST["PaRes"] ) ) : "";
+        $transKey = ! empty( $_COOKIE['TransKey'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['TransKey'] ) ) : "";
 
         // Output the HTML for the iFrame payment box.
         require_once 'checkout-payment-fields.php';
+        wp_enqueue_script( 'gestpay-for-woocommerce-iframe-js', $this->Gestpay->iframe_url );
         ?>
 
-        <script type="text/javascript" src="<?php echo $this->Gestpay->iframe_url; ?>"></script>
         <script type="text/javascript">
         var GestpayIframe = {}
 
@@ -139,14 +139,14 @@ class Gestpay_Iframe {
             if ( Result.ErrorCode == 10 ) {
 
                 // Handle 3D authentication 2nd call
-                var paRes = '<?php echo $paRes; ?>';
-                var transKey = '<?php echo $transKey; ?>';
+                var paRes = '<?php echo esc_js( $paRes ); ?>';
+                var transKey = '<?php echo esc_js( $transKey ); ?>';
 
                 if ( paRes.length > 0 && transKey.length > 0 ) {
                     // The cardholder land for the 2nd page load, after 3D Secure authentication,
                     // so we can proceed to process the transaction without showing the form
 
-                    document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo $this->Gestpay->strings['iframe_pay_progress']; ?>';
+                    document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_pay_progress'] ); ?>';
 
                     var params = {
                         PARes: paRes,
@@ -175,10 +175,10 @@ class Gestpay_Iframe {
             if ( Result.ErrorCode == 0 ) {
                 // --- Transaction correctly processed
 
-                var baseUrl = "<?php echo $this->Gestpay->ws_S2S_resp_url; ?>";
+                var baseUrl = "<?php echo esc_js( $this->Gestpay->ws_S2S_resp_url ); ?>";
 
                 // Decrypt the string to read the transaction results
-                document.location.replace( baseUrl + '&a=<?php echo $this->Gestpay->shopLogin; ?>&b=' + Result.EncryptedString );
+                document.location.replace( baseUrl + '&a=<?php echo esc_js( $this->Gestpay->shopLogin ); ?>&b=' + Result.EncryptedString );
             }
             else {
                 // --- An error has occurred: check for 3D authentication required
@@ -194,17 +194,17 @@ class Gestpay_Iframe {
                     // Get the TransKey, IMPORTANT! this value must be stored for further use
                     var TransKey = Result.TransKey;
                     var SameSite = '<?php echo is_ssl() ? '; SameSite=None; Secure' : ''; ?>';
-                    document.cookie = '<?php echo 'TransKey'; ?>=' + TransKey.toString() + '; expires=' + expDate + ' ; path=/' + SameSite;
+                    document.cookie = 'TransKey=' + TransKey.toString() + '; expires=' + expDate + ' ; path=/' + SameSite;
 
                     // Retrieve all parameters.
-                    var a = '<?php echo $this->Gestpay->shopLogin; ?>';
+                    var a = '<?php echo esc_js( $this->Gestpay->shopLogin ); ?>';
                     var b = Result.VBVRisp;
 
                     // The landing page where the user will be redirected after the issuer authentication
                     var c = document.location.href;
 
                     // Redirect the user to the issuer authentication page
-                    var AuthUrl = '<?php echo $this->Gestpay->pagam3d_url; ?>';
+                    var AuthUrl = '<?php echo esc_js( $this->Gestpay->pagam3d_url ); ?>';
 
                     document.location.replace( AuthUrl + '?a=' + a + '&b=' + b + '&c=' + c );
                 }
@@ -258,7 +258,7 @@ class Gestpay_Iframe {
 
             document.getElementById( 'gestpay-submit' ).disabled = true;
             document.getElementById( 'gestpay-freeze-pane' ).className = 'gestpay-freeze-pane-on';
-            document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo $this->Gestpay->strings['iframe_pay_progress']; ?>';
+            document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_pay_progress'] ); ?>';
             document.getElementById( 'gestpay-inner-freeze-pane' ).className = 'gestpay-on';
 
             var params = {
@@ -280,19 +280,19 @@ class Gestpay_Iframe {
         if ( BrowserEnabled ) {
             // Check if the browser support HTML5 postmessage
 
-            var a = '<?php echo $this->Gestpay->shopLogin; ?>';
-            var b = '<?php echo $encString; ?>';
+            var a = '<?php echo esc_js( $this->Gestpay->shopLogin ); ?>';
+            var b = '<?php echo esc_js( $encString ); ?>';
 
             // Create the iFrame
             GestPay.CreatePaymentPage( a, b, GestpayIframe.PaymentPageLoad );
 
             // Raise the Overlap layer and text
             document.getElementById( 'gestpay-freeze-pane' ).className = 'gestpay-freeze-pane-on';
-            document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo $this->Gestpay->strings['iframe_loading']; ?>';
+            document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_loading'] ); ?>';
             document.getElementById( 'gestpay-inner-freeze-pane' ).className = 'gestpay-on';
         }
         else {
-            document.getElementById( 'gestpay-error-box' ).innerHTML = '<?php echo $this->Gestpay->strings['iframe_browser_err']; ?>';
+            document.getElementById( 'gestpay-error-box' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_browser_err'] ); ?>';
             document.getElementById( 'gestpay-error-box' ).className = 'gestpay-on';
         }
 

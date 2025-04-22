@@ -1,18 +1,15 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Gestpay for WooCommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 if ( ! class_exists( 'WC_Settings_Tab_Gestpay' ) ) :
 
@@ -49,17 +46,24 @@ class WC_Settings_Tab_Gestpay {
     }
 
     /**
-     * Get the real IP address of the current website so that it can be
-     * used into the Gestpay backoffice.
-     * It uses an external service to find out the IP address.
+     * Ottiene l'indirizzo IP pubblico del server utilizzando icanhazip.com
+     * Questo servizio viene utilizzato solo nell'area amministrativa per aiutare
+     * nella configurazione del gateway di pagamento.
+     * 
+     * NOTA: Attualmente il gateway supporta solo indirizzi IPv4.
+     * Se il server ha un indirizzo IPv6, potrebbe essere necessario configurare
+     * manualmente l'indirizzo IPv4 nel backoffice di Axerve. Contatta il supporto tecnico per maggiori informazioni.
+     * 
+     * @see https://major.io/icanhazip-com-faq/ per informazioni sul servizio
+     * @return string Messaggio contenente l'indirizzo IP o un errore
      */
     public static function get_IP_address() {
-        $ip = wp_remote_retrieve_body( wp_remote_get( 'http://icanhazip.com/' ) );
-        if ( preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip ) ) {
+        $ip = wp_remote_retrieve_body(wp_remote_get('https://icanhazip.com/'));
+        if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip)) {
             return 'Indirizzo IP da utilizzare nel backoffice di Gestpay: <b style="font-size:18px">' . $ip . '</b>';
         }
 
-        return "Identificazione dell'indirizzo IP non riuscita. Contatta il tuo provider di hosting per conoscere l'indirizzo IP.";
+        return "Identificazione dell'indirizzo IP non riuscita. Contatta il tuo provider di hosting per conoscere l'indirizzo IP IPv4 del server.";
     }
 
     private static function maybe_show_admin_errors() {
@@ -170,8 +174,8 @@ class WC_Settings_Tab_Gestpay {
      */
     public static function get_settings() {
 
-        $url_doc = 'https://docs.gestpay.it/soap/getting-started/how-axerve-ecommerce-solutions-works/';
-        $wcs = '<a href="https://woocommerce.com/products/woocommerce-subscriptions/" target="_blank">WooCommerce Subscriptions</a>';
+        $url_doc = 'https://api.axerve.com/';
+        $wcs = '<a href="https://docs.axerve.com/it/plugin/woocommerce/" target="_blank">WooCommerce Subscriptions</a>';
 
         $settings = array(
 

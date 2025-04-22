@@ -5,8 +5,8 @@
  *
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
  *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -26,7 +26,7 @@ class WC_Gateway_Gestpay_CONSEL extends WC_Gateway_Gestpay {
     /**
      * Add parameters for CONSEL if enabled.
      * @see http://api.gestpay.it/#encrypt-example-consel
-     * @see http://docs.gestpay.it/oth/consel-rate-in-rete.html
+     * @see https://api.axerve.com/#payment-type-codes
      */
     public function add_consel_encrypt_parameters( $params, $order ) {
         if ( $this->enabled == 'yes'

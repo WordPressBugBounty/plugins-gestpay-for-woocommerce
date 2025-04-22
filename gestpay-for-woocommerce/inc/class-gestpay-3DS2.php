@@ -4,9 +4,10 @@
  * Gestpay for WooCommerce
  *
  * Copyright: © 2019 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ *  
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * Whereas with 3D Secure 1.0 every transaction undergoes an authentication which always requires an action from the buyer,
  * the application of 3D Secure 2 may result in two different outcomes: challenge flow or frictionless flow. When a challenge
@@ -15,7 +16,7 @@
  * flow occurs. The more informations are passed to the issuing bank, the most likely it is for the transaction to result
  * in a frictionless flow. In this scenario the authentication does not require any involvement of the buyer.
  *
- * @read more at https://docs.gestpay.it/soap/3ds-2.0/how-change-integration/
+ * @read more at https://api.axerve.com/#soap-apis
  *
  * Check for:
  * - @N/A - for fields that are unavailable
@@ -72,7 +73,7 @@ class Gestpay_3DS2 {
                 $last_login = reset( $sessions );
                 if ( !empty( $last_login['login'] ) ) {
                     // Fix: format timestamp to YYYYMMDDHHMM
-                    $profileDetails['authTimestamp'] = date( 'YmdHi', $last_login['login'] );
+                    $profileDetails['authTimestamp'] = gmdate( 'YmdHi', $last_login['login'] );
                 }
             }
 
@@ -186,7 +187,7 @@ class Gestpay_3DS2 {
                 $chAccAgeInd = self::get_indicative_date( $registered_date );
 
                 // Date that the cardholder opened the account with the 3DS Requestor
-                $acctInfo['chAccDate'] = date( 'Ymd', $registered_date );
+                $acctInfo['chAccDate'] = gmdate( 'Ymd', $registered_date );
             }
 
             // Number of purchases during the previous six months
@@ -210,7 +211,7 @@ class Gestpay_3DS2 {
                         $paymentAccInd = self::get_indicative_date( $card['timestamp'] );
 
                         // Here we can set the right date
-                        $acctInfo['paymentAccAge'] = date( 'Ymd', $card['timestamp'] );
+                        $acctInfo['paymentAccAge'] = gmdate( 'Ymd', $card['timestamp'] );
                     }
                 }
             }
@@ -225,7 +226,7 @@ class Gestpay_3DS2 {
         $last_update = get_user_meta( $cardholderID, 'last_update', true );
         if ( !empty( $last_update ) ) {
             // Length of time since the cardholder's account information was last changed
-            $acctInfo['chAccChange'] = date( 'Ymd', $last_update );
+            $acctInfo['chAccChange'] = gmdate( 'Ymd', $last_update );
         }
 
         // Indicates if the Cardholder Name on the account is identical to the shipping Name used for this transaction

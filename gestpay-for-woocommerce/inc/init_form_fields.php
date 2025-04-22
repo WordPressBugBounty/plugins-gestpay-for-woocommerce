@@ -5,9 +5,10 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * 
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -21,7 +22,7 @@ $is_compass = ! empty( $_GET['section'] ) && 'wc_gateway_gestpay_compass' == $_G
 $is_bancomatpay = ! empty( $_GET['section'] ) && 'wc_gateway_gestpay_bancomatpay' == $_GET['section'];
 
 if ( ! empty( $_GET['section'] ) ) {
-    $method_parts = explode( '_', $_GET['section'] );
+    $method_parts = explode( '_', sanitize_text_field( wp_unslash( $_GET['section'] ) ) );
     $method = end( $method_parts );
     $method = $method == 'gestpay' ? '' : strtoupper( $method );
 }

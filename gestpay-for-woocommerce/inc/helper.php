@@ -5,9 +5,9 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 
@@ -45,7 +45,7 @@ class WC_Gateway_GestPay_Helper {
         load_plugin_textdomain( 'gestpay-for-woocommerce', false, $this->plugin_path . "/languages" );
 
         // Style
-        wp_enqueue_style( 'gestpay-for-woocommerce-css', $this->plugin_url . '/gestpay-for-woocommerce.css' );
+        wp_enqueue_style( 'gestpay-for-woocommerce-css', $this->plugin_url . 'gestpay-for-woocommerce.css' );
 
         // Maybe load the strings used on this plugin
         if ( method_exists( $this_gw, 'init_strings' ) ) {
@@ -108,7 +108,7 @@ class WC_Gateway_GestPay_Helper {
     function load_card_icons() {
 
         $cards = array();
-        $card_path = $this->plugin_url . '/images/cards/';
+        $card_path = $this->plugin_url . 'images/cards/';
         $gws = $this->gw->settings;
 
         if (isset($gws['card_visa'])       && $gws['card_visa'] == "yes")       $cards[] = $card_path . 'card_visa.jpg';
@@ -748,11 +748,10 @@ class WC_Gateway_GestPay_Helper {
      */
     function get_gw_form( $action_url, $input_params, $order ) {
 
-        $assets_path = str_replace( array( 'http:', 'https:' ), '', WC()->plugin_url() ) . '/assets/';
-        $imgloader = $assets_path . 'images/ajax-loader@2x.gif';
-        $js = <<<JS
-            jQuery('html').block({
-                message: '<img src="$imgloader" alt="Redirecting&hellip;" style="float:left;margin-right:10px;"/>Thank you! We are redirecting you to make payment.',
+        $assets_path = str_replace( array( 'http:', 'https:' ), '', $this->plugin_url() );
+        $imgloader = $assets_path . 'images/ajax-loader2x.gif';
+        $js = sprintf("jQuery('html').block({
+                message: '<img src=\"%s\" alt=\"Redirecting&hellip;\" style=\"float:left;margin-right:10px;\" />Thank you! We are redirecting you to make payment.',
                 overlayCSS: {
                     background: '#fff',
                     opacity: 0.6
@@ -767,8 +766,8 @@ class WC_Gateway_GestPay_Helper {
                     lineHeight: '32px'
                 }
             });
-            jQuery('#submit__{$this->plugin_slug_dashed}').click();
-JS;
+            jQuery('#submit__%s').click();
+        ", $imgloader, $this->plugin_slug_dashed);
 
         wc_enqueue_js( $js );
 
@@ -782,13 +781,18 @@ JS;
             $input_fields.= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
         }
 
-        return <<<HTML
-            <form action="{$action_url}" method="POST" id="form__{$this->plugin_slug_dashed}" target="_top">
-                $input_fields
-                <input type="submit" class="button-alt" id="submit__{$this->plugin_slug_dashed}" value="{$pay_order_str}" />
-                <a class="button cancel" href="$cancel_url">{$cancel_order_str}</a>
-            </form>
-HTML;
+        return sprintf("<form action=\"%s\" method=\"POST\" id=\"form__%s\" target=\"_top\">
+                %s
+                <input type=\"submit\" class=\"button-alt\" id=\"submit__%s\" value=\"%s\" />
+                <a class=\"button cancel\" href=\"%s\">%s</a>
+            </form>",
+            $action_url,
+            $this->plugin_slug_dashed,
+            $input_fields,
+            $this->plugin_slug_dashed,
+            $pay_order_str,
+            $cancel_url,
+            $cancel_order_str);
     }
 
     /**
@@ -880,12 +884,10 @@ HTML;
      * Generate the option list
      */
     function get_page_list_as_option() {
-
-        $opt_pages = array( 0 => " -- Select -- " );
+        $opt_pages = array( 0 => __( ' -- Select -- ', 'gestpay-for-woocommerce' ) );
         foreach ( get_pages() as $page ) {
-            $opt_pages[ $page->ID ] = __( $page->post_title );
+            $opt_pages[ $page->ID ] = $page->post_title;
         }
-
         return $opt_pages;
     }
 
@@ -894,14 +896,13 @@ HTML;
      */
     function show_error( $msg ) {
 
-        echo '<div id="woocommerce_errors" class="error fade"><p>ERRORE: ' . $msg . '</p></div>';
+        echo '<div id="woocommerce_errors" class="error fade"><p>ERRORE: ' . esc_html( $msg ) . '</p></div>';
     }
 
     /**
      * Create a SOAP client using the specified URL
      */
     function get_soap_client( $url, $retry = true ) {
-
         try {
             $soapClientOptions = array(
                 'user_agent' => 'Wordpress/GestpayForWoocommerce',
@@ -912,7 +913,11 @@ HTML;
             $client = new SoapClient( $url, $soapClientOptions );
         }
         catch ( SoapFault $e ) {
-            $err = sprintf( __( 'Soap Client Request Exception with error %s' ), $e->getMessage() );
+            $err = sprintf(
+                /* translators: %s: Error message */
+                __( 'Soap Client Request Exception with error %s', 'gestpay-for-woocommerce' ),
+                $e->getMessage()
+            );
             $this->log_add( '[FATAL ERROR]: ' . $err );
 
             if ( $retry ) {
@@ -974,7 +979,7 @@ HTML;
      */
     function get_post_params( $key ) {
 
-        return isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
+        return isset( $_POST[$key] ) ? trim( sanitize_text_field( wp_unslash( $_POST[$key] ) ) ) : '';
     }
 }
 

@@ -1,16 +1,15 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Gestpay for WooCommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /*
  * @see https://woocommerce.wordpress.com/2016/04/21/tabbed-my-account-pages-in-2-6/
@@ -46,21 +45,21 @@ class Gestpay_Endpoint {
         add_rewrite_endpoint( GESTPAY_ACCOUNT_TOKENS_ENDPOINT, EP_ROOT | EP_PAGES );
 
         // Flush rules only once, after plugin activation
-        if ( get_option( 'wc_gateway_gestpay_flush_rewrite_rules_flag', false ) ) {
+        if ( get_option( 'gestpay_wc_gateway_gestpay_flush_rewrite_rules_flag', false ) ) {
             flush_rewrite_rules();
-            delete_option( 'wc_gateway_gestpay_flush_rewrite_rules_flag' );
+            delete_option( 'gestpay_wc_gateway_gestpay_flush_rewrite_rules_flag' );
         }
     }
 
     public static function activate_endpoint() {
-        if ( ! get_option( 'wc_gateway_gestpay_flush_rewrite_rules_flag', false ) ) {
-            add_option( 'wc_gateway_gestpay_flush_rewrite_rules_flag', true );
+        if ( ! get_option( 'gestpay_wc_gateway_gestpay_flush_rewrite_rules_flag', false ) ) {
+            add_option( 'gestpay_wc_gateway_gestpay_flush_rewrite_rules_flag', true );
         }
     }
 
     public static function deactivate_endpoint() {
         flush_rewrite_rules();
-        delete_option( 'wc_gateway_gestpay_flush_rewrite_rules_flag' );
+        delete_option( 'gestpay_wc_gateway_gestpay_flush_rewrite_rules_flag' );
     }
 
     /**

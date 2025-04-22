@@ -5,9 +5,9 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 <div id="s2s-loadingbox" style="top: 0px; left: 0px; display: none;">
     <div id="canvasbox">
-        <img src="<?php echo $loading_img; ?>" id="loadingArrow">
+        <img src="<?php echo esc_url( $loading_img ); ?>" id="loadingArrow">
     </div>
 </div>
 
@@ -35,19 +35,19 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
         <tr>
 
             <th class="gestpay-s2s-card-type">
-                <span class="nobr"><?php echo $trans_str['s2s_card']; ?></span>
+                <span class="nobr"><?php echo esc_html( $trans_str['s2s_card'] ); ?></span>
             </th>
 
             <th class="gestpay-s2s-card-exp-date">
-                <span class="nobr"><?php echo $trans_str['s2s_expire']; ?></span>
+                <span class="nobr"><?php echo esc_html( $trans_str['s2s_expire'] ); ?></span>
             </th>
 
             <th class="gestpay-s2s-card-actions" style="text-align: center;">
-                <span class="nobr"><?php echo $trans_str['s2s_remove']; ?></span>
+                <span class="nobr"><?php echo esc_html( $trans_str['s2s_remove'] ); ?></span>
             </th>
 
             <th class="gestpay-s2s-card-actions" style="text-align: center;">
-                <span class="nobr"><?php echo $trans_str['s2s_default']; ?></span>
+                <span class="nobr"><?php echo esc_html( $trans_str['s2s_default'] ); ?></span>
             </th>
 
         </tr>
@@ -65,22 +65,22 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
             <td class="card">
 
-                <?php echo $show_card; ?>
+                <?php echo esc_html( $show_card ); ?>
 
             </td>
 
             <td class="card-exp-date">
 
-                <?php echo esc_html( $card['month'] ) .'/'. esc_html( $card['year'] ); ?>
+                <?php echo esc_html( $card['month'].'/'.$card['year'] ); ?>
 
             </td>
 
             <td class="card-actions" style="text-align: center;">
 
-                <img src="<?php echo $delete_img; ?>"
+                <img src="<?php echo esc_url( $delete_img ); ?>"
                     class="wc-gestpay-s2s-delete"
-                    data-token="<?php echo $card['token']; ?>"
-                    alt="<?php echo $trans_str['s2s_token_delete']; ?>"
+                    data-token="<?php echo esc_attr( $card['token'] ); ?>"
+                    alt="<?php echo esc_attr( $trans_str['s2s_token_delete'] ); ?>"
                     style="display: inline;" />
 
             </td>
@@ -88,18 +88,18 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
             <td style="text-align: center;">
                 <?php if ( empty($default_cc) || $card['token'] != $default_cc ) : ?>
 
-                    <img src="<?php echo $unchecked_img; ?>"
+                    <img src="<?php echo esc_url( $unchecked_img ); ?>"
                         class="wc-gestpay-s2s-set"
-                        data-token="<?php echo $card['token']; ?>"
-                        alt="<?php echo $trans_str['s2s_token_add_default']; ?>"
+                        data-token="<?php echo esc_attr( $card['token'] ); ?>"
+                        alt="<?php echo esc_attr( $trans_str['s2s_token_add_default'] ); ?>"
                         style="display: inline;" />
 
                 <?php else: ?>
 
-                    <img src="<?php echo $checked_img; ?>"
+                    <img src="<?php echo esc_url( $checked_img ); ?>"
                         class="wc-gestpay-s2s-unset"
-                        data-token="<?php echo $card['token']; ?>"
-                        alt="<?php echo $trans_str['s2s_token_remove_default']; ?>"
+                        data-token="<?php echo esc_attr( $card['token'] ); ?>"
+                        alt="<?php echo esc_attr( $trans_str['s2s_token_remove_default'] ); ?>"
                         style="display: inline;" />
 
                 <?php endif; ?>
@@ -119,10 +119,10 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 <script type="text/javascript">
 
 (function($) {
-    var ajaxurl = '<?php echo wp_nonce_url(admin_url( 'admin-ajax.php' ),'card-manage'); ?>';
+    var ajaxurl = '<?php echo esc_url( wp_nonce_url(admin_url( 'admin-ajax.php' ),'card-manage') ); ?>';
 
     $( '.wc-gestpay-s2s-delete' ).click( function(e) {
-        if ( ! confirm( '<?php echo $trans_str['s2s_confirm_token_delete']; ?>' ) ) {
+        if ( ! confirm( '<?php echo esc_js( $trans_str['s2s_confirm_token_delete'] ); ?>' ) ) {
             e.preventDefault();
         }
         else {
@@ -188,11 +188,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
     <?php if ( !$can_save_token ) : ?>
 
-        <p><?php echo $trans_str['s2s_cant_save_cards']; ?></p>
+        <p><?php echo esc_html( $trans_str['s2s_cant_save_cards'] ); ?></p>
 
     <?php else: ?>
 
-        <p><?php echo $trans_str['s2s_no_cards']; ?></p>
+        <p><?php echo esc_html( $trans_str['s2s_no_cards'] ); ?></p>
 
     <?php endif; ?>
 

@@ -5,9 +5,9 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -450,8 +450,11 @@ class Gestpay_Subscriptions {
      * @param string $message a message to display inside the "Payment Failed" order note
      */
     public function renewal_payment_failure( $renewal_order, $message = '' ) {
-
-        $renewal_order_err = 'Gestpay S2S Error: ' . __( $message, $this->textdomain );
+        $renewal_order_err = sprintf(
+            /* translators: %s: Error message */
+            __( 'Gestpay S2S Error: %s', 'gestpay-for-woocommerce' ),
+            $message
+        );
 
         if ( wcs_order_contains_renewal( $renewal_order->get_id() ) ) {
             $parent_order_id = WC_Subscriptions_Renewal_Order::get_parent_order_id( $renewal_order->get_id() );
@@ -464,7 +467,7 @@ class Gestpay_Subscriptions {
         // Allow actors to hook into renewal_payment_failure
         do_action( 'gestpay_on_renewal_payment_failure', $renewal_order, $message, $this );
 
-        throw new Exception( $renewal_order_err );
+        throw new Exception( esc_html( $renewal_order_err ) );
     }
 
     /**
@@ -475,28 +478,26 @@ class Gestpay_Subscriptions {
      * @return string the subscription payment method
      */
     public function maybe_render_subscription_payment_method( $payment_method_to_display, $subscription ) {
-
         if ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $subscription ) ) {
             $order_id = $subscription->get_parent_id();
             $token = $this->Helper->get_order_token( $order_id );
 
             if ( is_array( $token ) ) {
-                // Current token version is saved as array and contains expiry date.
-                return sprintf( __( 'Via %s %s/%s', $this->textdomain ),
+                return sprintf(
+                    /* translators: 1: Token number, 2: Expiry month, 3: Expiry year */
+                    __( 'Via %1$s %2$s/%3$s', 'gestpay-for-woocommerce' ),
                     $this->show_token( $token['token'] ),
                     $token['month'],
                     $token['year']
                 );
             }
             else {
-                // deprecated token as string and without expiry date values
-                // except for PayPal, which doesn't have an expiry date.
-
                 if ( ! empty( $this->saved_cards ) ) {
-                    // user is logged in, try to match the saved token with the ones in the card section
                     foreach ( $this->saved_cards as $card ) {
                         if ( $card['token'] == $token ) {
-                            return sprintf( __( 'Via %s %s/%s', $this->textdomain ),
+                            return sprintf(
+                                /* translators: 1: Token number, 2: Expiry month, 3: Expiry year */
+                                __( 'Via %1$s %2$s/%3$s', 'gestpay-for-woocommerce' ),
                                 $this->show_token( $card['token'] ),
                                 $card['month'],
                                 $card['year']
@@ -515,8 +516,11 @@ class Gestpay_Subscriptions {
                         $str_token = $token_shown;
                     }
 
-                    // we don't know expiry date. Print just the token
-                    return sprintf( __( 'Via %s', $this->textdomain ), $str_token );
+                    return sprintf(
+                        /* translators: %s: Token number */
+                        __( 'Via %s', 'gestpay-for-woocommerce' ),
+                        $str_token
+                    );
                 }
                 else {
                     return 'N/A';
@@ -548,6 +552,10 @@ class Gestpay_Subscriptions {
 	 * @param WC_Order        $renewal_order The order which recorded the successful payment (to make up for the failed automatic payment).
 	 */
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
-        // @todo Not available now
+        $failed_payment_method_string = sprintf(
+            /* translators: %s: Order ID */
+            __( 'Pagamento fallito. ID ordine: %s', 'gestpay-for-woocommerce' ),
+            $renewal_order->get_id() );
+        $subscription->add_order_note( $failed_payment_method_string );
     }
 }

@@ -5,9 +5,9 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -237,7 +237,7 @@ class Gestpay_S2S {
 
             $input_params = array(
                 'a' => $this->Gestpay->shopLogin,
-                'b' => $_GET['VbVRisp'],
+                'b' => sanitize_text_field( wp_unslash( $_GET['VbVRisp'] ) ),
                 'c' => add_query_arg(
                     array(
                         'wc-action' => 'checkVbV',
@@ -249,7 +249,7 @@ class Gestpay_S2S {
 
             $this->Helper->log_add( '======= S2S Payment Phase 2 ======= Redirect to 3D Secure auth page.' );
 
-            echo $this->Helper->get_gw_form( $this->Gestpay->pagam3d_url, $input_params, $order );
+            echo wp_kses_post($this->Helper->get_gw_form( $this->Gestpay->pagam3d_url, $input_params, $order ));
         }
     }
 
@@ -280,12 +280,12 @@ class Gestpay_S2S {
             | ----------------------------------------------------------------------------------------------------------
             */
 
-            $order = wc_get_order( absint( $_GET['order_id'] ) );
+            $order = wc_get_order( absint( sanitize_text_field( wp_unslash( $_GET['order_id'] ) ) ) );
             if ( $order ) {
 
                 $this->Helper->log_add( '======= S2S Payment Phase 3 =======' );
 
-                $response = $this->Subscr->s2s_payment( $order, array( 'pares' => $_REQUEST['PaRes'] ) );
+                $response = $this->Subscr->s2s_payment( $order, array( 'pares' => sanitize_text_field( wp_unslash( $_REQUEST['PaRes'] ) ) ) );
 
                 // Fix 20191022
                 if ( !empty( $response['pay_result'] ) && $response['pay_result'] == 'KO' ) {

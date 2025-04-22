@@ -5,9 +5,9 @@
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
- *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Copyright: © 2024-2025 Fabrick S.p.A. - Gruppo Banca Sella (https://www.fabrick.com - ecommerce@sella.it)
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -97,9 +97,9 @@ class Gestpay_Cards {
 
     public static function ajax_delete_card() {
 
-        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'card-manage' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
-                $token = $_POST['token'];
+                $token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
                 $uid = get_current_user_id();
     
                 if ( $cards = get_user_meta( $uid, GESTPAY_META_TOKEN, true ) ) {
@@ -118,9 +118,9 @@ class Gestpay_Cards {
 
     public static function ajax_set_default_card() {
 
-        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'card-manage' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
-                update_user_meta( get_current_user_id(), '_wc_gestpay_cc_default', $_POST['token'] );
+                update_user_meta( get_current_user_id(), '_wc_gestpay_cc_default', sanitize_text_field( wp_unslash( $_POST['token'] ) ) );
             }    
             wp_die();
         }
@@ -128,7 +128,7 @@ class Gestpay_Cards {
     }
 
     public static function ajax_unset_default_card() {
-        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'card-manage' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
                 delete_user_meta( get_current_user_id(), '_wc_gestpay_cc_default' );
             }

@@ -1,9 +1,10 @@
 === Gestpay for WooCommerce ===
-Contributors: easynolo
-Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo, axerve, iframe, direct payment gateway
-Requires at least: 4.0.1
-Tested up to: 6.7
-Stable tag: 20241121
+Contributors: easynolo, netingweb
+Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo, netingweb, axerve, netingweb, fabrick, iframe, direct payment gateway
+Requires at least: 4.7
+Requires PHP: 7.0
+Tested up to: 6.8
+Stable tag: 20240418
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 3.0
@@ -22,14 +23,13 @@ There are four operational modes in this plugin, which depends on Axerve version
 * Axerve Professional On Site
 * Axerve Professional iFrame
 
-[Click here to read the full usage documentation on Axerve](https://docs.gestpay.it/soap/plugins/woocommerce/ "Axerve for WooCommerce - Usage Documentation").
+[Click here to read the full usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Axerve for WooCommerce - Usage Documentation").
 
 == Actions and filters list ==
 
 Here is a list of filters and actions used in this plugin:
 
 = Actions =
-
 * gestpay_before_processing_order
 * gestpay_after_order_completed
 * gestpay_after_order_failed
@@ -49,7 +49,6 @@ Here is a list of filters and actions used in this plugin:
 * gestpay_my_cards_template_after_table
 
 = Filters =
-
 * gestpay_gateway_parameters
 * gestpay_encrypt_parameters
 * gestpay_settings_tab
@@ -61,23 +60,89 @@ Here is a list of filters and actions used in this plugin:
 * gestpay_s2s_validate_payment_fields
 * gestpay_s2s_payment_fields_error_strings
 
-
 == Installation ==
 
 1. Ensure you have the WooCommerce 3+ plugin installed
 2. Search "Gestpay for WooCommerce" or upload and install the zip file, in the same way you'd install any other plugin.
-3. Read the [usage documentation on Axerve](https://docs.gestpay.it/soap/plugins/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
+3. Read the [usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
 
 == Changelog ==
 
+= 20240418 =
+* Security: All user inputs data have been sanitized and all outputs have been escaped
+* License: Copyright headers updated
+* Fix:
+  - strip_tag to wp_strip_tag and date to gmdate
+  - removed the use of the HEREDOCS/NNOWDOCS syntax as it's not allowd by Worpress guidelines
+  - some remote images included int the images folder
+  - some functions have been correctly prefixed (gestpay_)
+* Improvement: Nothing added
+* Checks: Nothing added
+* Note: Questa modifica non influisce sulla funzionalità del plugin ma migliora la sicurezza complessiva e segue le linee guida di Wordpress
+
+= 20250417 =
+* Security: Migliorata la sicurezza nelle chiamate al servizio di identificazione IP
+  - Aggiornato il protocollo da HTTP a HTTPS per le chiamate a icanhazip.com
+  - Aggiunta documentazione sulla limitazione IPv6 del gateway
+* Documentation: Aggiornata la documentazione sui servizi esterni
+  - Aggiunta sezione "External services" nel readme
+  - Documentato l'utilizzo del servizio icanhazip.com
+  - Chiariti i domini di esempio nei file di test
+* Fix: Nothing added
+* Improvement: Nothing added
+* Checks: Nothing added
+* Note: Queste modifiche migliorano la sicurezza e la trasparenza del plugin senza influire sulla funzionalità principale
+
+= 20250416 =
+* Security: Aggiunta protezione contro accesso diretto ai file PHP
+  - Implementato il controllo ABSPATH in tutti i file PHP del plugin
+  - Migliorata la sicurezza prevenendo l'esecuzione diretta dei file al di fuori del contesto WordPress
+  - File interessati: gestpay-for-woocommerce.php, sample/gestpay-pro-smistamento.php e file nella directory inc/
+* License: Aggiornamento della licenza del plugin da GPLv3 a GPLv2
+* Fix: Nothing added
+* Improvement: Nothing added
+* Checks: Nothing added
+* Note: Questa modifica non influisce sulla funzionalità del plugin ma migliora la sicurezza complessiva
+
+= 20250415 =
+* Fix: Internazionalizzazione delle stringhe secondo le best practice WordPress
+  - Corretto l'uso di variabili come testo o dominio di traduzione nelle funzioni gettext
+  - Aggiunti commenti per i traduttori
+  - Aggiornate le traduzioni in italiano
+  - Migliorata la compatibilità con gli strumenti di traduzione WordPress
+* Security: Nothing added 
+* Improvement: Nothing added
+* Checks: Verified compatibility WooCommerce 9.4.2
+* Note: Nothing added
+
+= 20250414 =
+* Fix: Aggiunta dichiarazione formale della dipendenza da WooCommerce tramite header "Requires Plugins"
+* Security: Nothing added
+* Improvement: Nothing added
+* Checks: Nothing added
+* Note: Questa modifica migliora la gestione delle dipendenze a livello di WordPress senza modificare la funzionalità del plugin
+
+= 20250412 =
+* Fix: Aggiornati i requisiti minimi del plugin per riflettere le reali necessità:
+  - WordPress: richiesta versione minima 4.7 per supporto REST API e funzionalità moderne
+  - PHP: richiesta versione minima 7.0 per supporto HPOS, gestione moderna dei cookie e migliori performance
+* Improvement: Allineata la dichiarazione dei requisiti tra file header del plugin e readme.txt
+* Checks: Nessuna modifica alla compatibilità verificata (WordPress 6.7 e WooCommerce 9.4.2)
+* Note: Questa modifica non influisce sulla funzionalità del plugin ma migliora la chiarezza dei requisiti di sistema
+
 = 20241121 =
+* Fix: Internazionalizzazione delle stringhe secondo le best practice WordPress
+  - Corretto l'uso di variabili come testo o dominio di traduzione nelle funzioni gettext
+  - Aggiunti commenti per i traduttori
+  - Aggiornate le traduzioni in italiano
+  - Migliorata la compatibilità con gli strumenti di traduzione WordPress
 * Security: Nothing added 
 * Improvement: Nothing added
 * Checks: Verified compatibility WooCommerce 9.4.2
 * Note: Nothing added
 
 = 20241118 =
-* Fix: Rewrote HPOS support from scratch
+* Fix: Rewritten HPOS support from scratch
 * Security: Nothing added 
 * Improvement: Nothing added
 * Checks: Verified compatibility with Wordpress 6.7, WooCommerce 9.4.1
@@ -297,3 +362,47 @@ Here is a list of filters and actions used in this plugin:
 
 = 20170224 =
 * First public release.
+
+== Third Party Libraries ==
+
+Questo plugin utilizza le seguenti librerie di terze parti:
+
+* SOAP Client - Parte della libreria standard PHP, utilizzata per le comunicazioni con l'API Gestpay
+* WooCommerce - Framework e-commerce per WordPress (GPLv3)
+* WordPress - CMS principale (GPLv2 o successiva)
+* jQuery - Libreria JavaScript per la manipolazione del DOM e la gestione degli eventi (MIT License)
+
+== External services ==
+
+Questo plugin si connette ai seguenti servizi esterni:
+
+1. Axerve Payment Gateway (precedentemente Gestpay)
+- Scopo: Elaborazione dei pagamenti tramite il gateway di Banca Sella
+- Dati inviati: Informazioni sull'ordine, dati del cliente necessari per il pagamento
+- Quando: Durante il processo di pagamento e per le operazioni di gestione degli ordini
+- Privacy Policy: https://www.axerve.com/privacy-policy
+- Termini di servizio: https://www.axerve.com/terms-conditions
+
+2. icanhazip.com
+- Scopo: Identificazione dell'indirizzo IP del server per la configurazione del gateway di pagamento
+- Dati inviati: Nessun dato viene inviato, il servizio risponde solo con l'indirizzo IP pubblico
+- Quando: Solo nell'area amministrativa durante la configurazione del plugin
+- Privacy Policy: https://major.io/icanhazip-com-faq/
+- Note: Questo servizio viene utilizzato solo per aiutare gli amministratori a configurare correttamente il gateway di pagamento nel backoffice di Axerve
+
+3. Script JavaScript di verifica
+- Scopo: Verifica della compatibilità del browser con il gateway di pagamento
+- Dati inviati: Informazioni sul browser dell'utente per verificare la compatibilità TLS
+- Quando: Durante il processo di pagamento
+- Domini: gestpay.net, gestpay.it, ecomm.sella.it
+- Privacy Policy: https://www.axerve.com/privacy-policy
+
+4. MyBank
+- Scopo: Integrazione con il sistema di pagamento MyBank
+- Dati inviati: Informazioni necessarie per il pagamento tramite MyBank
+- Quando: Solo quando l'utente sceglie MyBank come metodo di pagamento
+- Privacy Policy: https://www.mybank.eu/privacy-policy/
+- Termini di servizio: https://www.mybank.eu/terms-and-conditions/
+
+Server di test e sviluppo
+Nel codice di esempio (directory `sample/`) sono presenti riferimenti a domini fittizi (`site1.it` e `site2.it`) utilizzati solo come esempio per dimostrare la configurazione multi-sito. Questi domini sono puramente dimostrativi e non sono utilizzati nel codice di produzione.
