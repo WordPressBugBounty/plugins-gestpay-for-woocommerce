@@ -13,6 +13,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 /**
  * Handles S2S actions on orders.
  */
@@ -45,10 +47,15 @@ class Gestpay_Order_Actions {
         }
 
         $order = wc_get_order( $order_id );
+        if (!$order) {
+            $this->log( $order, $this->Gestpay->strings['refund_err_1'] );
+            return FALSE;
+        }
 
-        $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, TRUE );
+        $banktid = OrderUtil::custom_orders_table_usage_is_enabled() ? $order->get_meta( GESTPAY_ORDER_META_BANK_TID, true ) : get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, true );
+        
 
-        if ( ! $order || empty( $banktid ) ) {
+        if ( empty( $banktid ) ) {
             $this->log( $order, $this->Gestpay->strings['refund_err_1'] );
             return FALSE;
         }
@@ -270,7 +277,16 @@ class Gestpay_Order_Actions {
      */
     function get_CallReadTrxS2S_params( $order_id ) {
 
-        $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, TRUE );
+        if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+            $order = wc_get_order( $order_id );
+            if (!$order) {
+                $banktid = '';
+            } else {
+                $banktid = $order->get_meta( GESTPAY_ORDER_META_BANK_TID, true );
+            }
+        } else {
+            $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, true );
+        }
 
         $params = new stdClass();
         $params->shopLogin = $this->Gestpay->shopLogin;
@@ -291,7 +307,15 @@ class Gestpay_Order_Actions {
      */
     function get_CallSettleS2S_params( $order_id, $order, $amount = false ) {
 
-        $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, TRUE );
+        if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+            if (!$order) {
+                $banktid = '';
+            } else {
+                $banktid = $order->get_meta( GESTPAY_ORDER_META_BANK_TID, true );
+            }
+        } else {
+            $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, true );
+        }
 
         $params = new stdClass();
 
@@ -318,7 +342,16 @@ class Gestpay_Order_Actions {
      */
     function get_CallDeleteS2S_params( $order_id, $msg ) {
 
-        $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, TRUE );
+        if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+            $order = wc_get_order( $order_id );
+            if (!$order) {
+                $banktid = '';
+            } else {
+                $banktid = $order->get_meta( GESTPAY_ORDER_META_BANK_TID, true );
+            }
+        } else {
+            $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, true );
+        }
 
         $params = new stdClass();
 
@@ -359,7 +392,16 @@ class Gestpay_Order_Actions {
         // https://docs.axerve.com/it/plugin/woocommerce/
 
         $order = wc_get_order( $order_id );
-        $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, TRUE );
+
+        if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+            if (!$order) {
+                $banktid = '';
+            } else {
+                $banktid = $order->get_meta( GESTPAY_ORDER_META_BANK_TID, true );
+            }
+        } else {
+            $banktid = get_post_meta( $order_id, GESTPAY_ORDER_META_BANK_TID, true );
+        }
 
         // Get the Axerve S2S SOAP Client
         $client = $this->Helper->get_soap_client( $this->Gestpay->ws_S2S_url );
@@ -492,7 +534,7 @@ class Gestpay_Order_Actions {
 function gestpay_order_actions_add_action_buttons( $order ) {
 
     // Check if the order is paid and is paid with Gestpay, otherwise we don't need these buttons.
-    $pm = get_post_meta( $order->get_id(), '_payment_method', TRUE );
+    $pm = $order->get_payment_method();
     $is_moto_sep = "yes" === get_option( 'wc_gateway_gestpay_moto_sep' );
     if ( ! in_array( $pm, array( 'wc_gateway_gestpay', 'wc_gateway_gestpay_paypal' ) ) || ! $is_moto_sep ) {
         return;

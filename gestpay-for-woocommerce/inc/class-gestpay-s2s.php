@@ -249,7 +249,7 @@ class Gestpay_S2S {
 
             $this->Helper->log_add( '======= S2S Payment Phase 2 ======= Redirect to 3D Secure auth page.' );
 
-            echo wp_kses_post($this->Helper->get_gw_form( $this->Gestpay->pagam3d_url, $input_params, $order ));
+            echo wp_kses($this->Helper->get_gw_form( $this->Gestpay->pagam3d_url, $input_params, $order ), ["a"=>["href"=>true,"class"=>true],"form"=>["action"=>true,"method"=>true,"id"=>true,"target"=>true],"input"=>["type"=>true,"name"=>true,"class"=>true,"id"=>true,"value"=>true]]);
         }
     }
 

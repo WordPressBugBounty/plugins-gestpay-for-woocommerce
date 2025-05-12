@@ -12,6 +12,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 class Gestpay_Subscriptions {
 
     public function __construct( $gestpay ) {
@@ -206,7 +208,7 @@ class Gestpay_Subscriptions {
         else {
             if ( ! empty( $args['pares'] ) ) {
                 // S2S Payment Phase 3
-                $params->transKey = get_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, TRUE );
+                    $params->transKey = OrderUtil::custom_orders_table_usage_is_enabled() ? $order->get_meta( GESTPAY_ORDER_META_TRANS_KEY, true ) : get_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, TRUE );
                 $params->PARes = $args['pares'];
             }
             else {

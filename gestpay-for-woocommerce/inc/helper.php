@@ -13,6 +13,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 if ( ! class_exists( 'WC_Gateway_GestPay_Helper' ) ) :
 
 class WC_Gateway_GestPay_Helper {
@@ -95,7 +97,14 @@ class WC_Gateway_GestPay_Helper {
      */
     function is_gestpaid( $order_id ) {
 
-        if ( 'wc_gateway_gestpay' == get_post_meta( $order_id, '_payment_method', TRUE ) ) {
+        if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+            $order = wc_get_order( $order_id );
+            $pm = $order->get_payment_method();
+        } else {
+            $pm = get_post_meta( $order_id, '_payment_method', TRUE );
+        }
+
+        if ( 'wc_gateway_gestpay' == $pm ) {
             return TRUE;
         }
 
@@ -311,12 +320,7 @@ class WC_Gateway_GestPay_Helper {
 
     function get_currency( $order ) {
 
-        if ( method_exists( $order, 'get_currency' ) ) { // wc>=3
-            $the_currency = $order->get_currency();
-        }
-        else {
-            $the_currency = get_post_meta( $order->get_id(), '_order_currency', true );
-        }
+        $the_currency = $order->get_currency();
 
         if ( empty( $the_currency ) ) {
             $the_currency = get_option( 'woocommerce_currency' );
@@ -343,7 +347,7 @@ class WC_Gateway_GestPay_Helper {
 
         // Add the amount only if it wasn't already added.
         // If a payment fails, the cent is assigned anyway to the order, so we must not add it again.
-        $maybe_amount_fix = get_post_meta( $order->get_id(), GESTPAY_ORDER_META_AMOUNT, TRUE );
+        $maybe_amount_fix = $order->get_meta(GESTPAY_ORDER_META_AMOUNT, true );
         if ( empty( $maybe_amount_fix ) ) {
             $fix_message = "Addebito di ".$amount." ".$order_currency." per evitare errore per importo nullo su Gestpay. Si proverà a stornare tale importo automaticamente.";
             $this->log_add( $fix_message );
@@ -379,7 +383,7 @@ class WC_Gateway_GestPay_Helper {
         $this->log_add( "[order_amount_0] get_parent_order_id " . $parent_order );
 
         // Maybe refund the amount used on the first trial order.
-        $gestpay_fix_amount_zero = get_post_meta( $order_id, GESTPAY_ORDER_META_AMOUNT, TRUE );
+        $gestpay_fix_amount_zero = $order->get_meta(GESTPAY_ORDER_META_AMOUNT, true );
         if ( $gestpay_fix_amount_zero ) {
             $refund_res = $this->gw->Order_Actions->refund( $order_id, $gestpay_fix_amount_zero, 'Write-Off' );
 
@@ -552,12 +556,18 @@ class WC_Gateway_GestPay_Helper {
      */
     function get_order_token( $order, $just_token = true ) {
 
-        $order_id = $this->get_parent_order_id( $order );
-        if ( empty( $order_id ) ) {
+        $parent_order_id = $this->get_parent_order_id( $order );
+        if ( empty( $parent_order_id ) ) {
             return FALSE;
         }
 
-        $token = get_post_meta( $order_id, GESTPAY_META_TOKEN, TRUE );
+        if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+            $order = wc_get_order( $parent_order_id );
+            $token = $order->get_meta( GESTPAY_META_TOKEN, true );
+        } else {
+            $token = get_post_meta( $parent_order_id, GESTPAY_META_TOKEN, TRUE );
+        }
+
         if ( empty( $token ) ) {
             return FALSE;
         }
@@ -591,7 +601,13 @@ class WC_Gateway_GestPay_Helper {
     function get_transaction_id( $order_id ) {
 
         if ( class_exists( 'WC_Seq_Order_Number_Pro' ) ) {
-            $wcsonp_id = get_post_meta( $order_id, '_order_number_formatted', true );
+
+            if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+                $order = wc_get_order( $order_id );
+                $wcsonp_id = $order->get_meta( '_order_number_formatted', true );
+            } else {
+                $wcsonp_id = get_post_meta( $order_id, '_order_number_formatted', true );
+            }
 
             if ( ! empty( $wcsonp_id ) ) {
                 return $wcsonp_id;
@@ -748,7 +764,7 @@ class WC_Gateway_GestPay_Helper {
      */
     function get_gw_form( $action_url, $input_params, $order ) {
 
-        $assets_path = str_replace( array( 'http:', 'https:' ), '', $this->plugin_url() );
+        $assets_path = str_replace( array( 'http:', 'https:' ), '', $this->plugin_url );
         $imgloader = $assets_path . 'images/ajax-loader2x.gif';
         $js = sprintf("jQuery('html').block({
                 message: '<img src=\"%s\" alt=\"Redirecting&hellip;\" style=\"float:left;margin-right:10px;\" />Thank you! We are redirecting you to make payment.',
@@ -773,7 +789,7 @@ class WC_Gateway_GestPay_Helper {
 
         $action_url        = esc_url_raw( $action_url );
         $cancel_url        = esc_url_raw( $order->get_cancel_order_url() );
-        $pay_order_str     = 'Pay via '.$this->gw->method_title;
+        $pay_order_str     = esc_attr('Pay via '.$this->gw->method_title);
         $cancel_order_str  = 'Cancel order &amp; restore cart';
 
         $input_fields = "";
@@ -781,11 +797,11 @@ class WC_Gateway_GestPay_Helper {
             $input_fields.= '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
         }
 
-        return sprintf("<form action=\"%s\" method=\"POST\" id=\"form__%s\" target=\"_top\">
+        return sprintf('<form action="%s" method="POST" id="form__%s" target="_top">
                 %s
-                <input type=\"submit\" class=\"button-alt\" id=\"submit__%s\" value=\"%s\" />
-                <a class=\"button cancel\" href=\"%s\">%s</a>
-            </form>",
+                <input type="submit" class="button-alt" id="submit__%s" value="%s" />
+                <a class="button cancel" href="%s">%s</a>
+            </form>',
             $action_url,
             $this->plugin_slug_dashed,
             $input_fields,

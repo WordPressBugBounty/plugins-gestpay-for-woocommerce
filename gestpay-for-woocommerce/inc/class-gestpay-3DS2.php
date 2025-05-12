@@ -24,6 +24,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 // Default value for unknown bank trans. id of the parent order of a recurring transaction
 define( 'GESTPAY_BANK_TRANSACTION_ID_01N_UNKNOWN', -100 );
 
@@ -389,7 +391,12 @@ class Gestpay_3DS2 {
 
             $bt_id = false;
             if ( !empty( $parent_order_id ) ) {
-                $bt_id = get_post_meta( $parent_order_id, GESTPAY_ORDER_META_BANK_TID, true );
+                if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+                    $order = wc_get_order( $parent_order_id );
+                    $bt_id = $order->get_meta( GESTPAY_ORDER_META_BANK_TID, true );
+                } else {
+                    $bt_id = get_post_meta( $parent_order_id, GESTPAY_ORDER_META_BANK_TID, true );
+                }
             }
 
             if ( empty( $bt_id ) ) {
@@ -411,7 +418,15 @@ class Gestpay_3DS2 {
         // if not present the user meta, try to retrieve from the last order
         $last_order_id = self::get_nbPurchaseAccount( true, 0, 1, 'ids', 'DESC' );
         if ( !empty( $last_order_id ) && !empty( $last_order_id[0] ) ) {
-            return get_post_meta( $last_order_id[0], GESTPAY_ORDER_META_BANK_TID, true );
+            if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+                $last_order = wc_get_order( $last_order_id[0] );
+                if (!$last_order) {
+                    return false;
+                }
+                return $last_order->get_meta( GESTPAY_ORDER_META_BANK_TID, true );
+            } else {
+                return get_post_meta( $last_order_id[0], GESTPAY_ORDER_META_BANK_TID, true );
+            }
         }
 
         return false;
