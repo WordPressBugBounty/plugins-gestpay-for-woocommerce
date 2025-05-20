@@ -119,7 +119,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 <script type="text/javascript">
 
 (function($) {
-    var ajaxurl = '<?php echo esc_url( wp_nonce_url(admin_url( 'admin-ajax.php' ),'card-manage') ); ?>';
+    var ajaxurl = '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>';
+    var security = '<?php echo esc_attr( wp_create_nonce( 'card-manage' ) ); ?>';
 
     $( '.wc-gestpay-s2s-delete' ).click( function(e) {
         if ( ! confirm( '<?php echo esc_js( $trans_str['s2s_confirm_token_delete'] ); ?>' ) ) {
@@ -132,7 +133,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                 url:  ajaxurl,
                 data: {
                     'action': 'gestpay_s2s_delete_card',
-                    'token': $( this ).attr( 'data-token' )
+                    'token': $( this ).attr( 'data-token' ),
+                    'security': security
                 },
                 type: 'POST',
                 success: function( response ) {
@@ -151,7 +153,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
             url:  ajaxurl,
             data: data = {
                 'action': 'gestpay_s2s_set_default_card',
-                'token': $( this ).attr( 'data-token' )
+                'token': $( this ).attr( 'data-token' ),
+                'security': security
             },
             type: 'POST',
             success: function( response ) {
@@ -169,7 +172,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
             url:  ajaxurl,
             data: data = {
                 'action': 'gestpay_s2s_unset_default_card',
-                'token': $( this ).attr( 'data-token' )
+                'token': $( this ).attr( 'data-token' ),
+                'security': security
             },
             type: 'POST',
             success: function( response ) {

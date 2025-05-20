@@ -61,6 +61,8 @@ class WC_Settings_Tab_Gestpay {
         $ip = wp_remote_retrieve_body(wp_remote_get('https://icanhazip.com/'));
         if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip)) {
             return 'Indirizzo IP da utilizzare nel backoffice di Gestpay: <b style="font-size:18px">' . $ip . '</b>';
+        } elseif (preg_match('/^(([0-9A-Fa-f]{1,4}:){7})([0-9A-Fa-f]{1,4})$|(([0-9A-Fa-f]{1,4}:){1,6}:)(([0-9A-Fa-f]{1,4}:){0,4})([0-9A-Fa-f]{1,4})$/', $ip)) {
+            return 'Indirizzo IPv6 non supportato ('.$ip.'). Contatta il supporto tecnico per maggiori informazioni.';
         }
 
         return "Identificazione dell'indirizzo IP non riuscita. Contatta il tuo provider di hosting per conoscere l'indirizzo IP IPv4 del server.";

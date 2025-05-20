@@ -97,7 +97,7 @@ class Gestpay_Cards {
 
     public static function ajax_delete_card() {
 
-        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'card-manage' ) ) {
+        if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
                 $token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
                 $uid = get_current_user_id();
@@ -118,7 +118,7 @@ class Gestpay_Cards {
 
     public static function ajax_set_default_card() {
 
-        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'card-manage' ) ) {
+        if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
                 update_user_meta( get_current_user_id(), '_wc_gestpay_cc_default', sanitize_text_field( wp_unslash( $_POST['token'] ) ) );
             }    
@@ -128,7 +128,7 @@ class Gestpay_Cards {
     }
 
     public static function ajax_unset_default_card() {
-        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'card-manage' ) ) {
+        if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
                 delete_user_meta( get_current_user_id(), '_wc_gestpay_cc_default' );
             }
