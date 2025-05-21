@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20250521
+ * Version: 20250522
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
@@ -328,16 +328,6 @@ function gestpay_init_wc_gateway_gestpay() {
             add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
             add_action( 'woocommerce_api_' . strtolower( get_class( $this ) ), array( $this, 'check_gateway_response' ) );
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-
-            if ( function_exists( 'is_checkout' ) && is_checkout() ) {
-                // Include TLS js by Gestpay
-                error_log('Gestpay Scripts - Caricamento script TLS e browser check');
-                wp_enqueue_script( 'gestpay-checkBrowser', '//www.gestpay.it/checkbrowser/checkBrowser.js', array(), '201804', true );
-                wp_enqueue_script( 'gestpay-TLSCHK_TE', '//sandbox.gestpay.net/pagam/javascript/TLSCHK_TE.js', array('gestpay-checkBrowser'), '201804', true );
-                wp_enqueue_script( 'gestpay-TLSCHK_PRO', '//ecomm.sella.it/pagam/javascript/TLSCHK_PRO.js', array('gestpay-checkBrowser'), '201804', true );
-            }
-
-            add_action( 'woocommerce_review_order_before_payment', array( $this, 'check_tls12' ) );
 
             // Do not allow subscriptions payments with other payment types.
             add_filter( 'woocommerce_available_payment_gateways', array( $this, 'available_payment_gateways' ), 99, 1 );
