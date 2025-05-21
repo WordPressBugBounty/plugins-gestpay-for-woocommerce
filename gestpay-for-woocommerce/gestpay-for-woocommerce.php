@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20250520
+ * Version: 20250521
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
@@ -212,6 +212,11 @@ function gestpay_init_wc_gateway_gestpay() {
             $this->is_iframe       = GESTPAY_PRO_TOKEN_IFRAME == $this->account;
             $this->is_tokenization = $this->is_s2s || $this->is_iframe;
 
+            error_log('Gestpay Config - Account type: ' . $this->account);
+            error_log('Gestpay Config - is_s2s: ' . ($this->is_s2s ? 'true' : 'false'));
+            error_log('Gestpay Config - is_iframe: ' . ($this->is_iframe ? 'true' : 'false'));
+            error_log('Gestpay Config - is_tokenization: ' . ($this->is_tokenization ? 'true' : 'false'));
+
             // For token+auth output a payment_box containing the direct payment form
             $this->has_fields      = $this->is_s2s;
 
@@ -326,9 +331,10 @@ function gestpay_init_wc_gateway_gestpay() {
 
             if ( function_exists( 'is_checkout' ) && is_checkout() ) {
                 // Include TLS js by Gestpay
-                wp_enqueue_script( 'gestpay-TLSCHK_TE', '//sandbox.gestpay.net/pagam/javascript/TLSCHK_TE.js', array(), '201804', true );
-                wp_enqueue_script( 'gestpay-TLSCHK_PRO', '//ecomm.sella.it/pagam/javascript/TLSCHK_PRO.js', array(), '201804', true );
+                error_log('Gestpay Scripts - Caricamento script TLS e browser check');
                 wp_enqueue_script( 'gestpay-checkBrowser', '//www.gestpay.it/checkbrowser/checkBrowser.js', array(), '201804', true );
+                wp_enqueue_script( 'gestpay-TLSCHK_TE', '//sandbox.gestpay.net/pagam/javascript/TLSCHK_TE.js', array('gestpay-checkBrowser'), '201804', true );
+                wp_enqueue_script( 'gestpay-TLSCHK_PRO', '//ecomm.sella.it/pagam/javascript/TLSCHK_PRO.js', array('gestpay-checkBrowser'), '201804', true );
             }
 
             add_action( 'woocommerce_review_order_before_payment', array( $this, 'check_tls12' ) );

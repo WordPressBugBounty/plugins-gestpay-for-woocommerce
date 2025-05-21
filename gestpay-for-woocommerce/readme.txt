@@ -4,7 +4,7 @@ Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay start
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to: 6.8
-Stable tag: 20250520
+Stable tag: 20250521
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 3.0
@@ -67,6 +67,17 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
 
 == Changelog ==
+= 20250521 =
+* Fix: Improved iframe payment loading and stability
+  - Fixed JavaScript loading order for payment scripts
+  - Added robust BrowserEnabled check
+  - Optimized iframe initialization code
+  - Fixed "BrowserEnabled is not defined" error
+* Security: Nothing added
+* Improvement: Enhanced payment iframe reliability
+* Checks: Verified compatibility with WordPress 6.8, WooCommerce 9.4.2
+* Note: This update improves the payment iframe stability and fixes loading issues
+
 = 20250520 =
 * Security: enforced CSRF protection
 * Fix: IPv6 warning (not fully supported yet)

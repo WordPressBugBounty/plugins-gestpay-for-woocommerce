@@ -114,16 +114,19 @@ class Gestpay_Iframe {
      * Generate the receipt page
      */
     public function receipt_page( $order ) {
-
+        error_log('Gestpay iFrame - Inizio receipt_page');
         $encString = $this->retrieve_encoded_string( $order );
+        error_log('Gestpay iFrame - Stringa crittografata: ' . $encString);
 
         // Maybe get the paRes parameter for 2nd call, due to 3D enrolled credit card
         $paRes = ! empty( $_REQUEST["PaRes"] ) ? sanitize_text_field( wp_unslash( $_REQUEST["PaRes"] ) ) : "";
         $transKey = ! empty( $_COOKIE['TransKey'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['TransKey'] ) ) : "";
+        error_log('Gestpay iFrame - paRes: ' . $paRes . ', transKey: ' . $transKey);
 
         // Output the HTML for the iFrame payment box.
         require_once 'checkout-payment-fields.php';
         wp_enqueue_script( 'gestpay-for-woocommerce-iframe-js', $this->Gestpay->iframe_url );
+        error_log('Gestpay iFrame - Script iframe caricato: ' . $this->Gestpay->iframe_url);
         ?>
 
         <script type="text/javascript">
@@ -277,25 +280,25 @@ class Gestpay_Iframe {
             return false;
         }
 
-        if ( BrowserEnabled ) {
-            // Check if the browser support HTML5 postmessage
+        jQuery(document).ready(function($) {
+            if (typeof BrowserEnabled !== 'undefined' && BrowserEnabled) {
+                // Check if the browser support HTML5 postmessage
+                var a = '<?php echo esc_js( $this->Gestpay->shopLogin ); ?>';
+                var b = '<?php echo esc_js( $encString ); ?>';
 
-            var a = '<?php echo esc_js( $this->Gestpay->shopLogin ); ?>';
-            var b = '<?php echo esc_js( $encString ); ?>';
+                // Create the iFrame
+                GestPay.CreatePaymentPage( a, b, GestpayIframe.PaymentPageLoad );
 
-            // Create the iFrame
-            GestPay.CreatePaymentPage( a, b, GestpayIframe.PaymentPageLoad );
-
-            // Raise the Overlap layer and text
-            document.getElementById( 'gestpay-freeze-pane' ).className = 'gestpay-freeze-pane-on';
-            document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_loading'] ); ?>';
-            document.getElementById( 'gestpay-inner-freeze-pane' ).className = 'gestpay-on';
-        }
-        else {
-            document.getElementById( 'gestpay-error-box' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_browser_err'] ); ?>';
-            document.getElementById( 'gestpay-error-box' ).className = 'gestpay-on';
-        }
-
+                // Raise the Overlap layer and text
+                document.getElementById( 'gestpay-freeze-pane' ).className = 'gestpay-freeze-pane-on';
+                document.getElementById( 'gestpay-inner-freeze-pane-text' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_loading'] ); ?>';
+                document.getElementById( 'gestpay-inner-freeze-pane' ).className = 'gestpay-on';
+            }
+            else {
+                document.getElementById( 'gestpay-error-box' ).innerHTML = '<?php echo esc_js( $this->Gestpay->strings['iframe_browser_err'] ); ?>';
+                document.getElementById( 'gestpay-error-box' ).className = 'gestpay-on';
+            }
+        });
         </script>
 
         <?php
