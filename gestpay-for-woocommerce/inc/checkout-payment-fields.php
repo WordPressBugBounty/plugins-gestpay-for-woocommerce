@@ -224,7 +224,7 @@ if ( $this->Gestpay->is_sandbox ) : ?>
             <input type="text" class="input-text" name="gestpay-cc-cvv" id="gestpay-cc-cvv" placeholder="" value="" autocomplete="nope" data-encrypted-name="cvv" style="width:60px;" maxlength="4">
 
             <span class="description">
-                <?php echo esc_html( apply_filters( 'gestpay_cvv_fancybox', $fancy_info ) ); ?>
+                <?php echo wp_kses_post( apply_filters( 'gestpay_cvv_fancybox', $fancy_info ) ); ?>
             </span>
 
         </p>
