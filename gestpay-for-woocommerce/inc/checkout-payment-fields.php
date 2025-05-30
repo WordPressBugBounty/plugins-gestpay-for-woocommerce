@@ -82,6 +82,7 @@ if ( $this->Gestpay->is_sandbox ) : ?>
         <div class="clear"></div>
         <?php
             $wc_gestpay_cc_default = get_user_meta( get_current_user_id(), '_wc_gestpay_cc_default', true );
+            $card_index = 0;
             foreach ( $cards as $card ) :
 
                 // Add asterisks to the token, because the alphabetic maskedpan is not useful for the user.
@@ -99,15 +100,17 @@ if ( $this->Gestpay->is_sandbox ) : ?>
                     esc_html( $card['month'] ),
                     esc_html( $card['year'] )
                 );
+
+                $crypted = $this->Gestpay->Helper->crypt_token($card['token']);
             ?>
             <input type="radio"
-                id="gestpay-s2s-cc-token-<?php echo esc_attr( $card['token'] ); ?>"
+                id="gestpay-s2s-cc-token-<?php echo esc_attr( $card_index ); ?>"
                 class="gestpay-s2s-card-selection"
                 name="gestpay-s2s-cc-token"
                 style="width:auto;display:inline-block;"
-                value="<?php echo esc_attr( $card['token']); ?>" <?php checked( $this_cc_is_checked ); ?> />
+                value="<?php echo esc_attr( $crypted ); ?>" <?php checked( $this_cc_is_checked ); ?> />
 
-            <label style="display:inline;" for="gestpay-s2s-cc-token-<?php echo esc_attr( $card['token'] ); ?>"><?php echo esc_html( $expir_str ); ?></label>
+            <label style="display:inline;" for="gestpay-s2s-cc-token-<?php echo esc_attr( $card_index++ ); ?>"><?php echo esc_html( $expir_str ); ?></label>
             <br />
 
         <?php endforeach; ?>

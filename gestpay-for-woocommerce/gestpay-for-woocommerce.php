@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20250523
+ * Version: 20250530
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
@@ -61,6 +61,10 @@ define( 'GESTPAY_ORDER_META_BANK_TID', '_wc_gestpay_banktid' );
 define( 'GESTPAY_ORDER_META_AUTH_CODE', '_wc_gestpay_authcode' );
 
 define( 'GESTPAY_WC_API', 'WC_Gateway_Gestpay' );
+
+// Used to crypt the token
+define( 'GESTPAY_SECRET_KEY_1', 'gestpay_secret_key_1' );
+define( 'GESTPAY_SECRET_KEY_2', 'gestpay_secret_key_2' );
 
 // Immediately require these files
 require_once 'inc/class-gestpay-endpoint.php';
@@ -328,6 +332,15 @@ function gestpay_init_wc_gateway_gestpay() {
             add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
             add_action( 'woocommerce_api_' . strtolower( get_class( $this ) ), array( $this, 'check_gateway_response' ) );
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+            
+            if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+                // Include TLS js by Gestpay
+                wp_enqueue_script( 'gestpay-TLSCHK_TE', '//sandbox.gestpay.net/pagam/javascript/TLSCHK_TE.js', array(), time(), true );
+                wp_enqueue_script( 'gestpay-TLSCHK_PRO', '//ecomm.sella.it/pagam/javascript/TLSCHK_PRO.js', array(), time(), true );
+                wp_enqueue_script( 'gestpay-checkBrowser', '//www.gestpay.it/checkbrowser/checkBrowser.js', array('gestpay-TLSCHK_TE','gestpay-TLSCHK_PRO'), time(), true );
+            }
+
+            add_action( 'woocommerce_review_order_before_payment', array( $this, 'check_tls12' ) );
 
             // Do not allow subscriptions payments with other payment types.
             add_filter( 'woocommerce_available_payment_gateways', array( $this, 'available_payment_gateways' ), 99, 1 );

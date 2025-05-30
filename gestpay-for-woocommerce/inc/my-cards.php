@@ -59,6 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     foreach ( $cards as $card ) :
         // replace token letters with asterisks
         $show_card = substr_replace( $card['token'], '**********', 2, -4 );
+        $crypted = $this->Gestpay->Helper->crypt_token($card['token']);
         ?>
 
         <tr class="gestpay-s2s-card">
@@ -79,7 +80,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                 <img src="<?php echo esc_url( $delete_img ); ?>"
                     class="wc-gestpay-s2s-delete"
-                    data-token="<?php echo esc_attr( $card['token'] ); ?>"
+                    data-token="<?php echo esc_attr( $crypted ); ?>"
                     alt="<?php echo esc_attr( $trans_str['s2s_token_delete'] ); ?>"
                     style="display: inline;" />
 
@@ -90,7 +91,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                     <img src="<?php echo esc_url( $unchecked_img ); ?>"
                         class="wc-gestpay-s2s-set"
-                        data-token="<?php echo esc_attr( $card['token'] ); ?>"
+                        data-token="<?php echo esc_attr( $crypted ); ?>"
                         alt="<?php echo esc_attr( $trans_str['s2s_token_add_default'] ); ?>"
                         style="display: inline;" />
 
@@ -98,7 +99,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
                     <img src="<?php echo esc_url( $checked_img ); ?>"
                         class="wc-gestpay-s2s-unset"
-                        data-token="<?php echo esc_attr( $card['token'] ); ?>"
+                        data-token="<?php echo esc_attr( $crypted ); ?>"
                         alt="<?php echo esc_attr( $trans_str['s2s_token_remove_default'] ); ?>"
                         style="display: inline;" />
 

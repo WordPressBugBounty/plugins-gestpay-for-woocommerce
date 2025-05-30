@@ -4,7 +4,7 @@ Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay start
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to: 6.8
-Stable tag: 20250523
+Stable tag: 20250530
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 3.0
@@ -67,6 +67,16 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
 
 == Changelog ==
+
+= 20250530 =
+* Security: Impreved Credit card tokens encryption
+* Security: Improved AJAX/CSRF security
+* Fix: 3DS2 payment flows issues fixed
+* Fix: Improved TLS 1.2 connection handling
+* Fix: Corrected IPv6 handling message
+* Fix: PHP Warning: Undefined property: Gestpay_Cards::$current_user_id
+* Fix: Notice: Function _load_textdomain_just_in_time was called incorrectly
+* Checks: Verified compatibility with WordPress 6.8, WooCommerce 9.4.2
 
 = 20250523 =
 * Fix: Fixed CVV label HTML output in iframe mode

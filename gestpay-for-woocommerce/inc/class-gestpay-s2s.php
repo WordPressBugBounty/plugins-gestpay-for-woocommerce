@@ -52,6 +52,7 @@ class Gestpay_S2S {
     function validate_payment_fields() {
 
         // Skip validation if reusing a token
+        // Here there is no need to decrypt the token
         $cc_token = $this->Helper->get_post_params( 'gestpay-s2s-cc-token' );
         if ( !empty( $cc_token ) && $cc_token != 'new-card' ) {
             return TRUE;
@@ -114,12 +115,14 @@ class Gestpay_S2S {
             $token = $this->Helper->get_post_params( 'gestpay-s2s-cc-token' );
             if ( ! empty( $token ) && $token != 'new-card' ) {
 
-                $this->Helper->log_add( '[reusing token]: ' . $token );
+                $decrypted_token = $this->Helper->decrypt_token( $token );
+
+                $this->Helper->log_add( '[reusing token]: ' . $decrypted_token );
 
                 if ( !empty( $this->Subscr->saved_cards ) ) {
                     $card_token = array();
                     foreach ( $this->Subscr->saved_cards as $card ) {
-                        if ( $card['token'] == $token ) {
+                        if ( $card['token'] == $decrypted_token ) {
                             $card_token = $card;
                             break;
                         }
@@ -129,7 +132,7 @@ class Gestpay_S2S {
                 }
 
                 // Add the token to the parameters, so that it will be used to make the first payment
-                $s2s_payment_params['token'] = $token;
+                $s2s_payment_params['token'] = $decrypted_token;
             }
         }
 

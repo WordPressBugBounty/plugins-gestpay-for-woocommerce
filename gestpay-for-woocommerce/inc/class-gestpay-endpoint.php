@@ -21,9 +21,7 @@ class Gestpay_Endpoint {
      */
     public function __construct() {
 
-        load_plugin_textdomain( 'gestpay-for-woocommerce', false, dirname( plugin_basename( GESTPAY_MAIN_FILE ) ) . "/languages" );
-
-        $this->title = __( 'Stored Cards', 'gestpay-for-woocommerce' );
+        add_action('init', array($this, 'set_title'));
 
         // Actions used to insert a new endpoint in the WordPress.
         add_action( 'init', array( $this, 'add_endpoint' ) );
@@ -34,6 +32,11 @@ class Gestpay_Endpoint {
 
         // Add new tab/page into the My Account page.
         add_filter( 'woocommerce_account_menu_items', array( $this, 'new_menu_items' ) );
+    }
+
+    public function set_title() {
+        load_plugin_textdomain( 'gestpay-for-woocommerce', false, dirname( plugin_basename( GESTPAY_MAIN_FILE ) ) . "/languages" );
+        $this->title = __( 'Stored Cards', 'gestpay-for-woocommerce' );
     }
 
     /**

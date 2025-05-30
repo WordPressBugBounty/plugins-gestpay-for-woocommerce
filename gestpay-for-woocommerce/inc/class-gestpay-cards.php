@@ -28,10 +28,9 @@ class Gestpay_Cards {
     public function __construct( $gestpay ) {
 
         $this->Gestpay = $gestpay;
+        $this->current_user_id = get_current_user_id();
 
         if ( ! is_admin() ) {
-            $this->current_user_id = get_current_user_id();
-
             add_action( 'woocommerce_account_' . GESTPAY_ACCOUNT_TOKENS_ENDPOINT . '_endpoint', array( $this, 'endpoint_content' ) );
         }
     }
@@ -40,6 +39,10 @@ class Gestpay_Cards {
      * Endpoint HTML content.
      */
     public function endpoint_content() {
+
+        if ( ! $this->current_user_id ) {
+            return;
+        }
 
         // Variables used inside the template "my-cards"
         $trans_str = $this->Gestpay->strings;
@@ -63,6 +66,9 @@ class Gestpay_Cards {
     }
 
     public function get_cards() {
+        if ( ! $this->current_user_id ) {
+            return array();
+        }
         return $this->can_use_token() ? get_user_meta( $this->current_user_id, GESTPAY_META_TOKEN, true ) : array();
     }
 
@@ -99,12 +105,18 @@ class Gestpay_Cards {
 
         if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
-                $token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
+                $crypted_token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
+
+                if (!class_exists('WC_Gateway_GestPay_Helper')) {
+                    include_once(__DIR__ . '/helper.php');
+                }
+                $helper = new WC_Gateway_GestPay_Helper();
+                $decrypted_token = $helper->decrypt_token( $crypted_token );
                 $uid = get_current_user_id();
-    
+
                 if ( $cards = get_user_meta( $uid, GESTPAY_META_TOKEN, true ) ) {
-                    if ( isset( $cards[$token] ) ) {
-                        unset( $cards[$token] );
+                    if ( isset( $cards[$decrypted_token] ) ) {
+                        unset( $cards[$decrypted_token] );
                         update_user_meta( $uid, GESTPAY_META_TOKEN, $cards );
     
                         // May we have to delete also the token from all order metas? For now not.
@@ -120,7 +132,14 @@ class Gestpay_Cards {
 
         if ( isset( $_POST['security'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'card-manage' ) ) {
             if ( isset( $_POST['token'] ) ) {
-                update_user_meta( get_current_user_id(), '_wc_gestpay_cc_default', sanitize_text_field( wp_unslash( $_POST['token'] ) ) );
+                $crypted_token = sanitize_text_field( wp_unslash( $_POST['token'] ) );
+
+                if (!class_exists('WC_Gateway_GestPay_Helper')) {
+                    include_once(__DIR__ . '/helper.php');
+                }
+                $helper = new WC_Gateway_GestPay_Helper();
+                $decrypted_token = $helper->decrypt_token( $crypted_token );
+                update_user_meta( get_current_user_id(), '_wc_gestpay_cc_default', $decrypted_token );
             }    
             wp_die();
         }
