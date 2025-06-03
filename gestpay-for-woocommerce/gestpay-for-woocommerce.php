@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20250530
+ * Version: 20250603
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
@@ -216,10 +216,10 @@ function gestpay_init_wc_gateway_gestpay() {
             $this->is_iframe       = GESTPAY_PRO_TOKEN_IFRAME == $this->account;
             $this->is_tokenization = $this->is_s2s || $this->is_iframe;
 
-            error_log('Gestpay Config - Account type: ' . $this->account);
-            error_log('Gestpay Config - is_s2s: ' . ($this->is_s2s ? 'true' : 'false'));
-            error_log('Gestpay Config - is_iframe: ' . ($this->is_iframe ? 'true' : 'false'));
-            error_log('Gestpay Config - is_tokenization: ' . ($this->is_tokenization ? 'true' : 'false'));
+            //error_log('Gestpay Config - Account type: ' . $this->account);
+            //error_log('Gestpay Config - is_s2s: ' . ($this->is_s2s ? 'true' : 'false'));
+            //error_log('Gestpay Config - is_iframe: ' . ($this->is_iframe ? 'true' : 'false'));
+            //error_log('Gestpay Config - is_tokenization: ' . ($this->is_tokenization ? 'true' : 'false'));
 
             // For token+auth output a payment_box containing the direct payment form
             $this->has_fields      = $this->is_s2s;

@@ -114,19 +114,19 @@ class Gestpay_Iframe {
      * Generate the receipt page
      */
     public function receipt_page( $order ) {
-        error_log('Gestpay iFrame - Inizio receipt_page');
+        //error_log('Gestpay iFrame - Inizio receipt_page');
         $encString = $this->retrieve_encoded_string( $order );
-        error_log('Gestpay iFrame - Stringa crittografata: ' . $encString);
+        //error_log('Gestpay iFrame - Stringa crittografata: ' . $encString);
 
         // Maybe get the paRes parameter for 2nd call, due to 3D enrolled credit card
         $paRes = ! empty( $_REQUEST["PaRes"] ) ? sanitize_text_field( wp_unslash( $_REQUEST["PaRes"] ) ) : "";
         $transKey = ! empty( $_COOKIE['TransKey'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['TransKey'] ) ) : "";
-        error_log('Gestpay iFrame - paRes: ' . $paRes . ', transKey: ' . $transKey);
+        //error_log('Gestpay iFrame - paRes: ' . $paRes . ', transKey: ' . $transKey);
 
         // Output the HTML for the iFrame payment box.
         require_once 'checkout-payment-fields.php';
         wp_enqueue_script( 'gestpay-for-woocommerce-iframe-js', $this->Gestpay->iframe_url );
-        error_log('Gestpay iFrame - Script iframe caricato: ' . $this->Gestpay->iframe_url);
+        //error_log('Gestpay iFrame - Script iframe caricato: ' . $this->Gestpay->iframe_url);
         ?>
 
         <script type="text/javascript">
