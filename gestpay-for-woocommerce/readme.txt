@@ -4,7 +4,7 @@ Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay start
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to: 6.8.2
-Stable tag: 20250911
+Stable tag: 20250912
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 3.0
@@ -67,6 +67,17 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
 
 == Changelog ==
+
+= 20250912 =
+* Fix: Critical bug fix for WooCommerce Blocks integration
+  - Fixed fatal error when Blocks integration files are missing on server
+  - Added file existence checks before requiring Blocks integration files
+  - Implemented graceful fallback to prevent site crashes
+  - Enhanced error logging for debugging deployment issues
+* Security: Nothing added
+* Improvement: Improved deployment reliability and error handling
+* Checks: Verified compatibility with WordPress 6.8.2, WooCommerce 10.0.4
+* Note: This hotfix resolves the critical issue that caused site crashes in production
 
 = 20250911 =
 * Feature: Added WooCommerce Blocks support for credit card and PayPal payments

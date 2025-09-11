@@ -1,0 +1,182 @@
+/**
+ * Gestpay for WooCommerce - Blocks Styles
+ *
+ * @package Gestpay_For_WooCommerce
+ * @since 20250912
+ */
+
+/* Gestpay Payment Method Container */
+.gestpay-payment-method-content {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  margin-bottom: 15px;
+}
+
+/* Payment Method Icon */
+.gestpay-payment-method-icon {
+  margin: 10px 0;
+}
+
+.gestpay-payment-method-icon img {
+  max-height: 40px;
+  max-width: 100%;
+  height: auto;
+  margin-right: 2px;
+}
+
+/* Credit Card Form Styles */
+.gestpay-credit-card-form {
+  margin-top: 15px;
+}
+
+.gestpay-credit-card-form .form-row {
+  margin-bottom: 15px;
+}
+
+.gestpay-credit-card-form .form-row label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+.gestpay-credit-card-form .form-row input,
+.gestpay-credit-card-form .form-row select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.gestpay-credit-card-form .form-row input:focus,
+.gestpay-credit-card-form .form-row select:focus {
+  outline: none;
+  border-color: #0073aa;
+  box-shadow: 0 0 0 1px #0073aa;
+}
+
+.gestpay-credit-card-form .form-row input:disabled,
+.gestpay-credit-card-form .form-row select:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Two column layout for expiry and CVV */
+.gestpay-credit-card-form .form-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Error Message */
+.gestpay-error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* Checkbox Label */
+.gestpay-credit-card-form .checkbox-label {
+  display: flex !important;
+  align-items: center;
+  font-weight: normal !important;
+  cursor: pointer;
+}
+
+.gestpay-credit-card-form .checkbox-label input[type="checkbox"] {
+  width: auto !important;
+  margin-right: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .gestpay-credit-card-form .form-row-two {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .gestpay-payment-method-content {
+    padding: 10px;
+  }
+}
+
+/* Loading State */
+.gestpay-credit-card-form.processing {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Success State */
+.gestpay-credit-card-form.success {
+  border-color: #28a745;
+}
+
+/* Admin Edit Mode */
+.gestpay-payment-method-edit {
+  padding: 15px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.gestpay-payment-method-edit p {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+/* WooCommerce Blocks Integration */
+.wc-block-components-payment-method-interface .gestpay-payment-method-content {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wc-block-components-payment-method-interface .gestpay-credit-card-form {
+  margin-top: 10px;
+}
+
+.wc-block-components-payment-method-interface
+  .gestpay-credit-card-form
+  .form-row {
+  margin-bottom: 12px;
+}
+
+.wc-block-components-payment-method-interface
+  .gestpay-credit-card-form
+  .form-row
+  input,
+.wc-block-components-payment-method-interface
+  .gestpay-credit-card-form
+  .form-row
+  select {
+  padding: 8px 12px;
+  font-size: 16px; /* Better for mobile */
+}
+
+/* Focus states for accessibility */
+.gestpay-credit-card-form .form-row input:focus,
+.gestpay-credit-card-form .form-row select:focus {
+  border-color: #007cba;
+  box-shadow: 0 0 0 1px #007cba;
+}
+
+/* Card number formatting */
+.gestpay-credit-card-form input[name="gestpay_card_number"] {
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+/* CVV field */
+.gestpay-credit-card-form input[name="gestpay_cvv"] {
+  font-family: monospace;
+  letter-spacing: 2px;
+}

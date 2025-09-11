@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20250911
+ * Version: 20250912
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
@@ -217,10 +217,6 @@ function gestpay_init_wc_gateway_gestpay() {
             $this->is_iframe       = GESTPAY_PRO_TOKEN_IFRAME == $this->account;
             $this->is_tokenization = $this->is_s2s || $this->is_iframe;
 
-            //error_log('Gestpay Config - Account type: ' . $this->account);
-            //error_log('Gestpay Config - is_s2s: ' . ($this->is_s2s ? 'true' : 'false'));
-            //error_log('Gestpay Config - is_iframe: ' . ($this->is_iframe ? 'true' : 'false'));
-            //error_log('Gestpay Config - is_tokenization: ' . ($this->is_tokenization ? 'true' : 'false'));
 
             // For token+auth output a payment_box containing the direct payment form
             $this->has_fields      = $this->is_s2s;
@@ -1071,7 +1067,16 @@ function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
         
         // Register the main Gestpay payment method
         if ( ! class_exists( 'Gestpay_Blocks_Integration' ) ) {
-            require_once plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-blocks-integration.php';
+            $blocks_integration_file = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-blocks-integration.php';
+            if ( file_exists( $blocks_integration_file ) ) {
+                require_once $blocks_integration_file;
+            } else {
+                // Log error and skip registration if file doesn't exist
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                    error_log( 'Gestpay Blocks Integration: File not found - ' . $blocks_integration_file );
+                }
+                return;
+            }
         }
         
         if ( class_exists( 'Gestpay_Blocks_Integration' ) ) {
@@ -1084,7 +1089,16 @@ function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
         
         // Register the PayPal payment method
         if ( ! class_exists( 'Gestpay_PayPal_Blocks_Integration' ) ) {
-            require_once plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-paypal-blocks-integration.php';
+            $paypal_blocks_integration_file = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-paypal-blocks-integration.php';
+            if ( file_exists( $paypal_blocks_integration_file ) ) {
+                require_once $paypal_blocks_integration_file;
+            } else {
+                // Log error and skip registration if file doesn't exist
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                    error_log( 'Gestpay PayPal Blocks Integration: File not found - ' . $paypal_blocks_integration_file );
+                }
+                return;
+            }
         }
         
         if ( class_exists( 'Gestpay_PayPal_Blocks_Integration' ) ) {
@@ -1121,7 +1135,7 @@ function gestpay_enqueue_blocks_styles() {
             'gestpay-blocks-styles',
             plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-blocks.css',
             array(),
-            '20250911'
+            '20250603'
         );
     }
     
@@ -1132,7 +1146,7 @@ function gestpay_enqueue_blocks_styles() {
             'gestpay-paypal-blocks-styles',
             plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-paypal-blocks.css',
             array(),
-            '20250911'
+            '20250603'
         );
     }
 }
