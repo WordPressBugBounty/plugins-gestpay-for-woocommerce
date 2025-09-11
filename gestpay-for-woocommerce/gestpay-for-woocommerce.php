@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20250603
+ * Version: 20250911
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
@@ -75,10 +75,11 @@ require_once 'inc/class-gestpay-3DS2.php';
 add_action( 'plugins_loaded', 'gestpay_init_wc_gateway_gestpay' );
 
 add_action( 'before_woocommerce_init', function() {
-	if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
-	}
-} );
+    if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
+    }
+});
 
 function gestpay_init_wc_gateway_gestpay() {
 
@@ -179,7 +180,7 @@ function gestpay_init_wc_gateway_gestpay() {
             $this->id           = strtolower( get_class( $this ) );
             $this->textdomain   = $this->Helper->plugin_slug;
             $this->logfile      = $this->id;
-            $this->logo         = $this->plugin_url . '/images/gestpay-logo.png';
+            $this->logo         = $this->plugin_url . 'images/gestpay-logo.png';
             $this->method_title = $title;
         }
 
@@ -964,6 +965,81 @@ function wc_gateway_gestpay_ajax_delete_s2s() {
 }
 
 /**
+ * Handle PayPal payment processing from blocks checkout
+ */
+add_action( 'template_redirect', 'wc_gateway_gestpay_handle_blocks_paypal_payment' );
+function wc_gateway_gestpay_handle_blocks_paypal_payment() {
+    
+    // Only handle on checkout page
+    if ( ! is_checkout() ) {
+        return;
+    }
+    
+    // Check if this is a PayPal blocks payment
+    if ( ! isset( $_GET['gestpay_payment_type'] ) || $_GET['gestpay_payment_type'] !== 'PAYPAL' ) {
+        return;
+    }
+    
+    if ( ! isset( $_GET['gestpay_blocks'] ) || $_GET['gestpay_blocks'] !== '1' ) {
+        return;
+    }
+    
+    if ( ! isset( $_GET['payment_method'] ) || $_GET['payment_method'] !== 'wc_gateway_gestpay_paypal' ) {
+        return;
+    }
+    
+    // Check if cart is not empty
+    if ( WC()->cart->is_empty() ) {
+        wc_add_notice( 'Your cart is empty.', 'error' );
+        wp_redirect( wc_get_cart_url() );
+        exit;
+    }
+    
+    // Create order
+    $order = wc_create_order();
+    
+    // Add items from cart
+    foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+        $order->add_product(
+            $cart_item['data'],
+            $cart_item['quantity']
+        );
+    }
+    
+    // Set payment method
+    $order->set_payment_method( 'wc_gateway_gestpay_paypal' );
+    
+    // Set billing and shipping addresses
+    $order->set_address( WC()->customer->get_billing(), 'billing' );
+    $order->set_address( WC()->customer->get_shipping(), 'shipping' );
+    
+    // Calculate totals
+    $order->calculate_totals();
+    
+    // Process payment with PayPal gateway
+    if ( class_exists( 'WC_Gateway_Gestpay_PAYPAL' ) ) {
+        $paypal_gateway = new WC_Gateway_Gestpay_PAYPAL();
+        $result = $paypal_gateway->process_payment( $order->get_id() );
+        
+        if ( isset( $result['result'] ) && $result['result'] === 'success' ) {
+            // Payment successful, redirect to payment page
+            wp_redirect( $result['redirect'] );
+            exit;
+        } else {
+            // Payment failed
+            wc_add_notice( 'Payment processing failed. Please try again.', 'error' );
+            wp_redirect( wc_get_checkout_url() );
+            exit;
+        }
+    } else {
+        // PayPal gateway not available
+        wc_add_notice( 'PayPal payment method is not available.', 'error' );
+        wp_redirect( wc_get_checkout_url() );
+        exit;
+    }
+}
+
+/**
  * Add this action to listen for the order status manually changed
  */
 add_action( 'woocommerce_order_edit_status', 'wc_gateway_gestpay_woocommerce_order_edit_status', 10, 2 );
@@ -971,5 +1047,93 @@ function wc_gateway_gestpay_woocommerce_order_edit_status( $order_id, $new_statu
 
     $Gestpay = new WC_Gateway_Gestpay();
     $Gestpay->Order_Actions->wc_order_edit_status( $order_id, $new_status );
+}
+
+/**
+ * Register Gestpay payment methods for WooCommerce Blocks
+ */
+add_action( 'woocommerce_blocks_payment_method_type_registration', 'gestpay_register_blocks_payment_methods', 10 );
+function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
+    
+    // Only register if WooCommerce Blocks is active
+    if ( ! class_exists( 'Automattic\WooCommerce\Blocks\Assets\Api' ) ) {
+        return;
+    }
+    
+    // Only register if WooCommerce is fully loaded
+    if ( ! function_exists( 'WC' ) || ! WC() ) {
+        return;
+    }
+    
+    try {
+        // Get the Asset API instance
+        $asset_api = \Automattic\WooCommerce\Blocks\Package::container()->get( \Automattic\WooCommerce\Blocks\Assets\Api::class );
+        
+        // Register the main Gestpay payment method
+        if ( ! class_exists( 'Gestpay_Blocks_Integration' ) ) {
+            require_once plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-blocks-integration.php';
+        }
+        
+        if ( class_exists( 'Gestpay_Blocks_Integration' ) ) {
+            $payment_method_registry->register( new Gestpay_Blocks_Integration( $asset_api ) );
+            
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'Gestpay Blocks Integration: Main payment method registered successfully' );
+            }
+        }
+        
+        // Register the PayPal payment method
+        if ( ! class_exists( 'Gestpay_PayPal_Blocks_Integration' ) ) {
+            require_once plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-paypal-blocks-integration.php';
+        }
+        
+        if ( class_exists( 'Gestpay_PayPal_Blocks_Integration' ) ) {
+            $payment_method_registry->register( new Gestpay_PayPal_Blocks_Integration( $asset_api ) );
+            
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'Gestpay Blocks Integration: PayPal payment method registered successfully' );
+            }
+        }
+        
+    } catch ( Exception $e ) {
+        // Log error if debug is enabled
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            error_log( 'Gestpay Blocks Integration Error: ' . $e->getMessage() );
+        }
+    }
+}
+
+/**
+ * Enqueue Gestpay blocks styles
+ */
+add_action( 'wp_enqueue_scripts', 'gestpay_enqueue_blocks_styles' );
+function gestpay_enqueue_blocks_styles() {
+    
+    // Only enqueue on checkout page or when blocks are active
+    if ( ! is_checkout() && ! has_block( 'woocommerce/checkout' ) ) {
+        return;
+    }
+    
+    // Enqueue main GestPay blocks styles
+    $main_css_path = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-blocks.css';
+    if ( file_exists( $main_css_path ) ) {
+        wp_enqueue_style(
+            'gestpay-blocks-styles',
+            plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-blocks.css',
+            array(),
+            '20250911'
+        );
+    }
+    
+    // Enqueue PayPal blocks styles
+    $paypal_css_path = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-paypal-blocks.css';
+    if ( file_exists( $paypal_css_path ) ) {
+        wp_enqueue_style(
+            'gestpay-paypal-blocks-styles',
+            plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-paypal-blocks.css',
+            array(),
+            '20250911'
+        );
+    }
 }
 

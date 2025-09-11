@@ -3,12 +3,12 @@ Contributors: easynolo, netingweb
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo, netingweb, axerve, netingweb, fabrick, iframe, direct payment gateway
 Requires at least: 4.7
 Requires PHP: 7.0
-Tested up to: 6.8
-Stable tag: 20250603
+Tested up to: 6.8.2
+Stable tag: 20250911
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 3.0
-WC tested up to: 9.4.2
+WC tested up to: 10.0.4
 
 Axerve Free Plugin for Woocommerce extends WooCommerce providing the payment gateway Axerve.
 
@@ -67,6 +67,19 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
 
 == Changelog ==
+
+= 20250911 =
+* Feature: Added WooCommerce Blocks support for credit card and PayPal payments
+  - Integrated GestPay payment methods with WooCommerce Blocks checkout
+  - Added support for credit card payments in blocks checkout
+  - Added support for PayPal payments in blocks checkout
+  - Enhanced checkout experience with modern block-based interface
+  - Note: Support for other payment methods in blocks will be added in future releases
+* Fix: Nothing added
+* Security: Nothing added
+* Improvement: Enhanced checkout experience with blocks integration
+* Checks: Verified compatibility with WordPress 6.8.2, WooCommerce 10.0.4
+* Note: This release enables seamless integration of GestPay payments in WooCommerce Blocks checkout
 
 = 20250603 =
 * Fix: Removed unnecessary error_log messages that were causing log file inflation

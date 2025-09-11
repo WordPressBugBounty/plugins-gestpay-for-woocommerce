@@ -135,7 +135,7 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
 
         $mybank_url = '<a href="https://mybank.eu" target="_blank" title="MyBank"><strong>mybank.eu</strong></a>';
         $mybank_banner = '<div id="mybank-container-img"><a href="https://mybank.eu" target="_blank"><img src="'.esc_url( $this->plugin_url . 'images/mybank-tagline-positive-it.png' ).'" style="background-color:#fff!important"/></a></div>';
-        echo wp_kses_post( $mybank_banner ) . '<p>' . esc_html( $this->strings['mybank_payoff'] ) . ' ' . wp_kses_post( $mybank_url ) . '</p>';
+        echo wp_kses_post( $mybank_banner ) . '<p>' . wp_kses_post( $this->strings['mybank_payoff'] ) . ' ' . wp_kses_post( $mybank_url ) . '</p>';
 
         if ( $this->required_selection ) {
             $banks = $this->get_mybanks();

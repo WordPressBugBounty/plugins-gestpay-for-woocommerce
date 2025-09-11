@@ -50,7 +50,6 @@ class Gestpay_S2S {
      * Returns true if the posted credit card fields are valid, false otherwise
      */
     function validate_payment_fields() {
-
         // Skip validation if reusing a token
         // Here there is no need to decrypt the token
         $cc_token = $this->Helper->get_post_params( 'gestpay-s2s-cc-token' );
