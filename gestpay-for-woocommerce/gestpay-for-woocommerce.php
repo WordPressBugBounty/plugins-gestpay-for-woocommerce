@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20250912
+ * Version: 20251002
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
@@ -1108,6 +1108,50 @@ function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
                 error_log( 'Gestpay Blocks Integration: PayPal payment method registered successfully' );
             }
         }
+
+        // Register the Bancomatpay payment method
+        if ( ! class_exists( 'Gestpay_Bancomatpay_Blocks_Integration' ) ) {
+            $bancomatpay_blocks_integration_file = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-bancomatpay-blocks-integration.php';
+            if ( file_exists( $bancomatpay_blocks_integration_file ) ) {
+                require_once $bancomatpay_blocks_integration_file;
+            } else {
+                // Log error and skip registration if file doesn't exist
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                    error_log( 'Gestpay Bancomatpay Blocks Integration: File not found - ' . $bancomatpay_blocks_integration_file );
+                }
+                return;
+            }
+        }
+        
+        if ( class_exists( 'Gestpay_Bancomatpay_Blocks_Integration' ) ) {
+            $payment_method_registry->register( new Gestpay_Bancomatpay_Blocks_Integration( $asset_api ) );
+            
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'Gestpay Blocks Integration: Bancomatpay payment method registered successfully' );
+            }
+        }
+
+        // Register the Consel payment method
+        if ( ! class_exists( 'Gestpay_Consel_Blocks_Integration' ) ) {
+            $consel_blocks_integration_file = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-consel-blocks-integration.php';
+            if ( file_exists( $consel_blocks_integration_file ) ) {
+                require_once $consel_blocks_integration_file;
+            } else {
+                // Log error and skip registration if file doesn't exist
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                    error_log( 'Gestpay Consel Blocks Integration: File not found - ' . $consel_blocks_integration_file );
+                }
+                return;
+            }
+        }
+        
+        if ( class_exists( 'Gestpay_Consel_Blocks_Integration' ) ) {
+            $payment_method_registry->register( new Gestpay_Consel_Blocks_Integration( $asset_api ) );
+            
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'Gestpay Blocks Integration: Consel payment method registered successfully' );
+            }
+        }
         
     } catch ( Exception $e ) {
         // Log error if debug is enabled
@@ -1145,6 +1189,28 @@ function gestpay_enqueue_blocks_styles() {
         wp_enqueue_style(
             'gestpay-paypal-blocks-styles',
             plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-paypal-blocks.css',
+            array(),
+            '20250603'
+        );
+    }
+
+    // Enqueue Bancomatpay blocks styles
+    $bancomatpay_css_path = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-bancomatpay-blocks.css';
+    if ( file_exists( $bancomatpay_css_path ) ) {
+        wp_enqueue_style(
+            'gestpay-bancomatpay-blocks-styles',
+            plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-bancomatpay-blocks.css',
+            array(),
+            '20250603'
+        );
+    }
+
+    // Enqueue Consel blocks styles
+    $consel_css_path = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-consel-blocks.css';
+    if ( file_exists( $consel_css_path ) ) {
+        wp_enqueue_style(
+            'gestpay-consel-blocks-styles',
+            plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-consel-blocks.css',
             array(),
             '20250603'
         );
