@@ -1,0 +1,260 @@
+/**
+ * Gestpay MyBank Blocks Styles
+ *
+ * @package Gestpay_For_WooCommerce
+ * @since 20250912
+ */
+
+.wc-gestpay-mybank-payment-method {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.wc-gestpay-mybank-description {
+  margin-bottom: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.gestpay-mybank-info {
+  margin-bottom: 1rem;
+}
+
+.gestpay-mybank-info #mybank-container-img {
+  margin-bottom: 0.5rem;
+}
+
+.gestpay-mybank-info #mybank-container-img img {
+  max-width: 200px;
+  height: auto;
+  background-color: #fff !important;
+}
+
+.gestpay-mybank-bank-selection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.gestpay-mybank-bank-selection p {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  color: #666;
+}
+
+.gestpay-mybank-bank-selection select {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.gestpay-mybank-bank-selection select:focus {
+  outline: none;
+  border-color: #0070ba;
+  box-shadow: 0 0 0 2px rgba(0, 112, 186, 0.2);
+}
+
+/* SelectWoo styling for MyBank bank selection */
+.gestpay-mybank-bank-selection .select2-container {
+  width: 100% !important;
+  max-width: 400px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+.gestpay-mybank-bank-selection .select2-container .select2-selection--single {
+  height: 42px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 1rem;
+}
+
+.select2-container.select2-container--open .select2-dropdown--below {
+  border: 1px solid #aaa;
+}
+
+.gestpay-mybank-bank-selection
+  .select2-container
+  .select2-selection--single
+  .select2-selection__rendered {
+  padding-left: 12px;
+  padding-right: 20px;
+}
+
+.gestpay-mybank-bank-selection
+  .select2-container
+  .select2-selection--single
+  .select2-selection__arrow {
+  height: 40px;
+  right: 8px;
+}
+
+.gestpay-mybank-bank-selection
+  .select2-container--default.select2-container--focus
+  .select2-selection--single {
+  border-color: #0070ba;
+  box-shadow: 0 0 0 2px rgba(0, 112, 186, 0.2);
+}
+
+.gestpay-mybank-bank-selection .select2-dropdown {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gestpay-mybank-bank-selection .select2-results__option {
+  padding: 8px 12px;
+  font-size: 1rem;
+}
+
+.gestpay-mybank-bank-selection .select2-results__option--highlighted {
+  background-color: #0070ba;
+  color: white;
+}
+
+.gestpay-mybank-bank-selection
+  .select2-search--dropdown
+  .select2-search__field {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  margin: 4px;
+  width: calc(100% - 8px);
+}
+
+.gestpay-mybank-bank-selection .required {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.gestpay-mybank-help {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.gestpay-mybank-help a {
+  color: #0070ba;
+  text-decoration: none;
+}
+
+.gestpay-mybank-help a:hover {
+  text-decoration: underline;
+}
+
+.gestpay-mybank-loading {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #f0f8ff;
+  border: 1px solid #0070ba;
+  border-radius: 4px;
+  color: #0070ba;
+  text-align: center;
+  font-weight: 500;
+}
+
+.wc-gestpay-mybank-sandbox-notice {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f0f0f0;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.wc-gestpay-mybank-payment-method-edit {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+.wc-gestpay-mybank-icon img {
+  max-width: 60px;
+  height: auto;
+}
+
+.wc-gestpay-mybank-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.wc-gestpay-mybank-description {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* MyBank specific styles */
+#gestpay-mybank-sandbox {
+  padding: 10px 20px;
+  background: #ececec;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+#gestpay-mybank-sandbox * {
+  line-height: 1.5;
+}
+
+/* Bank selection styling */
+.gestpay-mybank-banklist {
+  font-family: inherit;
+}
+
+.gestpay-mybank-banklist option {
+  padding: 5px;
+}
+
+/* Responsive design */
+@media (max-width: 960px) {
+  .wc-gestpay-mybank-payment-method-edit {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .gestpay-mybank-bank-selection .select2-container {
+    max-width: 90%;
+  }
+
+  .gestpay-mybank-info #mybank-container-img img {
+    max-width: 150px;
+  }
+}
+
+/* Loading state */
+.gestpay-mybank-loading::before {
+  content: "⏳ ";
+  margin-right: 0.5rem;
+}
+
+/* Error state */
+.gestpay-mybank-error {
+  color: #e74c3c;
+  background: #fdf2f2;
+  border: 1px solid #f5c6cb;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+/* Success state */
+.gestpay-mybank-success {
+  color: #28a745;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}

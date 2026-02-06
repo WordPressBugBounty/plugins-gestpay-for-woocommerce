@@ -34,7 +34,7 @@ if (
     name: "wc_gateway_gestpay",
     label: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay", {}).title ||
-        __("Gestpay", "woocommerce")
+        __("Gestpay", "gestpay-for-woocommerce")
     ),
     content: createElement(GestpayContent),
     edit: createElement(GestpayEdit),
@@ -45,7 +45,7 @@ if (
     },
     ariaLabel: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay", {}).title ||
-        __("Payment via Gestpay", "woocommerce")
+        __("Payment via Gestpay", "gestpay-for-woocommerce")
     ),
     supports: {
       features: getPaymentMethodData("wc_gateway_gestpay", {}).supports || [],
@@ -66,18 +66,21 @@ if (
     const cvvRequired = paymentMethodData.cvvRequired || false;
     const buyerName = paymentMethodData.buyerName || false;
     const expMonthLabel =
-      paymentMethodData.expMonthLabel || __("MM", "woocommerce");
+      paymentMethodData.expMonthLabel || __("MM", "gestpay-for-woocommerce");
     const expYearLabel =
-      paymentMethodData.expYearLabel || __("YY", "woocommerce");
+      paymentMethodData.expYearLabel || __("YY", "gestpay-for-woocommerce");
     const expDateLabel =
-      paymentMethodData.expDateLabel || __("Expiry (MM/YY)", "woocommerce");
+      paymentMethodData.expDateLabel ||
+      __("Expiry (MM/YY)", "gestpay-for-woocommerce");
     const cardholderNameLabel =
       paymentMethodData.cardholderNameLabel ||
-      __("Cardholder Name", "woocommerce");
+      __("Cardholder Name", "gestpay-for-woocommerce");
     const cardNumberLabel =
-      paymentMethodData.cardNumberLabel || __("Card Number", "woocommerce");
+      paymentMethodData.cardNumberLabel ||
+      __("Card Number", "gestpay-for-woocommerce");
     const cardCVVLabel =
-      paymentMethodData.cardCVVLabel || __("Card Code", "woocommerce");
+      paymentMethodData.cardCVVLabel ||
+      __("Card Code", "gestpay-for-woocommerce");
     const infoBox = paymentMethodData.infoBox || "";
     const infoModal = paymentMethodData.infoModal || "";
     const savedCards = paymentMethodData.savedCards;
@@ -94,9 +97,11 @@ if (
     });
     const manageCardsEndpoint = paymentMethodData.manageCardsEndpoint;
     const manageCardsText =
-      paymentMethodData.manageCardsText || __("Manage Cards", "woocommerce");
+      paymentMethodData.manageCardsText ||
+      __("Manage Cards", "gestpay-for-woocommerce");
     const newCardText =
-      paymentMethodData.newCardText || __("New Card", "woocommerce");
+      paymentMethodData.newCardText ||
+      __("New Card", "gestpay-for-woocommerce");
 
     useEffect(() => {
       const unsubscribe = onPaymentSetup(async () => {
@@ -188,6 +193,13 @@ if (
               __html: paymentMethodData.icon || "",
             },
           }),
+          isSandbox &&
+            createElement("p", {
+              key: "sandbox",
+              dangerouslySetInnerHTML: {
+                __html: decodeEntities(paymentMethodData.sandbox || ""),
+              },
+            }),
         ]
       );
     }

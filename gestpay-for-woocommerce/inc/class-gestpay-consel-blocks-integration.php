@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestpay PayPal for WooCommerce - Blocks Integration
+ * Gestpay Consel for WooCommerce - Blocks Integration
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -19,17 +19,17 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 use Automattic\WooCommerce\Blocks\Assets\Api;
 
 /**
- * Gestpay PayPal Blocks Integration
+ * Gestpay Consel Blocks Integration
  *
  * @since 20250912
  */
-final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType {
+final class Gestpay_Consel_Blocks_Integration extends AbstractPaymentMethodType {
     /**
      * Payment method name defined by payment methods extending this class.
      *
      * @var string
      */
-    protected $name = 'wc_gateway_gestpay_paypal';
+    protected $name = 'wc_gateway_gestpay_consel';
 
     /**
      * An instance of the Asset Api
@@ -51,7 +51,7 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
      * Initializes the payment method type.
      */
     public function initialize() {
-        $this->settings = get_option( 'woocommerce_wc_gateway_gestpay_paypal_settings', [] );
+        $this->settings = get_option( 'woocommerce_wc_gateway_gestpay_consel_settings', [] );
     }
 
     /**
@@ -60,13 +60,13 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
      * @return boolean
      */
     public function is_active() {
-        // Check if PayPal is enabled in GestPay Pro settings
-        $paypal_enabled = "yes" === get_option( 'wc_gestpaypro_paypal', 'no' );
+        // Check if Consel is enabled in GestPay Pro settings
+        $consel_enabled = "yes" === get_option( 'wc_gestpaypro_consel', 'no' );
         
         // Check if payment types are enabled
         $payment_types_enabled = "yes" === get_option( 'wc_gestpay_param_payment_types', 'no' );
         
-        return $paypal_enabled && $payment_types_enabled;
+        return $consel_enabled && $payment_types_enabled;
     }
 
     /**
@@ -76,13 +76,13 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
      */
     public function get_payment_method_script_handles() {
         wp_register_script(
-            'wc-payment-method-gestpay-paypal',
-            plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/js/blocks/wc-payment-method-gestpay-paypal.js',
+            'wc-payment-method-gestpay-consel',
+            plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/js/blocks/wc-payment-method-gestpay-consel.js',
             array( 'wc-blocks-registry', 'wc-settings', 'wp-element', 'wp-components', 'wp-blocks', 'wp-data', 'wp-hooks', 'wp-i18n' ),
             '20251028',
             true
         );
-        return [ 'wc-payment-method-gestpay-paypal' ];
+        return [ 'wc-payment-method-gestpay-consel' ];
     }
 
     /**
@@ -92,15 +92,15 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
      */
     public function get_payment_method_data() {
         // Get basic settings
-        $title = $this->get_setting( 'title', 'PayPal' );
-        $description = $this->get_setting( 'description', 'Pay securely with PayPal' );
+        $title = $this->get_setting( 'title', 'Consel' );
+        $description = $this->get_setting( 'description', 'Pay securely with Consel' );
         $account_type = get_option( 'wc_gestpay_account_type', 0 );
         $is_sandbox = "yes" === get_option( 'wc_gestpay_test_url', 'no' );
         
         // Get icon safely
-        if ( class_exists( 'WC_Gateway_Gestpay_PAYPAL' ) && defined( 'GESTPAY_MAIN_FILE' ) ) {
+        if ( class_exists( 'WC_Gateway_Gestpay_CONSEL' ) && defined( 'GESTPAY_MAIN_FILE' ) ) {
             try {
-                $gateway = new WC_Gateway_Gestpay_PAYPAL();
+                $gateway = new WC_Gateway_Gestpay_CONSEL();
                 $icon = $gateway->get_icon();
             } catch ( Exception $e ) {
                 // Fallback
@@ -115,12 +115,12 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
         if ( $is_sandbox ) {
             $sandbox = '
             <style type="text/css">
-                #gestpay-paypal-sandbox{padding:10px 20px;background:#ececec}
-                #gestpay-paypal-sandbox *{line-height:1.5;}
+                #gestpay-consel-sandbox{padding:10px 20px;background:#ececec}
+                #gestpay-consel-sandbox *{line-height:1.5;}
             </style>
-            <p id="gestpay-paypal-sandbox">
+            <p id="gestpay-consel-sandbox">
                 <small>
-                    <strong>PayPal Test Mode</strong>
+                    <strong>Consel Test Mode</strong>
                 </small>
             </p>';
         }
@@ -134,8 +134,8 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
             'isSandbox'   => $is_sandbox,
             'enabled'     => $this->is_active(),
             'sandbox'     => $sandbox,
-            'paymentType' => 'PAYPAL',
-            'redirectUrl' => $this->get_paypal_redirect_url(),
+            'paymentType' => 'CONSEL',
+            'redirectUrl' => $this->get_consel_redirect_url(),
         ];
     }
 
@@ -145,7 +145,7 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
      * @return string[]
      */
     public function get_supported_features() {
-        // PayPal supports products and subscriptions
+        // Consel supports products and subscriptions
         $features = array( 'products' );
         
         // Check if WooCommerce Subscriptions is active
@@ -154,7 +154,7 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
         }
 
         /**
-         * Filter to control what features are available for PayPal payment gateway.
+         * Filter to control what features are available for Consel payment gateway.
          *
          * @since 4.4.0
          *
@@ -166,20 +166,20 @@ final class Gestpay_PayPal_Blocks_Integration extends AbstractPaymentMethodType 
     }
 
     /**
-     * Get PayPal redirect URL for payment processing
+     * Get Consel redirect URL for payment processing
      *
      * @return string
      */
-    private function get_paypal_redirect_url() {
+    private function get_consel_redirect_url() {
         // Get the checkout URL
         $checkout_url = wc_get_checkout_url();
         
-        // Add PayPal-specific parameters
+        // Add Consel-specific parameters
         $redirect_url = add_query_arg(
             array(
-                'gestpay_payment_type' => 'PAYPAL',
+                'gestpay_payment_type' => 'CONSEL',
                 'gestpay_blocks' => '1',
-                'payment_method' => 'wc_gateway_gestpay_paypal',
+                'payment_method' => 'wc_gateway_gestpay_consel',
             ),
             $checkout_url
         );

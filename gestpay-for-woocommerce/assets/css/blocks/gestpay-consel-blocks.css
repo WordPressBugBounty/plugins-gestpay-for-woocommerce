@@ -1,0 +1,90 @@
+/**
+ * Gestpay Consel Blocks Styles
+ *
+ * @package Gestpay_For_WooCommerce
+ * @since 20250912
+ */
+
+.wc-gestpay-consel-payment-method {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.wc-gestpay-consel-description {
+  margin-bottom: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.wc-gestpay-consel-sandbox-notice {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f0f0f0;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.wc-gestpay-consel-button-container {
+  text-align: center;
+}
+
+.wc-gestpay-consel-button {
+  background: #0070ba;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.wc-gestpay-consel-button:hover:not(:disabled) {
+  background: #005ea6;
+}
+
+.wc-gestpay-consel-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.wc-gestpay-consel-payment-method-edit {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+.wc-gestpay-consel-icon img {
+  max-width: 60px;
+  height: auto;
+}
+
+.wc-gestpay-consel-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.wc-gestpay-consel-description {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .wc-gestpay-consel-payment-method-edit {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .wc-gestpay-consel-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}

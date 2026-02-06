@@ -592,24 +592,26 @@ class Gestpay_3DS2 {
         // --- #previousTransDetails ---
         // Contains the details of a previous authenticated transaction for the same cardholder on the same merchant.
         // If present, it can help to increase the chances of a frictionless authentication.
-        $previousTransDetails = array();
+        if ($type === "01N") {
+            $previousTransDetails = array();
 
-        $bankTransactionID = self::get_bankTransactionID( $order, $scheduled_payment );
-        if ( !empty( $bankTransactionID ) ) {
-            $previousTransDetails['bankTransactionID'] = $bankTransactionID;
-        }
+            $bankTransactionID = self::get_bankTransactionID( $order, $scheduled_payment );
+            if ( !empty( $bankTransactionID ) ) {
+                $previousTransDetails['bankTransactionID'] = $bankTransactionID;
+            }
 
-        if ( $ws_type == 'WsS2S' ) { // These are only for WsS2S API
-            $cardholderID = get_current_user_id();
-            self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'authData' );
-            self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'authMethod' );
-            self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'authTimestamp' );
-            self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'acsID' );
-            // - @N/A - XID
-        }
+            if ( $ws_type == 'WsS2S' ) { // These are only for WsS2S API
+                $cardholderID = get_current_user_id();
+                self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'authData' );
+                self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'authMethod' );
+                self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'authTimestamp' );
+                self::maybe_add_user_transDetails( $previousTransDetails, $cardholderID, 'acsID' );
+                // - @N/A - XID
+            }
 
-        if ( !empty( $previousTransDetails ) ) {
-            $params->transDetails['previousTransDetails'] = $previousTransDetails;
+            if ( !empty( $previousTransDetails ) ) {
+                $params->transDetails['previousTransDetails'] = $previousTransDetails;
+            }
         }
 
         $params->OrderDetails = self::get_OrderDetails( $order );

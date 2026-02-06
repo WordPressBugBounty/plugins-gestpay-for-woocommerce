@@ -4,9 +4,6 @@ var GestpayIframe = {};
  * Handle asynchronous security check result for the 1st and 2nd page load.
  */
 GestpayIframe.PaymentPageLoad = function (Result) {
-  console.log("PaymentPageLoad", Result);
-  console.log("paRes", gestpayReadyObject.paRes);
-  console.log("transKey", gestpayReadyObject.transKey);
   // Check for errors: if the Result.ErroCode is 10 the iFrame
   // is created correctly and the security check are passed
   if (Result.ErrorCode == 10) {
@@ -25,11 +22,9 @@ GestpayIframe.PaymentPageLoad = function (Result) {
         PARes: paRes,
         TransKey: transKey,
       };
-      console.log("SendPAymentPArams", params);
 
       GestPay.SendPayment(params, GestpayIframe.PaymentCallBack);
     } else {
-      console.log("First Load");
       // 1st page load: show the form with the credit card fields
       document.getElementById("gestpay-inner-freeze-pane").className =
         "gestpay-off";
@@ -45,8 +40,6 @@ GestpayIframe.PaymentPageLoad = function (Result) {
  * Handle payment results.
  */
 GestpayIframe.PaymentCallBack = function (Result) {
-  console.log("PaymentCallback", Result);
-
   if (Result.ErrorCode == 0) {
     // --- Transaction correctly processed
 
@@ -118,7 +111,6 @@ GestpayIframe.PaymentCallBack = function (Result) {
 };
 
 GestpayIframe.OnError = function (Result) {
-  console.log("OnError", Result);
   //if (Result.ErrorCode === 'none') return;
   // Show the error box
   document.getElementById("gestpay-error-box").innerHTML =
@@ -141,8 +133,6 @@ GestpayIframe.OnError = function (Result) {
  * @see gestpay-for-woocommerce/inc/checkout-payment-fields.php
  */
 function gestpayCheckCC() {
-  console.log("GestpayCheckCC");
-
   document.getElementById("gestpay-submit").disabled = true;
   document.getElementById("gestpay-freeze-pane").className =
     "gestpay-freeze-pane-on";
@@ -158,8 +148,6 @@ function gestpayCheckCC() {
 
   if (gestpayReadyObject.is_cvv_required)
     params.CVV2 = document.getElementById("gestpay-cc-cvv").value;
-
-  console.log(params);
 
   GestPay.SendPayment(params, GestpayIframe.PaymentCallBack);
 

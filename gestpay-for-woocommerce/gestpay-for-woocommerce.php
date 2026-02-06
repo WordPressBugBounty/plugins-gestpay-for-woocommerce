@@ -3,14 +3,15 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20251002
+ * Version: 20251211    
  * Requires at least: 4.7
  * Requires PHP: 7.0
+ * Tested up to: 6.9
  * Author: Fabrick (Gruppo Banca Sella)
  * Author URI: https://www.fabrick.com
  *
- * WC requires at least: 3.0
- * WC tested up to: 9.4.2
+ * WC requires at least: 6.9
+ * WC tested up to: 10.3.6
  * Requires Plugins: woocommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
@@ -1036,6 +1037,81 @@ function wc_gateway_gestpay_handle_blocks_paypal_payment() {
 }
 
 /**
+ * Handle MyBank payment processing from blocks checkout
+ */
+add_action( 'template_redirect', 'wc_gateway_gestpay_handle_blocks_mybank_payment' );
+function wc_gateway_gestpay_handle_blocks_mybank_payment() {
+    
+    // Only handle on checkout page
+    if ( ! is_checkout() ) {
+        return;
+    }
+    
+    // Check if this is a MyBank blocks payment
+    if ( ! isset( $_GET['gestpay_payment_type'] ) || $_GET['gestpay_payment_type'] !== 'MYBANK' ) {
+        return;
+    }
+    
+    if ( ! isset( $_GET['gestpay_blocks'] ) || $_GET['gestpay_blocks'] !== '1' ) {
+        return;
+    }
+    
+    if ( ! isset( $_GET['payment_method'] ) || $_GET['payment_method'] !== 'wc_gateway_gestpay_mybank' ) {
+        return;
+    }
+    
+    // Check if cart is not empty
+    if ( WC()->cart->is_empty() ) {
+        wc_add_notice( 'Your cart is empty.', 'error' );
+        wp_redirect( wc_get_cart_url() );
+        exit;
+    }
+    
+    // Create order
+    $order = wc_create_order();
+    
+    // Add items from cart
+    foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+        $order->add_product(
+            $cart_item['data'],
+            $cart_item['quantity']
+        );
+    }
+    
+    // Set payment method
+    $order->set_payment_method( 'wc_gateway_gestpay_mybank' );
+    
+    // Set billing and shipping addresses
+    $order->set_address( WC()->customer->get_billing(), 'billing' );
+    $order->set_address( WC()->customer->get_shipping(), 'shipping' );
+    
+    // Calculate totals
+    $order->calculate_totals();
+    
+    // Process payment with MyBank gateway
+    if ( class_exists( 'WC_Gateway_Gestpay_MYBANK' ) ) {
+        $mybank_gateway = new WC_Gateway_Gestpay_MYBANK();
+        $result = $mybank_gateway->process_payment( $order->get_id() );
+        
+        if ( isset( $result['result'] ) && $result['result'] === 'success' ) {
+            // Payment successful, redirect to payment page
+            wp_redirect( $result['redirect'] );
+            exit;
+        } else {
+            // Payment failed
+            wc_add_notice( 'Payment processing failed. Please try again.', 'error' );
+            wp_redirect( wc_get_checkout_url() );
+            exit;
+        }
+    } else {
+        // MyBank gateway not available
+        wc_add_notice( 'MyBank payment method is not available.', 'error' );
+        wp_redirect( wc_get_checkout_url() );
+        exit;
+    }
+}
+
+/**
  * Add this action to listen for the order status manually changed
  */
 add_action( 'woocommerce_order_edit_status', 'wc_gateway_gestpay_woocommerce_order_edit_status', 10, 2 );
@@ -1071,20 +1147,13 @@ function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
             if ( file_exists( $blocks_integration_file ) ) {
                 require_once $blocks_integration_file;
             } else {
-                // Log error and skip registration if file doesn't exist
-                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    error_log( 'Gestpay Blocks Integration: File not found - ' . $blocks_integration_file );
-                }
+                // Skip registration if file doesn't exist
                 return;
             }
         }
         
         if ( class_exists( 'Gestpay_Blocks_Integration' ) ) {
             $payment_method_registry->register( new Gestpay_Blocks_Integration( $asset_api ) );
-            
-            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Gestpay Blocks Integration: Main payment method registered successfully' );
-            }
         }
         
         // Register the PayPal payment method
@@ -1093,20 +1162,13 @@ function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
             if ( file_exists( $paypal_blocks_integration_file ) ) {
                 require_once $paypal_blocks_integration_file;
             } else {
-                // Log error and skip registration if file doesn't exist
-                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    error_log( 'Gestpay PayPal Blocks Integration: File not found - ' . $paypal_blocks_integration_file );
-                }
+                // Skip registration if file doesn't exist
                 return;
             }
         }
         
         if ( class_exists( 'Gestpay_PayPal_Blocks_Integration' ) ) {
             $payment_method_registry->register( new Gestpay_PayPal_Blocks_Integration( $asset_api ) );
-            
-            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Gestpay Blocks Integration: PayPal payment method registered successfully' );
-            }
         }
 
         // Register the Bancomatpay payment method
@@ -1115,20 +1177,13 @@ function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
             if ( file_exists( $bancomatpay_blocks_integration_file ) ) {
                 require_once $bancomatpay_blocks_integration_file;
             } else {
-                // Log error and skip registration if file doesn't exist
-                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    error_log( 'Gestpay Bancomatpay Blocks Integration: File not found - ' . $bancomatpay_blocks_integration_file );
-                }
+                // Skip registration if file doesn't exist
                 return;
             }
         }
         
         if ( class_exists( 'Gestpay_Bancomatpay_Blocks_Integration' ) ) {
             $payment_method_registry->register( new Gestpay_Bancomatpay_Blocks_Integration( $asset_api ) );
-            
-            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Gestpay Blocks Integration: Bancomatpay payment method registered successfully' );
-            }
         }
 
         // Register the Consel payment method
@@ -1137,27 +1192,32 @@ function gestpay_register_blocks_payment_methods( $payment_method_registry ) {
             if ( file_exists( $consel_blocks_integration_file ) ) {
                 require_once $consel_blocks_integration_file;
             } else {
-                // Log error and skip registration if file doesn't exist
-                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    error_log( 'Gestpay Consel Blocks Integration: File not found - ' . $consel_blocks_integration_file );
-                }
+                // Skip registration if file doesn't exist
                 return;
             }
         }
         
         if ( class_exists( 'Gestpay_Consel_Blocks_Integration' ) ) {
             $payment_method_registry->register( new Gestpay_Consel_Blocks_Integration( $asset_api ) );
-            
-            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'Gestpay Blocks Integration: Consel payment method registered successfully' );
+        }
+
+        // Register the MyBank payment method
+        if ( ! class_exists( 'Gestpay_MyBank_Blocks_Integration' ) ) {
+            $mybank_blocks_integration_file = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'inc/class-gestpay-mybank-blocks-integration.php';
+            if ( file_exists( $mybank_blocks_integration_file ) ) {
+                require_once $mybank_blocks_integration_file;
+            } else {
+                // Skip registration if file doesn't exist
+                return;
             }
         }
         
-    } catch ( Exception $e ) {
-        // Log error if debug is enabled
-        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( 'Gestpay Blocks Integration Error: ' . $e->getMessage() );
+        if ( class_exists( 'Gestpay_MyBank_Blocks_Integration' ) ) {
+            $payment_method_registry->register( new Gestpay_MyBank_Blocks_Integration( $asset_api ) );
         }
+        
+    } catch ( Exception $e ) {
+        // Silently fail if blocks integration encounters an error
     }
 }
 
@@ -1211,6 +1271,17 @@ function gestpay_enqueue_blocks_styles() {
         wp_enqueue_style(
             'gestpay-consel-blocks-styles',
             plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-consel-blocks.css',
+            array(),
+            '20250603'
+        );
+    }
+
+    // Enqueue MyBank blocks styles
+    $mybank_css_path = plugin_dir_path( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-mybank-blocks.css';
+    if ( file_exists( $mybank_css_path ) ) {
+        wp_enqueue_style(
+            'gestpay-mybank-blocks-styles',
+            plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/css/blocks/gestpay-mybank-blocks.css',
             array(),
             '20250603'
         );

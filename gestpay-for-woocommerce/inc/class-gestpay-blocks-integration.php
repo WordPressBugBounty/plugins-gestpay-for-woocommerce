@@ -73,7 +73,7 @@ final class Gestpay_Blocks_Integration extends AbstractPaymentMethodType {
             'wc-payment-method-gestpay',
             plugin_dir_url( GESTPAY_MAIN_FILE ) . 'assets/js/blocks/wc-payment-method-gestpay.js',
             array( 'wc-blocks-registry', 'wc-settings', 'wp-element', 'wp-components', 'wp-blocks', 'wp-data', 'wp-hooks', 'wp-i18n' ),
-            '20250912',
+            '20251028',
             true
         );
         return [ 'wc-payment-method-gestpay' ];

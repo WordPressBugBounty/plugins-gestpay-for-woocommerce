@@ -1,14 +1,14 @@
 === Gestpay for WooCommerce ===
 Contributors: easynolo, netingweb
-Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo, netingweb, axerve, netingweb, fabrick, iframe, direct payment gateway
+Tags: woocommerce, payment gateway, gestpay, credit card, axerve
 Requires at least: 4.7
 Requires PHP: 7.0
-Tested up to: 6.8.2
-Stable tag: 20251002
+Tested up to  : 6.9
+Stable tag: 20251211   
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-WC requires at least: 3.0
-WC tested up to: 10.0.4
+WC requires at least: 6.9
+WC tested up to: 10.3.6
 
 Axerve Free Plugin for Woocommerce extends WooCommerce providing the payment gateway Axerve.
 
@@ -24,6 +24,30 @@ There are four operational modes in this plugin, which depends on Axerve version
 * Axerve Professional iFrame
 
 [Click here to read the full usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Axerve for WooCommerce - Usage Documentation").
+
+= WooCommerce Blocks Compatibility =
+
+Starting from version 20251028, the plugin is fully compatible with WooCommerce Blocks checkout. All payment methods are now supported in both classic checkout and blocks checkout modes. There is no need to disable WooCommerce Blocks checkout.
+
+= Available Features =
+
+* S2S SOAP (Except callReadTrxS2S and callVerifyCardS2S)
+* Tokenization
+* 3DS1
+* 3DS2 – Authentication
+* 3DS2 – Recurring Transactions
+* RBA (Risk-Based Authentication)
+* PayPal Seller Protection
+* WooCommerce Subscriptions support (Recurring payments and subscriptions)
+
+= Available Payment Methods =
+
+* Credit Cards
+* BANCOMAT Pay
+* MyBank
+* PayPal
+* PayPal Billing Agreement
+* PayPal Buy Now Pay Later
 
 == Actions and filters list ==
 
@@ -62,11 +86,50 @@ Here is a list of filters and actions used in this plugin:
 
 == Installation ==
 
-1. Ensure you have the WooCommerce 3+ plugin installed
+1. Ensure you have the WooCommerce 6.9+ plugin installed
 2. Search "Gestpay for WooCommerce" or upload and install the zip file, in the same way you'd install any other plugin.
 3. Read the [usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
 
 == Changelog ==
+= 20251204 =
+* Update: Compatibility information update
+  - Updated WordPress tested up to version: 6.9
+  - Updated WooCommerce tested up to version: 10.3.6
+  - Updated WooCommerce minimum required version: 6.9
+  - This update aligns the official documentation with the actual tested compatibility
+  - Note: The plugin has been tested with WordPress 6.9 and WooCommerce 10.3.6
+* Fix: Removed error_log statements for blocks integration
+  - Removed all error_log calls related to Gestpay blocks integration
+  - Improved error handling without logging to prevent log file inflation
+* Improvement: Updated settings page text
+  - Updated settings description to reflect full blocks checkout support for all payment methods
+  - Clarified that MyBank is now fully supported in blocks checkout
+  - Removed warnings about partial blocks support
+
+= 20251211 =
+* Fix: Removed PreviousTransDetails section for EC transaction type to prevent sending invalid bankTransactionID that caused failures in 3DS flow.
+* Fix: For 01F subscription transactions, the bankTransactionID field is now nullified, as requested by Axerve/Fabrick.
+* Improvement: Maintained correct handling of 01N scenario, which continues to use the bankTransactionID from the 01F transaction for subscription continuity.
+
+= 20251110 =
+* Update: Compatibility information update
+  - Updated WooCommerce tested up to version: 10.3.4
+  - Updated WooCommerce minimum required version: 6.9
+  - This update aligns the official documentation with the actual tested compatibility
+  - Note: The plugin has been tested with WooCommerce 10.3.4, and requires WooCommerce 6.9+ for HPOS compatibility
+
+= 20251029 =
+* Version number fix
+
+= 20251028 =
+* Feature: Full WooCommerce Blocks support
+  - Starting from version 20251028, the plugin is fully compatible with WooCommerce Blocks checkout
+  - All payment methods are now fully supported in blocks checkout mode
+  - No need to disable WooCommerce Blocks checkout
+* Security: Nothing added
+* Improvement: Enhanced checkout compatibility
+* Checks: Verified compatibility with WordPress 6.8.3, WooCommerce 10.2.2
+* Note: This release confirms complete blocks integration for all payment methods
 
 = 20251002 =
 * Feature: Extended WooCommerce Blocks support for additional payment methods
@@ -77,7 +140,7 @@ Here is a list of filters and actions used in this plugin:
 * Fix: Nothing added
 * Security: Nothing added
 * Improvement: Enhanced checkout experience with extended blocks integration
-* Checks: Verified compatibility with WordPress 6.8.2, WooCommerce 10.0.4
+* Checks: Verified compatibility with WordPress 6.8.3, WooCommerce 10.2.2
 * Note: This release completes the blocks integration for major Italian payment methods
 
 = 20250912 =
@@ -88,7 +151,7 @@ Here is a list of filters and actions used in this plugin:
   - Enhanced error logging for debugging deployment issues
 * Security: Nothing added
 * Improvement: Improved deployment reliability and error handling
-* Checks: Verified compatibility with WordPress 6.8.2, WooCommerce 10.0.4
+* Checks: Verified compatibility with WordPress 6.8.3, WooCommerce 10.2.2
 * Note: This hotfix resolves the critical issue that caused site crashes in production
 
 = 20250911 =
@@ -101,7 +164,7 @@ Here is a list of filters and actions used in this plugin:
 * Fix: Nothing added
 * Security: Nothing added
 * Improvement: Enhanced checkout experience with blocks integration
-* Checks: Verified compatibility with WordPress 6.8.2, WooCommerce 10.0.4
+* Checks: Verified compatibility with WordPress 6.8.3, WooCommerce 10.2.2
 * Note: This release enables seamless integration of GestPay payments in WooCommerce Blocks checkout
 
 = 20250603 =

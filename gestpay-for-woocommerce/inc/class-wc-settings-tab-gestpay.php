@@ -311,11 +311,9 @@ class WC_Settings_Tab_Gestpay {
 
             array(
                 'title' => '',
-                'desc' => 'Con Gestpay Professional è possibile aggiungere pagine di pagamento differenti per differenti metodi di pagamento.<br>Seleziona qui quali modilità di pagamento abilitare; poi salva e infine vai nel tab "Cassa" per vedere abilitati i tipi di pagamento selezionati.<br>Si faccia riferimento al manuale per maggiori informazioni. Nota: i metodi di pagamento selezionati devono essere abilitati anche nel Backoffice Gestpay.<br/><br/>Con l’ultima versione del nostro plugin, il <b>il checkout a blocchi di WooCommerce è già compatibile con i pagamenti con carta, PayPal, BANCOMATPay e Consel</b>.
-Se utilizzi esclusivamente questi metodi, puoi <b>attivarlo subito</b> e offrire un\'esperienza d’acquisto più moderna ai tuoi clienti.<br/>
-Il supporto per gli altri metodi di pagamento (es. MyBank) <b>verrà rilasciato progressivamente</b> nelle prossime versioni.<br/><br/>
-⚠️ Attivando il checkout a blocchi, <b>verranno mostrati solo i metodi di pagamento compatibili</b>. Eventuali altri metodi attivi nel tuo shop non saranno visibili ai clienti fino al completamento del supporto.<br/><br/>
-Se vuoi disabilitare il checkout a blocchi per garantire l\'utilizzo di tutti i metodi di pagamento attivi nel tuo shop, puoi seguire la guida disponibile sulla <a href="https://doc.fabrick.it/it/plugin/woocommerce/blocks-integration/" target="_blank">documentazione ufficiale di Fabrick</a>.<br/>',
+                'desc' => 'Con Gestpay Professional è possibile aggiungere pagine di pagamento differenti per differenti metodi di pagamento.<br>Seleziona qui quali modilità di pagamento abilitare; poi salva e infine vai nel tab "Cassa" per vedere abilitati i tipi di pagamento selezionati.<br>Si faccia riferimento al manuale per maggiori informazioni. Nota: i metodi di pagamento selezionati devono essere abilitati anche nel Backoffice Gestpay.<br/><br/>Con l\'ultima versione del nostro plugin, <b>il checkout a blocchi di WooCommerce è ora completamente compatibile con tutti i sistemi di pagamento</b>, inclusi carta di credito, PayPal, BANCOMATPay, Consel e MyBank.<br/>
+Puoi <b>attivare subito il checkout a blocchi</b> e offrire un\'esperienza d\'acquisto moderna ai tuoi clienti con il supporto completo per tutti i metodi di pagamento disponibili.<br/><br/>
+Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="https://doc.fabrick.it/it/plugin/woocommerce/blocks-integration/" target="_blank">documentazione ufficiale di Fabrick</a>.<br/>',
                 'type' => 'title',
                 'id' => 'wc_gestpaypro_moregateways_options',
             ),

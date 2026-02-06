@@ -1,5 +1,5 @@
 /**
- * Gestpay PayPal Payment Method Integration for WooCommerce Blocks
+ * Gestpay Bancomatpay Payment Method Integration for WooCommerce Blocks
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -17,7 +17,7 @@ if (
 // Only register if not already registered
 if (
   !window.wc.wcBlocksRegistry.__registeredPaymentMethods.has(
-    "wc_gateway_gestpay_paypal"
+    "wc_gateway_gestpay_bancomatpay"
   )
 ) {
   const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
@@ -28,48 +28,49 @@ if (
   const { __ } = window.wp.i18n;
 
   /**
-   * Gestpay PayPal payment method config object.
+   * Gestpay Bancomatpay payment method config object.
    */
-  const gestpayPayPalPaymentMethod = {
-    name: "wc_gateway_gestpay_paypal",
+  const gestpayBancomatpayPaymentMethod = {
+    name: "wc_gateway_gestpay_bancomatpay",
     label: decodeEntities(
-      getPaymentMethodData("wc_gateway_gestpay_paypal", {}).title ||
-        __("PayPal", "gestpay-for-woocommerce")
+      getPaymentMethodData("wc_gateway_gestpay_bancomatpay", {}).title ||
+        __("Bancomatpay", "gestpay-for-woocommerce")
     ),
-    content: createElement(GestpayPayPalContent),
-    edit: createElement(GestpayPayPalEdit),
+    content: createElement(GestpayBancomatpayContent),
+    edit: createElement(GestpayBancomatpayEdit),
     canMakePayment: () => {
       // Check if payment method data is available
       const paymentMethodData = getPaymentMethodData(
-        "wc_gateway_gestpay_paypal",
+        "wc_gateway_gestpay_bancomatpay",
         {}
       );
       return paymentMethodData && paymentMethodData.title;
     },
     ariaLabel: decodeEntities(
-      getPaymentMethodData("wc_gateway_gestpay_paypal", {}).title ||
-        __("Payment via PayPal", "gestpay-for-woocommerce")
+      getPaymentMethodData("wc_gateway_gestpay_bancomatpay", {}).title ||
+        __("Payment via Bancomatpay", "gestpay-for-woocommerce")
     ),
     supports: {
       features:
-        getPaymentMethodData("wc_gateway_gestpay_paypal", {}).supports || [],
+        getPaymentMethodData("wc_gateway_gestpay_bancomatpay", {}).supports ||
+        [],
     },
   };
 
   /**
-   * Content component for the Gestpay PayPal payment method.
+   * Content component for the Gestpay Bancomatpay payment method.
    */
-  function GestpayPayPalContent(props) {
+  function GestpayBancomatpayContent(props) {
     const { eventRegistration, emitResponse } = props;
     const { onPaymentSetup } = eventRegistration;
 
     useEffect(() => {
       const unsubscribe = onPaymentSetup(async () => {
         try {
-          // For PayPal, we redirect to GestPay's payment page
+          // For Bancomatpay, we redirect to GestPay's payment page
           // The actual payment processing happens on the GestPay side
           const redirectUrl =
-            paymentMethodData.redirectUrl || getPayPalRedirectUrl();
+            paymentMethodData.redirectUrl || getBancomatpayRedirectUrl();
 
           return {
             type: emitResponse.responseTypes.REDIRECT,
@@ -78,7 +79,7 @@ if (
             },
           };
         } catch (error) {
-          console.error("PayPal payment error:", error);
+          console.error("Bancomatpay payment error:", error);
           return {
             type: emitResponse.responseTypes.ERROR,
             message: "Payment processing failed. Please try again.",
@@ -90,14 +91,14 @@ if (
     }, [onPaymentSetup, emitResponse.responseTypes]);
 
     const paymentMethodData = getPaymentMethodData(
-      "wc_gateway_gestpay_paypal",
+      "wc_gateway_gestpay_bancomatpay",
       {}
     );
 
     return createElement(
       "div",
       {
-        className: "wc-gestpay-paypal-payment-method",
+        className: "wc-gestpay-bancomatpay-payment-method",
       },
       [
         createElement("p", {
@@ -125,35 +126,35 @@ if (
   }
 
   /**
-   * Edit component for the Gestpay PayPal payment method.
+   * Edit component for the Gestpay Bancomatpay payment method.
    */
-  function GestpayPayPalEdit() {
+  function GestpayBancomatpayEdit() {
     const paymentMethodData = getPaymentMethodData(
-      "wc_gateway_gestpay_paypal",
+      "wc_gateway_gestpay_bancomatpay",
       {}
     );
 
     return createElement(
       "div",
       {
-        className: "wc-gestpay-paypal-payment-method-edit",
+        className: "wc-gestpay-bancomatpay-payment-method-edit",
       },
       [
         createElement("div", {
-          className: "wc-gestpay-paypal-icon",
+          className: "wc-gestpay-bancomatpay-icon",
           dangerouslySetInnerHTML: { __html: paymentMethodData.icon },
         }),
         createElement(
           "div",
           {
-            className: "wc-gestpay-paypal-title",
+            className: "wc-gestpay-bancomatpay-title",
           },
           paymentMethodData.title
         ),
         createElement(
           "div",
           {
-            className: "wc-gestpay-paypal-description",
+            className: "wc-gestpay-bancomatpay-description",
           },
           paymentMethodData.description
         ),
@@ -162,27 +163,27 @@ if (
   }
 
   /**
-   * Get the PayPal redirect URL for payment processing.
+   * Get the Bancomatpay redirect URL for payment processing.
    * This should match the URL structure used by the main GestPay gateway.
    */
-  function getPayPalRedirectUrl() {
+  function getBancomatpayRedirectUrl() {
     // Get the current checkout URL
     const checkoutUrl = window.location.href;
 
-    // Add PayPal-specific parameters
+    // Add Bancomatpay-specific parameters
     const url = new URL(checkoutUrl);
-    url.searchParams.set("gestpay_payment_type", "PAYPAL");
+    url.searchParams.set("gestpay_payment_type", "BANCOMATPAY");
     url.searchParams.set("gestpay_blocks", "1");
-    url.searchParams.set("payment_method", "wc_gateway_gestpay_paypal");
+    url.searchParams.set("payment_method", "wc_gateway_gestpay_bancomatpay");
 
     return url.toString();
   }
 
   // Register the payment method
-  registerPaymentMethod(gestpayPayPalPaymentMethod);
+  registerPaymentMethod(gestpayBancomatpayPaymentMethod);
 
   // Mark as registered
   window.wc.wcBlocksRegistry.__registeredPaymentMethods.add(
-    "wc_gateway_gestpay_paypal"
+    "wc_gateway_gestpay_bancomatpay"
   );
 }

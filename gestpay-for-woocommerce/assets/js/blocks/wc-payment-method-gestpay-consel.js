@@ -1,5 +1,5 @@
 /**
- * Gestpay PayPal Payment Method Integration for WooCommerce Blocks
+ * Gestpay Consel Payment Method Integration for WooCommerce Blocks
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -17,7 +17,7 @@ if (
 // Only register if not already registered
 if (
   !window.wc.wcBlocksRegistry.__registeredPaymentMethods.has(
-    "wc_gateway_gestpay_paypal"
+    "wc_gateway_gestpay_consel"
   )
 ) {
   const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
@@ -28,48 +28,48 @@ if (
   const { __ } = window.wp.i18n;
 
   /**
-   * Gestpay PayPal payment method config object.
+   * Gestpay Consel payment method config object.
    */
-  const gestpayPayPalPaymentMethod = {
-    name: "wc_gateway_gestpay_paypal",
+  const gestpayConselPaymentMethod = {
+    name: "wc_gateway_gestpay_consel",
     label: decodeEntities(
-      getPaymentMethodData("wc_gateway_gestpay_paypal", {}).title ||
-        __("PayPal", "gestpay-for-woocommerce")
+      getPaymentMethodData("wc_gateway_gestpay_consel", {}).title ||
+        __("Consel", "gestpay-for-woocommerce")
     ),
-    content: createElement(GestpayPayPalContent),
-    edit: createElement(GestpayPayPalEdit),
+    content: createElement(GestpayConselContent),
+    edit: createElement(GestpayConselEdit),
     canMakePayment: () => {
       // Check if payment method data is available
       const paymentMethodData = getPaymentMethodData(
-        "wc_gateway_gestpay_paypal",
+        "wc_gateway_gestpay_consel",
         {}
       );
       return paymentMethodData && paymentMethodData.title;
     },
     ariaLabel: decodeEntities(
-      getPaymentMethodData("wc_gateway_gestpay_paypal", {}).title ||
-        __("Payment via PayPal", "gestpay-for-woocommerce")
+      getPaymentMethodData("wc_gateway_gestpay_consel", {}).title ||
+        __("Payment via Consel", "gestpay-for-woocommerce")
     ),
     supports: {
       features:
-        getPaymentMethodData("wc_gateway_gestpay_paypal", {}).supports || [],
+        getPaymentMethodData("wc_gateway_gestpay_consel", {}).supports || [],
     },
   };
 
   /**
-   * Content component for the Gestpay PayPal payment method.
+   * Content component for the Gestpay Consel payment method.
    */
-  function GestpayPayPalContent(props) {
+  function GestpayConselContent(props) {
     const { eventRegistration, emitResponse } = props;
     const { onPaymentSetup } = eventRegistration;
 
     useEffect(() => {
       const unsubscribe = onPaymentSetup(async () => {
         try {
-          // For PayPal, we redirect to GestPay's payment page
+          // For Consel, we redirect to GestPay's payment page
           // The actual payment processing happens on the GestPay side
           const redirectUrl =
-            paymentMethodData.redirectUrl || getPayPalRedirectUrl();
+            paymentMethodData.redirectUrl || getConselRedirectUrl();
 
           return {
             type: emitResponse.responseTypes.REDIRECT,
@@ -78,7 +78,7 @@ if (
             },
           };
         } catch (error) {
-          console.error("PayPal payment error:", error);
+          console.error("Consel payment error:", error);
           return {
             type: emitResponse.responseTypes.ERROR,
             message: "Payment processing failed. Please try again.",
@@ -90,14 +90,14 @@ if (
     }, [onPaymentSetup, emitResponse.responseTypes]);
 
     const paymentMethodData = getPaymentMethodData(
-      "wc_gateway_gestpay_paypal",
+      "wc_gateway_gestpay_consel",
       {}
     );
 
     return createElement(
       "div",
       {
-        className: "wc-gestpay-paypal-payment-method",
+        className: "wc-gestpay-consel-payment-method",
       },
       [
         createElement("p", {
@@ -125,35 +125,35 @@ if (
   }
 
   /**
-   * Edit component for the Gestpay PayPal payment method.
+   * Edit component for the Gestpay Consel payment method.
    */
-  function GestpayPayPalEdit() {
+  function GestpayConselEdit() {
     const paymentMethodData = getPaymentMethodData(
-      "wc_gateway_gestpay_paypal",
+      "wc_gateway_gestpay_consel",
       {}
     );
 
     return createElement(
       "div",
       {
-        className: "wc-gestpay-paypal-payment-method-edit",
+        className: "wc-gestpay-consel-payment-method-edit",
       },
       [
         createElement("div", {
-          className: "wc-gestpay-paypal-icon",
+          className: "wc-gestpay-consel-icon",
           dangerouslySetInnerHTML: { __html: paymentMethodData.icon },
         }),
         createElement(
           "div",
           {
-            className: "wc-gestpay-paypal-title",
+            className: "wc-gestpay-consel-title",
           },
           paymentMethodData.title
         ),
         createElement(
           "div",
           {
-            className: "wc-gestpay-paypal-description",
+            className: "wc-gestpay-consel-description",
           },
           paymentMethodData.description
         ),
@@ -162,27 +162,27 @@ if (
   }
 
   /**
-   * Get the PayPal redirect URL for payment processing.
+   * Get the Consel redirect URL for payment processing.
    * This should match the URL structure used by the main GestPay gateway.
    */
-  function getPayPalRedirectUrl() {
+  function getConselRedirectUrl() {
     // Get the current checkout URL
     const checkoutUrl = window.location.href;
 
-    // Add PayPal-specific parameters
+    // Add Consel-specific parameters
     const url = new URL(checkoutUrl);
-    url.searchParams.set("gestpay_payment_type", "PAYPAL");
+    url.searchParams.set("gestpay_payment_type", "CONSEL");
     url.searchParams.set("gestpay_blocks", "1");
-    url.searchParams.set("payment_method", "wc_gateway_gestpay_paypal");
+    url.searchParams.set("payment_method", "wc_gateway_gestpay_consel");
 
     return url.toString();
   }
 
   // Register the payment method
-  registerPaymentMethod(gestpayPayPalPaymentMethod);
+  registerPaymentMethod(gestpayConselPaymentMethod);
 
   // Mark as registered
   window.wc.wcBlocksRegistry.__registeredPaymentMethods.add(
-    "wc_gateway_gestpay_paypal"
+    "wc_gateway_gestpay_consel"
   );
 }
