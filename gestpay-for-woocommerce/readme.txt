@@ -4,7 +4,7 @@ Tags: woocommerce, payment gateway, gestpay, credit card, axerve
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to  : 6.9
-Stable tag: 20251211   
+Stable tag: 20260325
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 6.9
@@ -105,6 +105,10 @@ Here is a list of filters and actions used in this plugin:
   - Updated settings description to reflect full blocks checkout support for all payment methods
   - Clarified that MyBank is now fully supported in blocks checkout
   - Removed warnings about partial blocks support
+
+= 20260325 =
+* Update: New Fabrick logo replacing the old Gestpay logo.
+* Tested: WordPress 6.9.4, WooCommerce 10.3.6, WooCommerce Subscriptions 8.5.
 
 = 20251211 =
 * Fix: Removed PreviousTransDetails section for EC transaction type to prevent sending invalid bankTransactionID that caused failures in 3DS flow.

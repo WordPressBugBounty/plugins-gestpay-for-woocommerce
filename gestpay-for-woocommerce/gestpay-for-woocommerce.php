@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20251211    
+ * Version: 20260325
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Tested up to: 6.9
@@ -181,7 +181,7 @@ function gestpay_init_wc_gateway_gestpay() {
             $this->id           = strtolower( get_class( $this ) );
             $this->textdomain   = $this->Helper->plugin_slug;
             $this->logfile      = $this->id;
-            $this->logo         = $this->plugin_url . 'images/gestpay-logo.png';
+            $this->logo         = $this->plugin_url . 'images/fabrick-logo.png';
             $this->method_title = $title;
         }
 
@@ -432,9 +432,9 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
 
             <div class="gestpay-admin-main">
                 <div class="gestpay-message">
-                    <img src="<?php echo esc_url( $this->logo ); ?>" id="gestpay-logo"/>
+                    <img src="<?php echo esc_url( $this->logo ); ?>" id="fabrick-logo" style="max-width: 200px; height: auto;"/>
                     <h3>
-                        <a href="https://www.gestpay.it/" target="_blank">Gestpay</a> by <a href="https://www.axerve.com/" target="_blank">Axerve S.p.A. - Gruppo Banca Sella</a>
+                        <a href="https://docs.paymentorchestra.fabrick.com/it/plugin/woocommerce/" target="_blank">Ecommerce Fabrick</a>
                     </h3>
                 </div>
                 <div class="gestpay-message gestpay-form">

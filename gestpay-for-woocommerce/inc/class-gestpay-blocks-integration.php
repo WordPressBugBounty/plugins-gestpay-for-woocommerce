@@ -104,11 +104,11 @@ final class Gestpay_Blocks_Integration extends AbstractPaymentMethodType {
                 $icon = $gateway->get_icon();
             } catch ( Exception $e ) {
                 // Fallback to default icon
-                $icon = '<img src="' . plugin_dir_url( GESTPAY_MAIN_FILE ) . 'images/gestpay-logo.png" alt="Gestpay" />';
+                $icon = '<img src="' . plugin_dir_url( GESTPAY_MAIN_FILE ) . 'images/fabrick-logo.png" alt="Fabrick" />';
             }
         } else {
             // Fallback to default icon
-            $icon = '<img src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'images/gestpay-logo.png" alt="Gestpay" />';
+            $icon = '<img src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'images/fabrick-logo.png" alt="Fabrick" />';
         }
 
         // Get strings
