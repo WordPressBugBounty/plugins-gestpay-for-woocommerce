@@ -4,40 +4,41 @@ Tags: woocommerce, payment gateway, gestpay, credit card, axerve
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to  : 6.9
-Stable tag: 20260325
+Stable tag: 20260326
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 6.9
-WC tested up to: 10.3.6
+WC tested up to: 10.6
 
-Axerve Free Plugin for Woocommerce extends WooCommerce providing the payment gateway Axerve.
+Fabrick Free Plugin for WooCommerce extends WooCommerce by providing the Fabrick payment gateway.
 
 == Description ==
 
-Axerve Free Plugin for Woocommerce allows you to use [Axerve](https://www.axerve.com/ "Axerve Website") on your WooCommerce-powered website.
+Fabrick offers solutions to meet and anticipate payment acceptance needs across physical and digital channels. The offering is based on a single platform to accept payments through POS and e-commerce gateways, Banking-as-a-Service (BaaS), and omnichannel solutions that continuously evolve with market changes.
 
-There are four operational modes in this plugin, which depends on Axerve version you are using:
+With Fabrick Payment Orchestra, you can:
+* Accept payments from all major credit cards.
+* Accept payments with alternative methods, including PayPal, and manage them from a single dashboard.
+* Customize every aspect of the payment page.
+* Use a PCI DSS-compliant payment flow, without storing customers' full credit card numbers on your servers.
+* Rely on 3DS2 support.
 
-* Axerve Starter
-* Axerve Professional
-* Axerve Professional On Site
-* Axerve Professional iFrame
-
-[Click here to read the full usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Axerve for WooCommerce - Usage Documentation").
+[Click here to read the full usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Fabrick for WooCommerce - Usage Documentation").
 
 = WooCommerce Blocks Compatibility =
 
-Starting from version 20251028, the plugin is fully compatible with WooCommerce Blocks checkout. All payment methods are now supported in both classic checkout and blocks checkout modes. There is no need to disable WooCommerce Blocks checkout.
+The plugin is fully compatible with WooCommerce Blocks checkout. All payment methods are supported in both classic checkout and Blocks checkout modes. There is no need to disable WooCommerce Blocks checkout.
 
 = Available Features =
 
-* S2S SOAP (Except callReadTrxS2S and callVerifyCardS2S)
+* S2S SOAP (except `callReadTrxS2S` and `callVerifyCardS2S`)
 * Tokenization
 * 3DS1
-* 3DS2 – Authentication
-* 3DS2 – Recurring Transactions
+* 3DS2 - Authentication
+* 3DS2 - Recurring Transactions
 * RBA (Risk-Based Authentication)
 * PayPal Seller Protection
+* PayPal Billing Agreement
 * WooCommerce Subscriptions support (Recurring payments and subscriptions)
 
 = Available Payment Methods =
@@ -48,6 +49,22 @@ Starting from version 20251028, the plugin is fully compatible with WooCommerce 
 * PayPal
 * PayPal Billing Agreement
 * PayPal Buy Now Pay Later
+
+= Benefits =
+
+* Accept credit card payments directly on your checkout page.
+* Accept payments with a variety of alternative methods to increase conversion by allowing customers to use their preferred payment option.
+* Reduce fraud risk with advanced fraud detection tools (RBA).
+
+= Security =
+
+* No full credit card data is stored on your servers during the payment process.
+* All major card brands are supported (Visa, Mastercard, American Express).
+* 3DS2.x support.
+
+= Support =
+
+You can contact our support team at ecommerce@sella.it.
 
 == Actions and filters list ==
 
@@ -88,9 +105,16 @@ Here is a list of filters and actions used in this plugin:
 
 1. Ensure you have the WooCommerce 6.9+ plugin installed
 2. Search "Gestpay for WooCommerce" or upload and install the zip file, in the same way you'd install any other plugin.
-3. Read the [usage documentation on Axerve](https://docs.axerve.com/it/plugin/woocommerce/ "Gestpay for WooCommerce - Usage Documentation").
+3. Read the [usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Fabrick for WooCommerce - Usage Documentation").
 
 == Changelog ==
+= 20260326 =
+* Update: Compatibility metadata update.
+  - Updated WooCommerce tested up to version: 10.6
+  - Verified plugin compatibility with WooCommerce 10.6
+* Docs: Updated marketplace description with Fabrick positioning, feature overview, benefits, security details, and support information.
+* Docs: Aligned Installation section wording with Fabrick branding.
+
 = 20251204 =
 * Update: Compatibility information update
   - Updated WordPress tested up to version: 6.9

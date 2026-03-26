@@ -3,7 +3,7 @@
  * Plugin Name: Gestpay for WooCommerce
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20260325
+ * Version: 20260326
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Tested up to: 6.9
@@ -11,7 +11,7 @@
  * Author URI: https://www.fabrick.com
  *
  * WC requires at least: 6.9
- * WC tested up to: 10.3.6
+ * WC tested up to: 10.6
  * Requires Plugins: woocommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
