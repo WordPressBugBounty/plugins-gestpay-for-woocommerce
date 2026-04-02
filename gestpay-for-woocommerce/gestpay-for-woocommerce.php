@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Gestpay for WooCommerce
+ * Plugin Name: Ecommerce Fabrick
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
- * Description: Abilita il sistema di pagamento GestPay by Axerve (Gruppo Banca Sella) in WooCommerce.
- * Version: 20260326
+ * Description: Abilita il sistema di pagamento Ecommerce Fabrick for Woocommerce.
+ * Version: 20260402
  * Requires at least: 4.7
  * Requires PHP: 7.0
  * Tested up to: 6.9
@@ -100,7 +100,7 @@ function gestpay_init_wc_gateway_gestpay() {
 
         function __construct() {
 
-            $this->set_this_gateway_params( 'Gestpay' );
+            $this->set_this_gateway_params( 'Fabrick Payment Orchestra' );
             $this->paymentType = 'CREDITCARD';
             $this->Helper->init_gateway( $this );
             $this->set_this_gateway();
@@ -133,7 +133,7 @@ function gestpay_init_wc_gateway_gestpay() {
         function is_valid_for_use() {
 
             if ( ! class_exists( 'WC_Payment_Gateways' ) ) {
-                return array( 'error' => 'GestPay for WooCommerce richiede WooCommerce' );
+                return array( 'error' => 'Ecommerce Fabrick richiede WooCommerce' );
             }
 
             if ( ! $this->Helper->check_fatal_soap( 'GestPay' ) ) {
@@ -141,11 +141,11 @@ function gestpay_init_wc_gateway_gestpay() {
             }
 
             if ( ! $this->Helper->check_fatal_suhosin( 'GestPay', FALSE ) ) {
-                return array( 'error' => $this->Helper->get_suhosin_error_msg( 'GestPay for WooCommerce' ) );
+                return array( 'error' => $this->Helper->get_suhosin_error_msg( 'Ecommerce Fabrick' ) );
             }
 
             if ( ! version_compare( WC_VERSION, '3.0.0', '>=' ) ) {
-                return array( 'error' => 'GestPay for WooCommerce richiede WooCommerce versione >= 3.0.x' );
+                return array( 'error' => 'Ecommerce Fabrick richiede WooCommerce versione >= 3.0.x' );
             }
 
             return TRUE;
@@ -585,7 +585,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
                 }
 
                 Gestpay_3DS2::add_3ds2_params( $params, $order_id, 'WSCryptDecrypt' );
-                $this->Helper->log_add( '[GESTPAY ENCRYPT PARAMETERS]', $params );
+                $this->Helper->log_add( '[Fabrick Payment Orchestra ENCRYPT PARAMETERS]', $params );
 
                 $objectresult = $client->Encrypt( $params );
                 $xml = simplexml_load_string( $objectresult->EncryptResult->any );
@@ -640,10 +640,10 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
             $is_gestpay_s2s_call = empty( $_SERVER['HTTP_USER_AGENT'] );
 
             if ( ! $is_gestpay_s2s_call ) {
-                $this->Helper->log_add( "[INFO] Checking GestPay response..." );
+                $this->Helper->log_add( "[INFO] Checking Fabrick Payment Orchestra response..." );
             }
             else {
-                $this->Helper->log_add( "[INFO] Checking S2S GestPay response..." );
+                $this->Helper->log_add( "[INFO] Checking S2S Fabrick Payment Orchestra response..." );
             }
 
             $params = new stdClass();

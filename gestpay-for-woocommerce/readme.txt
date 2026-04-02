@@ -1,16 +1,16 @@
-=== Gestpay for WooCommerce ===
+=== Ecommerce Fabrick ===
 Contributors: easynolo, netingweb
-Tags: woocommerce, payment gateway, gestpay, credit card, axerve
+Tags: woocommerce, payment gateway, fabrick, credit card, axerve
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to  : 6.9
-Stable tag: 20260326
+Stable tag: 20260402
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 6.9
 WC tested up to: 10.6
 
-Fabrick Free Plugin for WooCommerce extends WooCommerce by providing the Fabrick payment gateway.
+Fabrick Free Plugin for WooCommerce extends WooCommerce by providing the Fabrick Payment Orchestra payment gateway.
 
 == Description ==
 
@@ -23,7 +23,7 @@ With Fabrick Payment Orchestra, you can:
 * Use a PCI DSS-compliant payment flow, without storing customers' full credit card numbers on your servers.
 * Rely on 3DS2 support.
 
-[Click here to read the full usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Fabrick for WooCommerce - Usage Documentation").
+[Click here to read the full usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Ecommerce Fabrick - Usage Documentation").
 
 = WooCommerce Blocks Compatibility =
 
@@ -104,10 +104,19 @@ Here is a list of filters and actions used in this plugin:
 == Installation ==
 
 1. Ensure you have the WooCommerce 6.9+ plugin installed
-2. Search "Gestpay for WooCommerce" or upload and install the zip file, in the same way you'd install any other plugin.
+2. Search "Ecommerce Fabrick" or upload and install the zip file, in the same way you'd install any other plugin.
 3. Read the [usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Fabrick for WooCommerce - Usage Documentation").
 
 == Changelog ==
+= 20260402 =
+* Update: Plugin rebranded from "Gestpay for WooCommerce" to "Ecommerce Fabrick".
+* Update: Gateway name updated to "Fabrick Payment Orchestra" across all payment methods.
+* Update: Plugin description updated to reflect Ecommerce Fabrick branding.
+* Update: readme.txt title, tags and description aligned to Ecommerce Fabrick.
+* Update: All user-facing labels and translatable strings updated to new brand name.
+* Update: WooCommerce Blocks payment method labels updated for all payment types (main, PayPal, MyBank, BancomatPay, Consel).
+* Update: Italian translations (.po) aligned to new brand name.
+
 = 20260326 =
 * Update: Compatibility metadata update.
   - Updated WooCommerce tested up to version: 10.6

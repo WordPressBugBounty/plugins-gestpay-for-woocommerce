@@ -1,5 +1,5 @@
 /**
- * Gestpay Consel Payment Method Integration for WooCommerce Blocks
+ * Fabrick Payment Orchestra Consel Payment Method Integration for WooCommerce Blocks
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -17,7 +17,7 @@ if (
 // Only register if not already registered
 if (
   !window.wc.wcBlocksRegistry.__registeredPaymentMethods.has(
-    "wc_gateway_gestpay_consel"
+    "wc_gateway_gestpay_consel",
   )
 ) {
   const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
@@ -28,13 +28,13 @@ if (
   const { __ } = window.wp.i18n;
 
   /**
-   * Gestpay Consel payment method config object.
+   * Fabrick Payment Orchestra Consel payment method config object.
    */
   const gestpayConselPaymentMethod = {
     name: "wc_gateway_gestpay_consel",
     label: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_consel", {}).title ||
-        __("Consel", "gestpay-for-woocommerce")
+        __("Consel", "gestpay-for-woocommerce"),
     ),
     content: createElement(GestpayConselContent),
     edit: createElement(GestpayConselEdit),
@@ -42,13 +42,13 @@ if (
       // Check if payment method data is available
       const paymentMethodData = getPaymentMethodData(
         "wc_gateway_gestpay_consel",
-        {}
+        {},
       );
       return paymentMethodData && paymentMethodData.title;
     },
     ariaLabel: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_consel", {}).title ||
-        __("Payment via Consel", "gestpay-for-woocommerce")
+        __("Payment via Consel", "gestpay-for-woocommerce"),
     ),
     supports: {
       features:
@@ -57,7 +57,7 @@ if (
   };
 
   /**
-   * Content component for the Gestpay Consel payment method.
+   * Content component for the Fabrick Payment Orchestra Consel payment method.
    */
   function GestpayConselContent(props) {
     const { eventRegistration, emitResponse } = props;
@@ -66,8 +66,8 @@ if (
     useEffect(() => {
       const unsubscribe = onPaymentSetup(async () => {
         try {
-          // For Consel, we redirect to GestPay's payment page
-          // The actual payment processing happens on the GestPay side
+          // For Consel, we redirect to Fabrick Payment Orchestra's payment page
+          // The actual payment processing happens on the Fabrick Payment Orchestra side
           const redirectUrl =
             paymentMethodData.redirectUrl || getConselRedirectUrl();
 
@@ -91,7 +91,7 @@ if (
 
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_consel",
-      {}
+      {},
     );
 
     return createElement(
@@ -120,17 +120,17 @@ if (
               __html: decodeEntities(paymentMethodData.sandbox || ""),
             },
           }),
-      ]
+      ],
     );
   }
 
   /**
-   * Edit component for the Gestpay Consel payment method.
+   * Edit component for the Fabrick Payment Orchestra Consel payment method.
    */
   function GestpayConselEdit() {
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_consel",
-      {}
+      {},
     );
 
     return createElement(
@@ -148,22 +148,22 @@ if (
           {
             className: "wc-gestpay-consel-title",
           },
-          paymentMethodData.title
+          paymentMethodData.title,
         ),
         createElement(
           "div",
           {
             className: "wc-gestpay-consel-description",
           },
-          paymentMethodData.description
+          paymentMethodData.description,
         ),
-      ]
+      ],
     );
   }
 
   /**
    * Get the Consel redirect URL for payment processing.
-   * This should match the URL structure used by the main GestPay gateway.
+   * This should match the URL structure used by the main Fabrick Payment Orchestra gateway.
    */
   function getConselRedirectUrl() {
     // Get the current checkout URL
@@ -183,6 +183,6 @@ if (
 
   // Mark as registered
   window.wc.wcBlocksRegistry.__registeredPaymentMethods.add(
-    "wc_gateway_gestpay_consel"
+    "wc_gateway_gestpay_consel",
   );
 }

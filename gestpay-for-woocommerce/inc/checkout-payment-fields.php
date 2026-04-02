@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -30,7 +30,7 @@ if ( $this->Gestpay->is_sandbox ) : ?>
     <p id="gestpay-s2s-sandbox">
         <small>
             <strong>Test Mode</strong><br>
-            <a href="https://docs.axerve.com/en/testing/testing-cards" target="_blank">gestpay test cards</a>
+            <a href="https://docs.axerve.com/en/testing/testing-cards" target="_blank">Fabrick Payment Orchestra test cards</a>
         </small>
     </p>
 

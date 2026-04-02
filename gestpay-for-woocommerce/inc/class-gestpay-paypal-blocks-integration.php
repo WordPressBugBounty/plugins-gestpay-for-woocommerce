@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestpay PayPal for WooCommerce - Blocks Integration
+ * Fabrick Payment Orchestra PayPal for WooCommerce - Blocks Integration
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -19,7 +19,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 use Automattic\WooCommerce\Blocks\Assets\Api;
 
 /**
- * Gestpay PayPal Blocks Integration
+ * Fabrick Payment Orchestra PayPal Blocks Integration
  *
  * @since 20250912
  */

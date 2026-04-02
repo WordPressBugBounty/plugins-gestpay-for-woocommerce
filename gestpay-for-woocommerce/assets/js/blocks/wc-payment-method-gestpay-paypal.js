@@ -1,5 +1,5 @@
 /**
- * Gestpay PayPal Payment Method Integration for WooCommerce Blocks
+ * Fabrick Payment Orchestra PayPal Payment Method Integration for WooCommerce Blocks
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -17,7 +17,7 @@ if (
 // Only register if not already registered
 if (
   !window.wc.wcBlocksRegistry.__registeredPaymentMethods.has(
-    "wc_gateway_gestpay_paypal"
+    "wc_gateway_gestpay_paypal",
   )
 ) {
   const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
@@ -28,13 +28,13 @@ if (
   const { __ } = window.wp.i18n;
 
   /**
-   * Gestpay PayPal payment method config object.
+   * Fabrick Payment Orchestra PayPal payment method config object.
    */
   const gestpayPayPalPaymentMethod = {
     name: "wc_gateway_gestpay_paypal",
     label: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_paypal", {}).title ||
-        __("PayPal", "gestpay-for-woocommerce")
+        __("PayPal", "gestpay-for-woocommerce"),
     ),
     content: createElement(GestpayPayPalContent),
     edit: createElement(GestpayPayPalEdit),
@@ -42,13 +42,13 @@ if (
       // Check if payment method data is available
       const paymentMethodData = getPaymentMethodData(
         "wc_gateway_gestpay_paypal",
-        {}
+        {},
       );
       return paymentMethodData && paymentMethodData.title;
     },
     ariaLabel: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_paypal", {}).title ||
-        __("Payment via PayPal", "gestpay-for-woocommerce")
+        __("Payment via PayPal", "gestpay-for-woocommerce"),
     ),
     supports: {
       features:
@@ -57,7 +57,7 @@ if (
   };
 
   /**
-   * Content component for the Gestpay PayPal payment method.
+   * Content component for the Fabrick Payment Orchestra PayPal payment method.
    */
   function GestpayPayPalContent(props) {
     const { eventRegistration, emitResponse } = props;
@@ -66,8 +66,8 @@ if (
     useEffect(() => {
       const unsubscribe = onPaymentSetup(async () => {
         try {
-          // For PayPal, we redirect to GestPay's payment page
-          // The actual payment processing happens on the GestPay side
+          // For PayPal, we redirect to Fabrick Payment Orchestra's payment page
+          // The actual payment processing happens on the Fabrick Payment Orchestra side
           const redirectUrl =
             paymentMethodData.redirectUrl || getPayPalRedirectUrl();
 
@@ -91,7 +91,7 @@ if (
 
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_paypal",
-      {}
+      {},
     );
 
     return createElement(
@@ -120,17 +120,17 @@ if (
               __html: decodeEntities(paymentMethodData.sandbox || ""),
             },
           }),
-      ]
+      ],
     );
   }
 
   /**
-   * Edit component for the Gestpay PayPal payment method.
+   * Edit component for the Fabrick Payment Orchestra PayPal payment method.
    */
   function GestpayPayPalEdit() {
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_paypal",
-      {}
+      {},
     );
 
     return createElement(
@@ -148,22 +148,22 @@ if (
           {
             className: "wc-gestpay-paypal-title",
           },
-          paymentMethodData.title
+          paymentMethodData.title,
         ),
         createElement(
           "div",
           {
             className: "wc-gestpay-paypal-description",
           },
-          paymentMethodData.description
+          paymentMethodData.description,
         ),
-      ]
+      ],
     );
   }
 
   /**
    * Get the PayPal redirect URL for payment processing.
-   * This should match the URL structure used by the main GestPay gateway.
+   * This should match the URL structure used by the main Fabrick Payment Orchestra gateway.
    */
   function getPayPalRedirectUrl() {
     // Get the current checkout URL
@@ -183,6 +183,6 @@ if (
 
   // Mark as registered
   window.wc.wcBlocksRegistry.__registeredPaymentMethods.add(
-    "wc_gateway_gestpay_paypal"
+    "wc_gateway_gestpay_paypal",
   );
 }

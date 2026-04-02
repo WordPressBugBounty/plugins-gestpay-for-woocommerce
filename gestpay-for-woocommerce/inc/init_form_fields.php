@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -30,7 +30,7 @@ else {
     $method = '';
 }
 
-$enable_label = "Abilita Gestpay " . $method . " se selezionato";
+$enable_label = "Abilita Fabrick Payment Orchestra " . $method . " se selezionato";
 
 $base_stuff = array(
     'enabled' => array(
@@ -49,7 +49,7 @@ $base_stuff = array(
         'title' => $this->gw->strings['gateway_desc'],
         'type' => 'textarea',
         'description' => $this->gw->strings['gateway_desc_label'],
-        'default' => "Paga in tutta sicurezza con GestPay."
+        'default' => "Paga in tutta sicurezza con Fabrick Payment Orchestra."
     ),
 );
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
  *
@@ -15,7 +15,7 @@ class WC_Gateway_Gestpay_PAYPAL extends WC_Gateway_Gestpay {
 
     public function __construct() {
 
-        $this->set_this_gateway_params( 'Gestpay PayPal' );
+        $this->set_this_gateway_params( 'Fabrick Payment Orchestra PayPal' );
         $this->paymentType = 'PAYPAL';
         $this->Helper->init_gateway( $this );
         $this->set_this_gateway();

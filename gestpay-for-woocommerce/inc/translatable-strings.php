@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -20,7 +20,7 @@ return array(
         __( "Enable/Disable", 'gestpay-for-woocommerce' ),
 
     "gateway_enabled_label" =>
-        __( "Enable Gestpay when selected.", 'gestpay-for-woocommerce' ),
+        __( "Enable Fabrick Payment Orchestra when selected.", 'gestpay-for-woocommerce' ),
 
     "gateway_title" =>
         __( "Title", 'gestpay-for-woocommerce' ),
@@ -47,13 +47,13 @@ return array(
         __( "Overwrite card icons", 'gestpay-for-woocommerce' ),
 
     "gateway_overwrite_cards_label" =>
-        __( "Select the cards you want to display as an icon (note: the fact that they are really active or not depends on the Gestpay settings)", 'gestpay-for-woocommerce' ),
+        __( "Select the cards you want to display as an icon (note: the fact that they are really active or not depends on the Fabrick Payment Orchestra settings)", 'gestpay-for-woocommerce' ),
 
     "crypted_string" =>
         __( "Crypted string", 'gestpay-for-woocommerce' ),
 
     "crypted_string_info" =>
-        __( "You are forcing the re-encryption process: this may cause multiple calls to the GestPay webservice.", 'gestpay-for-woocommerce' ),
+        __( "You are forcing the re-encryption process: this may cause multiple calls to the Fabrick Payment Orchestra webservice.", 'gestpay-for-woocommerce' ),
 
     "transaction_error" =>
         /* translators: 1: Order ID, 2: Error message */
@@ -73,7 +73,7 @@ return array(
 
     "payment_error" =>
         /* translators: 1: Error code, 2: Error message */
-        __( 'Gestpay Error #%1$s on Payment phase: %2$s', 'gestpay-for-woocommerce' ),
+        __( 'Fabrick Payment Orchestra Error #%1$s on Payment phase: %2$s', 'gestpay-for-woocommerce' ),
 
     "request_error" =>
         __( "There was an error with your request, please try again.", 'gestpay-for-woocommerce' ),
@@ -187,7 +187,7 @@ return array(
         __( "You can delete this authorized transaction if using the M.O.T.O. configuration with the separation between the authorization and the settlement phase.", 'gestpay-for-woocommerce' ),
 
     "subscr_approved" =>
-        __( "GestPay Subscription Renewal Payment Approved", 'gestpay-for-woocommerce' ),
+        __( "Fabrick Payment Orchestra Subscription Renewal Payment Approved", 'gestpay-for-woocommerce' ),
 
     "gestpay_cvv_help" =>
         __( "Where do I find the security code?", 'gestpay-for-woocommerce' ),

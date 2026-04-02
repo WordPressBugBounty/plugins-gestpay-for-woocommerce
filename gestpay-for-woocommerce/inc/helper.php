@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -349,7 +349,7 @@ class WC_Gateway_GestPay_Helper {
         // If a payment fails, the cent is assigned anyway to the order, so we must not add it again.
         $maybe_amount_fix = $order->get_meta(GESTPAY_ORDER_META_AMOUNT, true );
         if ( empty( $maybe_amount_fix ) ) {
-            $fix_message = "Addebito di ".$amount." ".$order_currency." per evitare errore per importo nullo su Gestpay. Si proverà a stornare tale importo automaticamente.";
+            $fix_message = "Addebito di ".$amount." ".$order_currency." per evitare errore per importo nullo su Fabrick Payment Orchestra. Si proverà a stornare tale importo automaticamente.";
             $this->log_add( $fix_message );
             $order->add_order_note( $fix_message );
             

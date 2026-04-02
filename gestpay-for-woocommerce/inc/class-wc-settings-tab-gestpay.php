@@ -2,7 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -31,7 +31,7 @@ class WC_Settings_Tab_Gestpay {
      * @return array $settings_tabs Array of WooCommerce setting tabs & their labels, including this tab.
      */
     public static function add_settings_tab( $settings_tabs ) {
-        $settings_tabs['settings_tab_gestpay'] = 'Gestpay for WooCommerce';
+        $settings_tabs['settings_tab_gestpay'] = 'Ecommerce Fabrick';
         return $settings_tabs;
     }
 
@@ -60,7 +60,7 @@ class WC_Settings_Tab_Gestpay {
     public static function get_IP_address() {
         $ip = wp_remote_retrieve_body(wp_remote_get('https://icanhazip.com/'));
         if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip)) {
-            return 'Indirizzo IP da utilizzare nel backoffice di Gestpay: <b style="font-size:18px">' . $ip . '</b> (<b>Nota:</b> Gestpay supporta solo indirizzi IPv4, IPv6 non è supportato).';
+            return 'Indirizzo IP da utilizzare nel backoffice di Gestpay: <b style="font-size:18px">' . $ip . '</b> (<b>Nota:</b> Ecommerce Fabrick supporta solo indirizzi IPv4, IPv6 non è supportato).';
         } elseif (preg_match('/^(([0-9A-Fa-f]{1,4}:){7})([0-9A-Fa-f]{1,4})$|(([0-9A-Fa-f]{1,4}:){1,6}:)(([0-9A-Fa-f]{1,4}:){0,4})([0-9A-Fa-f]{1,4})$/', $ip)) {
             return 'Indirizzo IPv6 non supportato ('.$ip.'). Contatta il supporto tecnico per maggiori informazioni.';
         }
@@ -93,7 +93,7 @@ class WC_Settings_Tab_Gestpay {
         if ( $is_active && ! $save_token ) {
             ?>
 <div class="error">
-    <p>Attenzione! WooCommerce Subscriptions è attivo ma GestPay è configurato per non memorizzare i Token: i pagamenti ricorrenti non potranno essere processati. Per poterli processare è necessario abilitare il salvataggio del Token.</p>
+    <p>Attenzione! WooCommerce Subscriptions è attivo ma Ecommerce Fabrick è configurato per non memorizzare i Token: i pagamenti ricorrenti non potranno essere processati. Per poterli processare è necessario abilitare il salvataggio del Token.</p>
 </div>
             <?php
         }
@@ -183,14 +183,14 @@ class WC_Settings_Tab_Gestpay {
 
             // ------------------------------------------------- Main options
             array(
-                'title' => 'Opzioni Gestpay - Axerve E-commerce Solutions',
+                'title' => 'Opzioni Fabrick Payment Orchestra - Axerve E-commerce Solutions',
                 'desc' => '',
                 'type' => 'title',
                 'id' => 'section0',
             ),
             array(
                 'title' => 'Versione account',
-                'desc' => '<br>Seleziona la versione del tuo account Gestpay - Axerve E-commerce Solutions.'.
+                'desc' => '<br>Seleziona la versione del tuo account Fabrick Payment Orchestra - Axerve E-commerce Solutions.'.
                     '<br>- La versione On-Site consente di effettuare i pagamenti nella pagina del checkout'.
                         ' e richiede che siano abilitati i servizi "Tokenization" e "Authorization". Sarà possibile utilizzare '. $wcs.
                     '<br>- La versione iFrame consente di effettuare i pagamenti nella pagina di pagamento di WooCommerce,'.
@@ -200,17 +200,17 @@ class WC_Settings_Tab_Gestpay {
                 'default' => GESTPAY_STARTER,
                 'type' => 'select',
                 'options' => array(
-                    GESTPAY_STARTER => "Gestpay Starter",
-                    GESTPAY_PROFESSIONAL => "Gestpay Professional",
-                    GESTPAY_PRO_TOKEN_AUTH => "Gestpay Professional On-Site",
-                    GESTPAY_PRO_TOKEN_IFRAME => "Gestpay Professional iFrame",
+                    GESTPAY_STARTER => "Fabrick Payment Orchestra Starter",
+                    GESTPAY_PROFESSIONAL => "Fabrick Payment Orchestra Professional",
+                    GESTPAY_PRO_TOKEN_AUTH => "Fabrick Payment Orchestra Professional On-Site",
+                    GESTPAY_PRO_TOKEN_IFRAME => "Fabrick Payment Orchestra Professional iFrame",
                 ),
                 'id' => 'wc_gestpay_account_type',
             ),
             array(
-                'title' => 'Gestpay Shop Login:',
+                'title' => 'Fabrick Payment Orchestra Shop Login:',
                 'type' => 'text',
-                'desc' => "<br>Inserisci il tuo Shop Login fornito da Gestpay. Lo Shop Login è nella forma GESPAY12345 oppure 9012345, rispettivamente per l'ambiente di test e per quello di produzione.",
+                'desc' => "<br>Inserisci il tuo Shop Login fornito da Fabrick Payment Orchestra. Lo Shop Login è nella forma GESPAY12345 oppure 9012345, rispettivamente per l'ambiente di test e per quello di produzione.",
                 'default' => '',
                 'id' => 'wc_gestpay_shop_login',
             ),
@@ -246,9 +246,9 @@ class WC_Settings_Tab_Gestpay {
 
             // ------------------------------------------------- Pro parameters
             array(
-                'title' => 'Parametri opzionali di Gestpay Professional',
+                'title' => 'Parametri opzionali di Fabrick Payment Orchestra Professional',
                 'type' => 'title',
-                'desc' => 'Nota: per abilitare/valorizzare tali parametri è necessario che siano stati abilitati anche nel backoffice di Gestpay, nella sezione "Campi&Parametri"',
+                'desc' => 'Nota: per abilitare/valorizzare tali parametri è necessario che siano stati abilitati anche nel backoffice di Fabrick Payment Orchestra, nella sezione "Campi&Parametri"',
                 'id' => 'wc_gateway_gestpay_pro_parameters'
             ),
             array(
@@ -267,7 +267,7 @@ class WC_Settings_Tab_Gestpay {
                 'title' => 'Language:',
                 'type' => 'checkbox',
                 'default' => 'no',
-                'desc' => "Permette di impostare automaticamente la lingua della pagina di pagamento di Gestpay (richiede qTranslate-X o WPML)",
+                'desc' => "Permette di impostare automaticamente la lingua della pagina di pagamento di Fabrick Payment Orchestra (richiede qTranslate-X o WPML)",
                 'id' => 'wc_gestpay_param_language',
             ),
             array(
@@ -291,9 +291,9 @@ class WC_Settings_Tab_Gestpay {
 
             // ------------------------------------------------- More gateways
             array(
-                'title' => 'Tipi di pagamento di Gestpay Professional',
+                'title' => 'Tipi di pagamento di Fabrick Payment Orchestra Professional',
                 'type' => 'title',
-                'desc' => 'È possibile aggiungere separatamente anche i pagamenti anche attraverso altri metodi di pagamento. Questi devo essere stati abilitati da Gestpay.',
+                'desc' => 'È possibile aggiungere separatamente anche i pagamenti anche attraverso altri metodi di pagamento. Questi devo essere stati abilitati da Fabrick Payment Orchestra.',
                 'id' => 'wc_gateway_gestpay_pro_parameters_payment_types'
             ),
             array(
@@ -311,7 +311,7 @@ class WC_Settings_Tab_Gestpay {
 
             array(
                 'title' => '',
-                'desc' => 'Con Gestpay Professional è possibile aggiungere pagine di pagamento differenti per differenti metodi di pagamento.<br>Seleziona qui quali modilità di pagamento abilitare; poi salva e infine vai nel tab "Cassa" per vedere abilitati i tipi di pagamento selezionati.<br>Si faccia riferimento al manuale per maggiori informazioni. Nota: i metodi di pagamento selezionati devono essere abilitati anche nel Backoffice Gestpay.<br/><br/>Con l\'ultima versione del nostro plugin, <b>il checkout a blocchi di WooCommerce è ora completamente compatibile con tutti i sistemi di pagamento</b>, inclusi carta di credito, PayPal, BANCOMATPay, Consel e MyBank.<br/>
+                'desc' => 'Con Fabrick Payment Orchestra Professional è possibile aggiungere pagine di pagamento differenti per differenti metodi di pagamento.<br>Seleziona qui quali modilità di pagamento abilitare; poi salva e infine vai nel tab "Cassa" per vedere abilitati i tipi di pagamento selezionati.<br>Si faccia riferimento al manuale per maggiori informazioni. Nota: i metodi di pagamento selezionati devono essere abilitati anche nel Backoffice Fabrick Payment Orchestra.<br/><br/>Con l\'ultima versione del nostro plugin, <b>il checkout a blocchi di WooCommerce è ora completamente compatibile con tutti i sistemi di pagamento</b>, inclusi carta di credito, PayPal, BANCOMATPay, Consel e MyBank.<br/>
 Puoi <b>attivare subito il checkout a blocchi</b> e offrire un\'esperienza d\'acquisto moderna ai tuoi clienti con il supporto completo per tutti i metodi di pagamento disponibili.<br/><br/>
 Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="https://doc.fabrick.it/it/plugin/woocommerce/blocks-integration/" target="_blank">documentazione ufficiale di Fabrick</a>.<br/>',
                 'type' => 'title',
@@ -380,9 +380,9 @@ Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="ht
             ),
             array(
                 // *** @deprecated - with 3DS 2.0 this is no longer useful, but is kept for compatibility ***
-                'title' => 'Gestpay Shop Login Recurring:',
+                'title' => 'Fabrick Payment Orchestra Shop Login Recurring:',
                 'type' => 'text',
-                'desc' => "<br>Inserisci il tuo Shop Login fornito da Gestpay per i soli pagamenti ricorrenti (3DS non abilitato).",
+                'desc' => "<br>Inserisci il tuo Shop Login fornito da Fabrick Payment Orchestra per i soli pagamenti ricorrenti (3DS non abilitato).",
                 'default' => '',
                 'id' => 'wc_gestpay_shop_login_recurring',
             ),
@@ -390,14 +390,14 @@ Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="ht
                 // *** @deprecated - with 3DS 2.0 this is no longer useful, but is kept for compatibility ***
                 'title' => 'API Key Recurring:',
                 'type' => 'password',
-                'desc' => "<br>Inserisci opzionalmente l'API Key per abilitare l'autenticazione congiunta o alternativa a quella con indirizzo IP per Gestpay Shop Login Recurring. <a href=\"".$url_doc."\" target=\"_blank\">Fai click qui per maggiori informazioni</a>",
+                'desc' => "<br>Inserisci opzionalmente l'API Key per abilitare l'autenticazione congiunta o alternativa a quella con indirizzo IP per Fabrick Payment Orchestra Shop Login Recurring. <a href=\"".$url_doc."\" target=\"_blank\">Fai click qui per maggiori informazioni</a>",
                 'default' => '',
                 'id' => 'wc_gestpay_api_key_recurring',
             ),
             array(
                 'title' => 'Memorizza Token',
                 'type' => 'checkbox',
-                'desc' => 'Se selezionato memorizza il token della carta e consente all\'acquirente di riusare una carta precedentemente inserita (solo per la versione "On-site"), oltre che permettere di effettuare i pagamenti ricorrenti tramite '.$wcs.'. <strong>Se non selezionato i pagamenti ricorrenti con WooCommerce Subscriptions non potranno essere processati</strong>.<br>Verificare nel proprio account Gestpay, sezione "Campi&Parametri", che per il parametro "TOKEN" sia abiliato per la "Risposta" e per la "Risposta Web Service"',
+                'desc' => 'Se selezionato memorizza il token della carta e consente all\'acquirente di riusare una carta precedentemente inserita (solo per la versione "On-site"), oltre che permettere di effettuare i pagamenti ricorrenti tramite '.$wcs.'. <strong>Se non selezionato i pagamenti ricorrenti con WooCommerce Subscriptions non potranno essere processati</strong>.<br>Verificare nel proprio account Fabrick Payment Orchestra, sezione "Campi&Parametri", che per il parametro "TOKEN" sia abiliato per la "Risposta" e per la "Risposta Web Service"',
                 'id' => 'wc_gestpay_param_tokenization_save_token',
                 'default' => 'no',
             ),
@@ -412,7 +412,7 @@ Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="ht
             array(
                 'title' => 'CVV',
                 'type' => 'checkbox',
-                'desc' => 'Invia anche il campo CVV (Card Verification Value) quando viene effettuata la richiesta del token. ATTENZIONE: se il campo è impostato come <i>Input</i> nel Back Office di Gestpay, questa opzione deve essere selezionata altrimenti si otterrà un errore.',
+                'desc' => 'Invia anche il campo CVV (Card Verification Value) quando viene effettuata la richiesta del token. ATTENZIONE: se il campo è impostato come <i>Input</i> nel Back Office di Fabrick Payment Orchestra, questa opzione deve essere selezionata altrimenti si otterrà un errore.',
                 'id' => 'wc_gestpay_param_tokenization_send_cvv',
                 'default' => 'no',
             ),
@@ -460,7 +460,7 @@ Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="ht
                 'type' => 'checkbox',
                 'label' => "Abilita la registrazione degli eventi",
                 'default' => 'yes',
-                'desc' => 'Memorizza alcuni eventi di Gestpay nel file di log.',
+                'desc' => 'Memorizza alcuni eventi di Fabrick Payment Orchestra nel file di log.',
                 'id' => 'wc_gestpay_debug',
             ),
             array(
@@ -487,7 +487,7 @@ Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="ht
                 'title' => 'Forza verifica risposta',
                 'type' => 'checkbox',
                 'label' => ' ',
-                'desc' => 'Se selezionato, verrà forzata la verifica della risposta restituita da Gestpay. <strong>Si consiglia di utilizzare questa opzione solo in caso di problemi con l\'aggiornamento dello stato dell\'ordine</strong>.',
+                'desc' => 'Se selezionato, verrà forzata la verifica della risposta restituita da Fabrick Payment Orchestra. <strong>Si consiglia di utilizzare questa opzione solo in caso di problemi con l\'aggiornamento dello stato dell\'ordine</strong>.',
                 'default' => 'no',
                 'id' => 'wc_gestpay_force_check_gateway_response',
             ),
@@ -496,7 +496,7 @@ Per maggiori informazioni sul checkout a blocchi, puoi consultare la <a href="ht
                 'type' => 'checkbox',
                 'label' => ' ',
                 'default' => 'no',
-                'desc' => "Se selezionato, verrà forzata la ri-cifratura: in alcuni casi può essere utile forzare la ri-cifratura della stringa inviata al server Gestpay. <strong>Attenzione: questa è una funzionalità sperimentale! Attivare questa funzione solo se si è consci di cosa si sta facendo.</strong>",
+                'desc' => "Se selezionato, verrà forzata la ri-cifratura: in alcuni casi può essere utile forzare la ri-cifratura della stringa inviata al server Fabrick Payment Orchestra. <strong>Attenzione: questa è una funzionalità sperimentale! Attivare questa funzione solo se si è consci di cosa si sta facendo.</strong>",
                 'id' => 'wc_gestpay_force_recrypt',
             ),
             array(

@@ -1,5 +1,5 @@
 /**
- * Gestpay MyBank Payment Method Integration for WooCommerce Blocks
+ * Fabrick Payment Orchestra MyBank Payment Method Integration for WooCommerce Blocks
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -17,7 +17,7 @@ if (
 // Only register if not already registered
 if (
   !window.wc.wcBlocksRegistry.__registeredPaymentMethods.has(
-    "wc_gateway_gestpay_mybank"
+    "wc_gateway_gestpay_mybank",
   )
 ) {
   const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
@@ -28,13 +28,13 @@ if (
   const { __ } = window.wp.i18n;
 
   /**
-   * Gestpay MyBank payment method config object.
+   * Fabrick Payment Orchestra MyBank payment method config object.
    */
   const gestpayMyBankPaymentMethod = {
     name: "wc_gateway_gestpay_mybank",
     label: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_mybank", {}).title ||
-        __("MyBank", "gestpay-for-woocommerce")
+        __("MyBank", "gestpay-for-woocommerce"),
     ),
     content: createElement(GestpayMyBankContent),
     edit: createElement(GestpayMyBankEdit),
@@ -42,13 +42,13 @@ if (
       // Check if payment method data is available
       const paymentMethodData = getPaymentMethodData(
         "wc_gateway_gestpay_mybank",
-        {}
+        {},
       );
       return paymentMethodData && paymentMethodData.title;
     },
     ariaLabel: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_mybank", {}).title ||
-        __("Payment via MyBank", "gestpay-for-woocommerce")
+        __("Payment via MyBank", "gestpay-for-woocommerce"),
     ),
     supports: {
       features:
@@ -57,7 +57,7 @@ if (
   };
 
   /**
-   * Content component for the Gestpay MyBank payment method.
+   * Content component for the Fabrick Payment Orchestra MyBank payment method.
    */
   function GestpayMyBankContent(props) {
     const { eventRegistration, emitResponse } = props;
@@ -69,7 +69,7 @@ if (
 
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_mybank",
-      {}
+      {},
     );
 
     // Load banks on component mount
@@ -90,7 +90,7 @@ if (
         // Small delay to ensure DOM is ready
         setTimeout(() => {
           const selectElement = document.getElementById(
-            "gestpay-mybank-banklist"
+            "gestpay-mybank-banklist",
           );
           if (selectElement) {
             window.jQuery(selectElement).selectWoo({
@@ -127,7 +127,7 @@ if (
       return () => {
         if (selectWooInitialized && window.jQuery) {
           const selectElement = document.getElementById(
-            "gestpay-mybank-banklist"
+            "gestpay-mybank-banklist",
           );
           if (selectElement) {
             window.jQuery(selectElement).selectWoo("destroy");
@@ -165,8 +165,8 @@ if (
             }
           }
 
-          // For MyBank, we redirect to GestPay's payment page
-          // The actual payment processing happens on the GestPay side
+          // For MyBank, we redirect to Fabrick Payment Orchestra's payment page
+          // The actual payment processing happens on the Fabrick Payment Orchestra side
           const redirectUrl = getMyBankRedirectUrl(selectedBank);
 
           return {
@@ -253,7 +253,7 @@ if (
                     },
                     "--- " +
                       __("Choose an option", "gestpay-for-woocommerce") +
-                      " ---"
+                      " ---",
                   ),
                   ...Object.entries(banks).map(([code, name]) =>
                     createElement(
@@ -262,10 +262,10 @@ if (
                         key: code,
                         value: code,
                       },
-                      name
-                    )
+                      name,
+                    ),
                   ),
-                ]
+                ],
               ),
               createElement(
                 "span",
@@ -273,7 +273,7 @@ if (
                   key: "required",
                   className: "required",
                 },
-                " *"
+                " *",
               ),
               createElement(
                 "p",
@@ -293,9 +293,9 @@ if (
                         "Can't find your bank?",
                     },
                   }),
-                ]
+                ],
               ),
-            ]
+            ],
           ),
         paymentMethodData.isSandbox &&
           createElement("p", {
@@ -311,19 +311,19 @@ if (
               key: "loading",
               className: "gestpay-mybank-loading",
             },
-            __("Processing payment...", "gestpay-for-woocommerce")
+            __("Processing payment...", "gestpay-for-woocommerce"),
           ),
-      ]
+      ],
     );
   }
 
   /**
-   * Edit component for the Gestpay MyBank payment method.
+   * Edit component for the Fabrick Payment Orchestra MyBank payment method.
    */
   function GestpayMyBankEdit() {
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_mybank",
-      {}
+      {},
     );
 
     return createElement(
@@ -341,16 +341,16 @@ if (
           {
             className: "wc-gestpay-mybank-title",
           },
-          paymentMethodData.title
+          paymentMethodData.title,
         ),
         createElement(
           "div",
           {
             className: "wc-gestpay-mybank-description",
           },
-          paymentMethodData.description
+          paymentMethodData.description,
         ),
-      ]
+      ],
     );
   }
 
@@ -375,7 +375,7 @@ if (
 
   /**
    * Get the MyBank redirect URL for payment processing.
-   * This should match the URL structure used by the main GestPay gateway.
+   * This should match the URL structure used by the main Fabrick Payment Orchestra gateway.
    */
   function getMyBankRedirectUrl(selectedBank) {
     // Get the current checkout URL
@@ -400,6 +400,6 @@ if (
 
   // Mark as registered
   window.wc.wcBlocksRegistry.__registeredPaymentMethods.add(
-    "wc_gateway_gestpay_mybank"
+    "wc_gateway_gestpay_mybank",
   );
 }

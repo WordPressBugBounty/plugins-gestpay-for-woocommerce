@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -493,7 +493,7 @@ class Gestpay_Order_Actions {
                 }
                 else {
                     $resp_err = '[Error ' . $d_xml->ErrorCode . '] ' . $d_xml->ErrorDescription;
-                    $resp_err.= ' - Verifica la transazione nel backoffice Gestpay e gestisci manualmente questo caso.';
+                    $resp_err.= ' - Verifica la transazione nel backoffice Fabrick Payment Orchestra e gestisci manualmente questo caso.';
                     $this->Helper->log_add( $pre.$resp_err );
                     $this->Helper->log_add( '[CallReadTrxS2S RESPONSE]: ', $xml_response );
                     $this->Helper->log_add( '[CallDeleteS2S RESPONSE]: ', $d_xml );

@@ -1,5 +1,5 @@
 /**
- * Gestpay Payment Method Integration for WooCommerce Blocks
+ * Fabrick Payment Orchestra Payment Method Integration for WooCommerce Blocks
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -17,7 +17,7 @@ if (
 // Only register if not already registered
 if (
   !window.wc.wcBlocksRegistry.__registeredPaymentMethods.has(
-    "wc_gateway_gestpay"
+    "wc_gateway_gestpay",
   )
 ) {
   const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
@@ -28,13 +28,13 @@ if (
   const { __ } = window.wp.i18n;
 
   /**
-   * Gestpay payment method config object.
+   * Fabrick Payment Orchestra payment method config object.
    */
   const gestpayPaymentMethod = {
     name: "wc_gateway_gestpay",
     label: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay", {}).title ||
-        __("Gestpay", "gestpay-for-woocommerce")
+        __("Gestpay", "gestpay-for-woocommerce"),
     ),
     content: createElement(GestpayContent),
     edit: createElement(GestpayEdit),
@@ -45,7 +45,7 @@ if (
     },
     ariaLabel: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay", {}).title ||
-        __("Payment via Gestpay", "gestpay-for-woocommerce")
+        __("Payment via Gestpay", "gestpay-for-woocommerce"),
     ),
     supports: {
       features: getPaymentMethodData("wc_gateway_gestpay", {}).supports || [],
@@ -53,7 +53,7 @@ if (
   };
 
   /**
-   * Content component for the Gestpay payment method.
+   * Content component for the Fabrick Payment Orchestra payment method.
    */
   function GestpayContent(props) {
     const { eventRegistration, emitResponse } = props;
@@ -85,7 +85,7 @@ if (
     const infoModal = paymentMethodData.infoModal || "";
     const savedCards = paymentMethodData.savedCards;
     const [defaultToken, setDefaultToken] = useState(
-      paymentMethodData.defaultToken || "new-card"
+      paymentMethodData.defaultToken || "new-card",
     );
     const [cardData, setCardData] = useState({
       cardNumber: "",
@@ -200,7 +200,7 @@ if (
                 __html: decodeEntities(paymentMethodData.sandbox || ""),
               },
             }),
-        ]
+        ],
       );
     }
 
@@ -249,7 +249,7 @@ if (
                   href: manageCardsEndpoint,
                   target: "_blank",
                 },
-                manageCardsText
+                manageCardsText,
               ),
               createElement(
                 "div",
@@ -257,7 +257,7 @@ if (
                   key: "clear-div",
                   className: "clear",
                 },
-                null
+                null,
               ),
               savedCards.map((card, index) => {
                 return [
@@ -285,7 +285,7 @@ if (
                         display: "inline-block",
                       },
                     },
-                    card.expir_str
+                    card.expir_str,
                   ),
                   createElement("br", {
                     key: `gestpay-s2s-cc-token-br-${index}`,
@@ -315,9 +315,9 @@ if (
                     display: "inline-block",
                   },
                 },
-                newCardText
+                newCardText,
               ),
-            ]
+            ],
           ),
 
         // Credit card form
@@ -342,7 +342,7 @@ if (
                       key: "label",
                       htmlFor: "gestpay-card-number",
                     },
-                    cardNumberLabel
+                    cardNumberLabel,
                   ),
                   createElement("input", {
                     key: "input",
@@ -353,14 +353,14 @@ if (
                     onChange: (e) =>
                       handleInputChange(
                         "cardNumber",
-                        formatCardNumber(e.target.value)
+                        formatCardNumber(e.target.value),
                       ),
                     placeholder: "1234 5678 9012 3456",
                     maxLength: 19,
                     required: true,
                     className: "input-text",
                   }),
-                ]
+                ],
               ),
 
               createElement(
@@ -386,7 +386,7 @@ if (
                           key: "label",
                           htmlFor: "gestpay-expiry-month",
                         },
-                        expDateLabel
+                        expDateLabel,
                       ),
                       createElement(
                         "div",
@@ -405,7 +405,7 @@ if (
                               onChange: (e) =>
                                 handleInputChange(
                                   "expiryMonth",
-                                  e.target.value
+                                  e.target.value,
                                 ),
                               required: true,
                               className: "input-text",
@@ -414,17 +414,17 @@ if (
                               createElement(
                                 "option",
                                 { key: "default", value: "" },
-                                expMonthLabel
+                                expMonthLabel,
                               ),
                               ...Array.from({ length: 12 }, (_, i) => {
                                 const month = String(i + 1).padStart(2, "0");
                                 return createElement(
                                   "option",
                                   { key: month, value: month },
-                                  month
+                                  month,
                                 );
                               }),
-                            ]
+                            ],
                           ),
                           createElement(
                             "select",
@@ -442,11 +442,11 @@ if (
                               createElement(
                                 "option",
                                 { key: "default", value: "" },
-                                expYearLabel
+                                expYearLabel,
                               ),
                               ...Array.from({ length: 10 }, (_, i) => {
                                 const year = String(
-                                  new Date().getFullYear() + i
+                                  new Date().getFullYear() + i,
                                 );
                                 return createElement(
                                   "option",
@@ -454,14 +454,14 @@ if (
                                     key: year.slice(-2),
                                     value: year.slice(-2),
                                   },
-                                  year
+                                  year,
                                 );
                               }),
-                            ]
+                            ],
                           ),
-                        ]
+                        ],
                       ),
-                    ]
+                    ],
                   ),
 
                   // CVV
@@ -479,7 +479,7 @@ if (
                             key: "label",
                             htmlFor: "gestpay-cvv",
                           },
-                          cardCVVLabel
+                          cardCVVLabel,
                         ),
                         createElement("input", {
                           key: "input",
@@ -490,7 +490,7 @@ if (
                           onChange: (e) =>
                             handleInputChange(
                               "cvv",
-                              e.target.value.replace(/\D/g, "")
+                              e.target.value.replace(/\D/g, ""),
                             ),
                           placeholder: "123",
                           maxLength: 4,
@@ -514,11 +514,11 @@ if (
                                 "data-src": "#gestpay-fancybox-cvv-modal",
                                 href: "javascript:;",
                               },
-                              infoBox
+                              infoBox,
                             ),
-                          ]
+                          ],
                         ),
-                      ]
+                      ],
                     ),
 
                   // Fancybox modal
@@ -528,7 +528,7 @@ if (
                       __html: decodeEntities(infoModal || ""),
                     },
                   }),
-                ]
+                ],
               ),
 
               // Cardholder Name
@@ -546,7 +546,7 @@ if (
                         key: "label",
                         htmlFor: "gestpay-cc-buyer-name",
                       },
-                      cardholderNameLabel
+                      cardholderNameLabel,
                     ),
                     createElement("input", {
                       key: "input",
@@ -559,16 +559,16 @@ if (
                       required: true,
                       className: "input-text",
                     }),
-                  ]
+                  ],
                 ),
-            ]
+            ],
           ),
-      ]
+      ],
     );
   }
 
   /**
-   * Edit component for the Gestpay payment method (admin/editor view).
+   * Edit component for the Fabrick Payment Orchestra payment method (admin/editor view).
    */
   function GestpayEdit() {
     const paymentMethodData = getPaymentMethodData("wc_gateway_gestpay", {});
@@ -592,7 +592,7 @@ if (
             __html: paymentMethodData.icon || "",
           },
         }),
-      ]
+      ],
     );
   }
 
@@ -601,6 +601,6 @@ if (
 
   // Mark as registered
   window.wc.wcBlocksRegistry.__registeredPaymentMethods.add(
-    "wc_gateway_gestpay"
+    "wc_gateway_gestpay",
   );
 }

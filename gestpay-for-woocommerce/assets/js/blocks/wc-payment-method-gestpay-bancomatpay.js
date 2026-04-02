@@ -1,5 +1,5 @@
 /**
- * Gestpay Bancomatpay Payment Method Integration for WooCommerce Blocks
+ * Fabrick Payment Orchestra Bancomatpay Payment Method Integration for WooCommerce Blocks
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -17,7 +17,7 @@ if (
 // Only register if not already registered
 if (
   !window.wc.wcBlocksRegistry.__registeredPaymentMethods.has(
-    "wc_gateway_gestpay_bancomatpay"
+    "wc_gateway_gestpay_bancomatpay",
   )
 ) {
   const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
@@ -28,13 +28,13 @@ if (
   const { __ } = window.wp.i18n;
 
   /**
-   * Gestpay Bancomatpay payment method config object.
+   * Fabrick Payment Orchestra Bancomatpay payment method config object.
    */
   const gestpayBancomatpayPaymentMethod = {
     name: "wc_gateway_gestpay_bancomatpay",
     label: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_bancomatpay", {}).title ||
-        __("Bancomatpay", "gestpay-for-woocommerce")
+        __("Bancomatpay", "gestpay-for-woocommerce"),
     ),
     content: createElement(GestpayBancomatpayContent),
     edit: createElement(GestpayBancomatpayEdit),
@@ -42,13 +42,13 @@ if (
       // Check if payment method data is available
       const paymentMethodData = getPaymentMethodData(
         "wc_gateway_gestpay_bancomatpay",
-        {}
+        {},
       );
       return paymentMethodData && paymentMethodData.title;
     },
     ariaLabel: decodeEntities(
       getPaymentMethodData("wc_gateway_gestpay_bancomatpay", {}).title ||
-        __("Payment via Bancomatpay", "gestpay-for-woocommerce")
+        __("Payment via Bancomatpay", "gestpay-for-woocommerce"),
     ),
     supports: {
       features:
@@ -58,7 +58,7 @@ if (
   };
 
   /**
-   * Content component for the Gestpay Bancomatpay payment method.
+   * Content component for the Fabrick Payment Orchestra Bancomatpay payment method.
    */
   function GestpayBancomatpayContent(props) {
     const { eventRegistration, emitResponse } = props;
@@ -67,8 +67,8 @@ if (
     useEffect(() => {
       const unsubscribe = onPaymentSetup(async () => {
         try {
-          // For Bancomatpay, we redirect to GestPay's payment page
-          // The actual payment processing happens on the GestPay side
+          // For Bancomatpay, we redirect to Fabrick Payment Orchestra's payment page
+          // The actual payment processing happens on the Fabrick Payment Orchestra side
           const redirectUrl =
             paymentMethodData.redirectUrl || getBancomatpayRedirectUrl();
 
@@ -92,7 +92,7 @@ if (
 
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_bancomatpay",
-      {}
+      {},
     );
 
     return createElement(
@@ -121,17 +121,17 @@ if (
               __html: decodeEntities(paymentMethodData.sandbox || ""),
             },
           }),
-      ]
+      ],
     );
   }
 
   /**
-   * Edit component for the Gestpay Bancomatpay payment method.
+   * Edit component for the Fabrick Payment Orchestra Bancomatpay payment method.
    */
   function GestpayBancomatpayEdit() {
     const paymentMethodData = getPaymentMethodData(
       "wc_gateway_gestpay_bancomatpay",
-      {}
+      {},
     );
 
     return createElement(
@@ -149,22 +149,22 @@ if (
           {
             className: "wc-gestpay-bancomatpay-title",
           },
-          paymentMethodData.title
+          paymentMethodData.title,
         ),
         createElement(
           "div",
           {
             className: "wc-gestpay-bancomatpay-description",
           },
-          paymentMethodData.description
+          paymentMethodData.description,
         ),
-      ]
+      ],
     );
   }
 
   /**
    * Get the Bancomatpay redirect URL for payment processing.
-   * This should match the URL structure used by the main GestPay gateway.
+   * This should match the URL structure used by the main Fabrick Payment Orchestra gateway.
    */
   function getBancomatpayRedirectUrl() {
     // Get the current checkout URL
@@ -184,6 +184,6 @@ if (
 
   // Mark as registered
   window.wc.wcBlocksRegistry.__registeredPaymentMethods.add(
-    "wc_gateway_gestpay_bancomatpay"
+    "wc_gateway_gestpay_bancomatpay",
   );
 }

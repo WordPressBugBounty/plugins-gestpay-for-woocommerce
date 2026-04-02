@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestpay for WooCommerce - Blocks Integration
+ * Ecommerce Fabrick - Blocks Integration
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -86,7 +86,7 @@ final class Gestpay_Blocks_Integration extends AbstractPaymentMethodType {
      */
     public function get_payment_method_data() {
         // Get basic settings
-        $title = $this->get_setting( 'title', 'Gestpay' );
+        $title = $this->get_setting( 'title', 'Fabrick Payment Orchestra' );
         $description = $this->get_setting( 'description', '' );
         $account_type = get_option( 'wc_gestpay_account_type', 0 );
         $is_sandbox = "yes" === get_option( 'wc_gestpay_test_url', 'no' );
@@ -145,7 +145,7 @@ final class Gestpay_Blocks_Integration extends AbstractPaymentMethodType {
         <p id="gestpay-s2s-sandbox">
             <small>
                 <strong>Test Mode</strong><br>
-                <a href="https://docs.axerve.com/en/testing/testing-cards" target="_blank">gestpay test cards</a>
+                <a href="https://docs.axerve.com/en/testing/testing-cards" target="_blank">Fabrick Payment Orchestra test cards</a>
             </small>
         </p>';
 

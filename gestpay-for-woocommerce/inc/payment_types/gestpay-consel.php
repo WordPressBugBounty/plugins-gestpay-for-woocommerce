@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
  *
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class WC_Gateway_Gestpay_CONSEL extends WC_Gateway_Gestpay {
     public function __construct() {
-        $this->set_this_gateway_params( 'Gestpay Consel' );
+        $this->set_this_gateway_params( 'Fabrick Payment Orchestra Consel' );
         $this->paymentType = 'CONSEL';
         $this->Helper->init_gateway( $this );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestpay MyBank for WooCommerce - Blocks Integration
+ * Fabrick Payment Orchestra MyBank for WooCommerce - Blocks Integration
  *
  * @package Gestpay_For_WooCommerce
  * @since 20250912
@@ -19,7 +19,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 use Automattic\WooCommerce\Blocks\Assets\Api;
 
 /**
- * Gestpay MyBank Blocks Integration
+ * Fabrick Payment Orchestra MyBank Blocks Integration
  *
  * @since 20250912
  */

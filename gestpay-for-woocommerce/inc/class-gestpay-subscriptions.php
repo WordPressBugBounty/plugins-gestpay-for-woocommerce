@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gestpay for WooCommerce
+ * Ecommerce Fabrick
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
  * Copyright: © 2017-2021 Axerve S.p.A. - Gruppo Banca Sella (https://www.axerve.com - ecommerce@sella.it)
@@ -208,7 +208,7 @@ class Gestpay_Subscriptions {
         else {
             if ( ! empty( $args['pares'] ) ) {
                 // S2S Payment Phase 3
-                    $params->transKey = OrderUtil::custom_orders_table_usage_is_enabled() ? $order->get_meta( GESTPAY_ORDER_META_TRANS_KEY, true ) : get_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, TRUE );
+                $params->transKey = OrderUtil::custom_orders_table_usage_is_enabled() ? $order->get_meta( GESTPAY_ORDER_META_TRANS_KEY, true ) : get_post_meta( $order_id, GESTPAY_ORDER_META_TRANS_KEY, TRUE );
                 $params->PARes = $args['pares'];
             }
             else {
@@ -454,7 +454,7 @@ class Gestpay_Subscriptions {
     public function renewal_payment_failure( $renewal_order, $message = '' ) {
         $renewal_order_err = sprintf(
             /* translators: %s: Error message */
-            __( 'Gestpay S2S Error: %s', 'gestpay-for-woocommerce' ),
+            __( 'Fabrick Payment Orchestra S2S Error: %s', 'gestpay-for-woocommerce' ),
             $message
         );
 
