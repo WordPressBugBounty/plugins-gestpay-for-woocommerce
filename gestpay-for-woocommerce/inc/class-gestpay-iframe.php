@@ -17,6 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  */
 class Gestpay_Iframe {
 
+    /** @var WC_Gateway_Gestpay */
+    public $Gestpay;
+    /** @var WC_Gateway_GestPay_Helper */
+    public $Helper;
+    public $can_have_cards;
+    /** @var Gestpay_Subscriptions */
+    public $Subscr;
+
     public function __construct( $gestpay ) {
 
         // Get a pointer to the main class and to the helper.
@@ -148,7 +156,7 @@ class Gestpay_Iframe {
     /**
      * Clean up iframe cookies.
      */
-    function delete_cookies() {
+    public function delete_cookies() {
 
         $this->set_cookie( 'GestPayEncString', '', 1 );
         $this->set_cookie( 'TransKey', '', 1 );

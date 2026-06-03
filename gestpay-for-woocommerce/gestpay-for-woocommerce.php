@@ -3,15 +3,15 @@
  * Plugin Name: Ecommerce Fabrick
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento Ecommerce Fabrick for Woocommerce.
- * Version: 20260402
+ * Version: 20260604
  * Requires at least: 4.7
- * Requires PHP: 7.0
- * Tested up to: 6.9
+ * Requires PHP: 7.4
+ * Tested up to: 7.0
  * Author: Fabrick (Gruppo Banca Sella)
  * Author URI: https://www.fabrick.com
  *
  * WC requires at least: 6.9
- * WC tested up to: 10.6
+ * WC tested up to: 10.8.1
  * Requires Plugins: woocommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
@@ -98,7 +98,52 @@ function gestpay_init_wc_gateway_gestpay() {
      */
     class WC_Gateway_Gestpay extends WC_Payment_Gateway {
 
-        function __construct() {
+        /** @var WC_Gateway_GestPay_Helper */
+        public $Helper;
+        public $paymentType;
+        public $plugin_url;
+        public $plugin_path;
+        public $textdomain;
+        public $logfile;
+        public $logo;
+        public $shopLogin;
+        public $account;
+        public $apikey;
+        public $is_sandbox;
+        public $force_recrypt;
+        public $force_check;
+        public $debug;
+        public $is_moto_sep;
+        public $completed_order_status;
+        public $is_s2s;
+        public $is_iframe;
+        public $is_tokenization;
+        public $is_cvv_required;
+        public $save_token;
+        public $token_with_auth;
+        public $param_buyer_email;
+        public $param_buyer_name;
+        public $param_language;
+        public $param_payment_types;
+        public $param_seller_protection;
+        public $param_custominfo;
+        public $shopLoginRec;
+        public $apikeyRec;
+        public $ws_url;
+        public $ws_S2S_url;
+        public $payment_url;
+        public $pagam3d_url;
+        public $iframe_url;
+        public $ws_S2S_resp_url;
+        /** @var Gestpay_Order_Actions */
+        public $Order_Actions;
+        /** @var Gestpay_S2S */
+        public $S2S;
+        /** @var Gestpay_Iframe */
+        public $IFrame;
+        public $strings;
+
+        public function __construct() {
 
             $this->set_this_gateway_params( 'Fabrick Payment Orchestra' );
             $this->paymentType = 'CREDITCARD';
@@ -130,7 +175,7 @@ function gestpay_init_wc_gateway_gestpay() {
          *
          * @return boolean|array - TRUE if ok, array if error.
          */
-        function is_valid_for_use() {
+        public function is_valid_for_use() {
 
             if ( ! class_exists( 'WC_Payment_Gateways' ) ) {
                 return array( 'error' => 'Ecommerce Fabrick richiede WooCommerce' );
@@ -138,10 +183,6 @@ function gestpay_init_wc_gateway_gestpay() {
 
             if ( ! $this->Helper->check_fatal_soap( 'GestPay' ) ) {
                 return array( 'error' => 'La libreria SOAP client di PHP deve essere abilitata' );
-            }
-
-            if ( ! $this->Helper->check_fatal_suhosin( 'GestPay', FALSE ) ) {
-                return array( 'error' => $this->Helper->get_suhosin_error_msg( 'Ecommerce Fabrick' ) );
             }
 
             if ( ! version_compare( WC_VERSION, '3.0.0', '>=' ) ) {
@@ -154,7 +195,7 @@ function gestpay_init_wc_gateway_gestpay() {
         /**
          * Checks if we are working with a certain payment type.
          */
-        function is_payment_type_ok( $params ) {
+        public function is_payment_type_ok( $params ) {
             if ( $this->enabled == 'yes'
                 && ! empty( $params->paymentTypes['paymentType'] )
                     && $params->paymentTypes['paymentType'] == $this->paymentType
@@ -170,7 +211,7 @@ function gestpay_init_wc_gateway_gestpay() {
          *
          * @param string $title
          */
-        function set_this_gateway_params( $title = '' ) {
+        public function set_this_gateway_params( $title = '' ) {
 
             // Add the helper class.
             include_once( 'inc/helper.php' );
@@ -188,7 +229,7 @@ function gestpay_init_wc_gateway_gestpay() {
         /**
          * Set user defined options.
          */
-        function set_this_gateway() {
+        public function set_this_gateway() {
 
             $this->title          = $this->get_option( 'title' );
             $this->description    = $this->get_option( 'description' );
@@ -319,7 +360,7 @@ function gestpay_init_wc_gateway_gestpay() {
         /**
          * Add gateway actions.
          */
-        function add_actions() {
+        public function add_actions() {
 
             if ( $this->force_check ) {
                 // This can be used to force the check of the response. Some website's may need that.
@@ -353,7 +394,7 @@ function gestpay_init_wc_gateway_gestpay() {
          * We need to directly print the JS becuase it depends on the method name.
          * Passing parameters to an external JS file does not seems to work.
          */
-        function check_tls12() {
+        public function check_tls12() {
 
             if ( $this->is_s2s && $this->id === 'wc_gateway_gestpay' ) {
                 // Don't do that with the S2S payment box
@@ -388,7 +429,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         /**
          * Initialise other translatable strings.
          */
-        function init_strings() {
+        public function init_strings() {
 
             $this->strings = include 'inc/translatable-strings.php';
         }
@@ -396,7 +437,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         /**
          * Disable extra Gestpay payment types which doesn't support WC Subscriptions, because we can't get a Token.
          */
-        function available_payment_gateways( $available_gateways ) {
+        public function available_payment_gateways( $available_gateways ) {
 
             if ( $this->Helper->is_a_subscription() ) {
                 if (is_array($available_gateways)) {
@@ -414,7 +455,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         /**
          * Admin Panel Options
          */
-        function admin_options() {
+        public function admin_options() {
 
             echo '<h2>' . esc_html( $this->get_method_title() );
             wc_back_link( __( 'Return to payments', 'gestpay-for-woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=checkout' ) );
@@ -455,7 +496,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         /**
          * Output a payment box, maybe containing your direct payment form.
          */
-        function payment_fields() {
+        public function payment_fields() {
             if ( $this->description ) {
                 $description = $this->get_option('description');
                 echo wp_kses_post( wpautop( wptexturize( $description ) ) );
@@ -479,7 +520,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
          *
          * @return array
          */
-        function process_payment( $order_id ) {
+        public function process_payment( $order_id ) {
 
             $this->Helper->log_add( "################### [INFO][{$this->id}] Processing payment..." );
 
@@ -537,7 +578,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         /**
          * Generate the receipt page
          */
-        function receipt_page( $order ) {
+        public function receipt_page( $order ) {
 
             $order = wc_get_order( $order );
 
@@ -574,7 +615,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
          *
          * @return string
          */
-        function gestpay_encrypt( $params, $order_id ) {
+        public function gestpay_encrypt( $params, $order_id ) {
 
             // Create a SOAP client which uses the GestPay webservice and then encrypt values.
             try {
@@ -615,7 +656,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
          * The crypted string will be decrypted and the resulting parameters will be used to retrieve
          * the order so that it can be updated with the right status (completed/failed).
          */
-        function check_gateway_response() {
+        public function check_gateway_response() {
 
             if ( $this->is_s2s ) {
                 // On S2S with Card, we need to go to the phase 3.
@@ -786,7 +827,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
         /**
          * Output for the order received page.
          */
-        function thankyou_page() {
+        public function thankyou_page() {
 
             if ( $description = $this->get_description() ) {
                 echo wp_kses_post( wpautop( wptexturize( $description ) ) );
@@ -807,7 +848,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
          *
          * @return array
          */
-        function get_base_params( $order, $override_amount = FALSE, $maybe_token = TRUE ) {
+        public function get_base_params( $order, $override_amount = FALSE, $maybe_token = TRUE ) {
 
             $order_id = $order->get_id();
 
@@ -875,7 +916,7 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
          *
          * @return array
          */
-        function get_ab_params( $order ) {
+        public function get_ab_params( $order ) {
 
             $params = $this->get_base_params( $order );
 

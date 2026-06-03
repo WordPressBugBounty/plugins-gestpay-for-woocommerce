@@ -16,6 +16,16 @@ use Automattic\WooCommerce\Utilities\OrderUtil;
 
 class Gestpay_Subscriptions {
 
+    /** @var WC_Gateway_Gestpay */
+    public $Gestpay;
+    /** @var WC_Gateway_GestPay_Helper */
+    public $Helper;
+    public $textdomain;
+    public $is_scheduled_payment;
+    /** @var Gestpay_Cards */
+    public $Cards;
+    public $saved_cards;
+
     public function __construct( $gestpay ) {
 
         // Get a pointer to the main class and to the helper.

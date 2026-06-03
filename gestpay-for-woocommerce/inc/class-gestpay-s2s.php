@@ -14,6 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class Gestpay_S2S {
 
+    /** @var WC_Gateway_Gestpay */
+    public $Gestpay;
+    /** @var WC_Gateway_GestPay_Helper */
+    public $Helper;
+    public $can_have_cards;
+    /** @var Gestpay_Subscriptions */
+    public $Subscr;
+
     public function __construct( $gestpay ) {
 
         // Get a pointer to the main class and to the helper.
@@ -49,7 +57,7 @@ class Gestpay_S2S {
     /**
      * Returns true if the posted credit card fields are valid, false otherwise
      */
-    function validate_payment_fields() {
+    public function validate_payment_fields() {
         // Skip validation if reusing a token
         // Here there is no need to decrypt the token
         $cc_token = $this->Helper->get_post_params( 'gestpay-s2s-cc-token' );

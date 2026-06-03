@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  */
 class Gestpay_Endpoint {
 
+    public $title;
+
     /**
      * Plugin actions.
      */

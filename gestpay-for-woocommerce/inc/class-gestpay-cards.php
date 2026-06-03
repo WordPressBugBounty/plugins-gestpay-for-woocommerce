@@ -22,6 +22,10 @@ function wc_gateway_gestpay_s2s_init() {
 
 class Gestpay_Cards {
 
+    /** @var WC_Gateway_Gestpay */
+    public $Gestpay;
+    public $current_user_id;
+
     /**
      * Plugin actions.
      */

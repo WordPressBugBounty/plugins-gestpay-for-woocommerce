@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class WC_Gateway_Gestpay_PAYPAL_BNPL extends WC_Gateway_Gestpay {
 
+    /** @var Gestpay_Subscriptions */
+    public $Subscr;
+
     public function __construct() {
 
         $this->set_this_gateway_params( 'Fabrick Payment Orchestra PayPal Buy Now Pay Later' );

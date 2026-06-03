@@ -2,13 +2,13 @@
 Contributors: easynolo, netingweb
 Tags: woocommerce, payment gateway, fabrick, credit card, axerve
 Requires at least: 4.7
-Requires PHP: 7.0
-Tested up to  : 6.9
-Stable tag: 20260402
+Requires PHP: 7.4
+Tested up to  : 7.0
+Stable tag: 20260604
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 6.9
-WC tested up to: 10.6
+WC tested up to: 10.8.1
 
 Fabrick Free Plugin for WooCommerce extends WooCommerce by providing the Fabrick Payment Orchestra payment gateway.
 
@@ -108,6 +108,21 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Fabrick for WooCommerce - Usage Documentation").
 
 == Changelog ==
+= 20260604 =
+* Fix: Restored the redirect to the hosted payment page (Starter accounts) on both classic and Blocks checkout, broken after the WooCommerce inline script API migration.
+* Improvement: Added a native form-submit fallback so the payment redirect proceeds even if the overlay script fails.
+* Checks: Verified compatibility with WordPress 7.0 and WooCommerce 10.8.1.
+
+= 20260603 =
+* Update: Compatibility metadata updated for WordPress 7.0 and WooCommerce 10.8.1.
+* Update: Minimum PHP requirement updated to 7.4 for WordPress 7.0 compatibility.
+* Improvement: Updated WooCommerce debug logging to use the current logger API.
+* Improvement: Updated hosted payment redirect inline script handling while preserving the existing redirect behavior.
+* Improvement: Added explicit class properties and method visibility declarations to improve PHP 8.2+ compatibility.
+* Improvement: Removed obsolete Suhosin compatibility checks from gateway validation.
+* Security: Nothing added.
+* Checks: Verified compatibility with WordPress 7.0 and WooCommerce 10.8.1.
+
 = 20260402 =
 * Update: Plugin rebranded from "Gestpay for WooCommerce" to "Ecommerce Fabrick".
 * Update: Gateway name updated to "Fabrick Payment Orchestra" across all payment methods.

@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
 
+    public $required_selection;
+
     public function __construct() {
 
         $this->set_this_gateway_params( 'Fabrick Payment Orchestra MyBank' );
@@ -129,7 +131,7 @@ class WC_Gateway_Gestpay_MYBANK extends WC_Gateway_Gestpay {
     /**
      * Rewrite the payment_fields() to apply MyBank requirements.
      */
-    function payment_fields() {
+    public function payment_fields() {
 
         echo '<div id="mybank-container">';
 

@@ -20,6 +20,11 @@ use Automattic\WooCommerce\Utilities\OrderUtil;
  */
 class Gestpay_Order_Actions {
 
+    /** @var WC_Gateway_Gestpay */
+    public $Gestpay;
+    /** @var WC_Gateway_GestPay_Helper */
+    public $Helper;
+
     /**
      * Plugin actions.
      */
@@ -275,7 +280,7 @@ class Gestpay_Order_Actions {
     /**
      * Prepare parameters for the CallReadTrxS2S
      */
-    function get_CallReadTrxS2S_params( $order_id ) {
+    public function get_CallReadTrxS2S_params( $order_id ) {
 
         if (OrderUtil::custom_orders_table_usage_is_enabled()) {
             $order = wc_get_order( $order_id );
@@ -305,7 +310,7 @@ class Gestpay_Order_Actions {
     /**
      * Prepare parameters for the CallSettleS2S
      */
-    function get_CallSettleS2S_params( $order_id, $order, $amount = false ) {
+    public function get_CallSettleS2S_params( $order_id, $order, $amount = false ) {
 
         if (OrderUtil::custom_orders_table_usage_is_enabled()) {
             if (!$order) {
@@ -340,7 +345,7 @@ class Gestpay_Order_Actions {
     /**
      * Prepare parameters for the CallDeleteS2S
      */
-    function get_CallDeleteS2S_params( $order_id, $msg ) {
+    public function get_CallDeleteS2S_params( $order_id, $msg ) {
 
         if (OrderUtil::custom_orders_table_usage_is_enabled()) {
             $order = wc_get_order( $order_id );
@@ -373,7 +378,7 @@ class Gestpay_Order_Actions {
      * If the Gestpay plugin is configured to handle the separation between authorization and financial transaction
      * we need to handle the financial transaction if the payment was authorized and the order status is manually changed.
      */
-    function wc_order_edit_status( $order_id, $new_status ) {
+    public function wc_order_edit_status( $order_id, $new_status ) {
 
         if ( ! $this->Gestpay->is_moto_sep ) {
             // This happens when the merchant is using the MOTO option as "Unify transaction".
