@@ -3,12 +3,12 @@ Contributors: easynolo, netingweb
 Tags: woocommerce, payment gateway, fabrick, credit card, axerve
 Requires at least: 4.7
 Requires PHP: 7.4
-Tested up to  : 7.0
-Stable tag: 20260604
+Tested up to: 7.1
+Stable tag: 20260827
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 6.9
-WC tested up to: 10.8.1
+WC tested up to: 11.0.1
 
 Fabrick Free Plugin for WooCommerce extends WooCommerce by providing the Fabrick Payment Orchestra payment gateway.
 
@@ -108,6 +108,12 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Fabrick for WooCommerce - Usage Documentation").
 
 == Changelog ==
+= 20260827 =
+* Fix: Paid orders no longer disappear from the WooCommerce order list when the payment response is handled before order statuses are fully registered (Server-to-Server notification and "Force check gateway response").
+* Fix: Replaced the deprecated WC_Subscriptions::is_duplicate_site() call with WCS_Staging::is_duplicate_site(), keeping a fallback for older Subscriptions versions.
+* Tested: WordPress 7.1 and WooCommerce 11.0.1, with High-Performance Order Storage on and off.
+* Security: Nothing added.
+
 = 20260604 =
 * Fix: Restored the redirect to the hosted payment page (Starter accounts) on both classic and Blocks checkout, broken after the WooCommerce inline script API migration.
 * Improvement: Added a native form-submit fallback so the payment redirect proceeds even if the overlay script fails.

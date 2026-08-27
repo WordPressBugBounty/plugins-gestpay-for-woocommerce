@@ -80,7 +80,11 @@ class WC_Settings_Tab_Gestpay {
             return;
         }
 
-        if (  WC_Subscriptions::is_duplicate_site() ) {
+        $is_duplicate_site = ( class_exists( 'WCS_Staging' ) && method_exists( 'WCS_Staging', 'is_duplicate_site' ) )
+            ? WCS_Staging::is_duplicate_site()
+            : WC_Subscriptions::is_duplicate_site();
+
+        if ( $is_duplicate_site ) {
             // @see https://docs.woocommerce.com/document/subscriptions-handles-staging-sites/
             ?>
 <div class="error">

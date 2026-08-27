@@ -3,15 +3,15 @@
  * Plugin Name: Ecommerce Fabrick
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento Ecommerce Fabrick for Woocommerce.
- * Version: 20260604
+ * Version: 20260827
  * Requires at least: 4.7
  * Requires PHP: 7.4
- * Tested up to: 7.0
+ * Tested up to: 7.1
  * Author: Fabrick (Gruppo Banca Sella)
  * Author URI: https://www.fabrick.com
  *
  * WC requires at least: 6.9
- * WC tested up to: 10.8.1
+ * WC tested up to: 11.0.1
  * Requires Plugins: woocommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
@@ -363,8 +363,12 @@ function gestpay_init_wc_gateway_gestpay() {
         public function add_actions() {
 
             if ( $this->force_check ) {
-                // This can be used to force the check of the response. Some website's may need that.
-                $this->check_gateway_response();
+                // Never run before wp_loaded: order statuses may not be registered yet.
+                if ( did_action( 'wp_loaded' ) ) {
+                    $this->check_gateway_response();
+                } else {
+                    add_action( 'wp_loaded', array( $this, 'check_gateway_response' ), 99 );
+                }
             }
 
             add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );
@@ -778,11 +782,13 @@ jQuery( document.body ).on( 'updated_checkout payment_method_selected', function
                 elseif ( $not_already_completed && (string)$xml->TransactionResult == "XX" ) {
                     $mess = "XX Response";
                     $order->update_status( 'on-hold', $mess );
+                    $this->Helper->maybe_normalize_persisted_order_status( $order );
                     $this->Helper->log_add( "[INFO] " . $mess );
                     do_action( 'gestpay_after_order_pending', $order, $xml );
                 }
                 else {
                     $order->update_status( 'failed', $err_str );
+                    $this->Helper->maybe_normalize_persisted_order_status( $order );
                     $this->Helper->log_add( "[ERROR] " . $err_str );
                     do_action( 'gestpay_after_order_failed', $order, $xml );
                 }

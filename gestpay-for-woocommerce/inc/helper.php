@@ -724,7 +724,11 @@ class WC_Gateway_GestPay_Helper {
                 $this->maybe_refund_0_order_amount_fix( $order );
             }
 
-            WC()->cart->empty_cart();
+            $this->maybe_normalize_persisted_order_status( $order );
+
+            if ( function_exists( 'WC' ) && WC() && isset( WC()->cart ) && WC()->cart ) {
+                WC()->cart->empty_cart();
+            }
 
             // Under some circustances emails seems to not be fired. This force them to be sent.
             if ( defined( 'WC_GATEWAY_GESTPAY_FORCE_SEND_EMAIL' ) && WC_GATEWAY_GESTPAY_FORCE_SEND_EMAIL ) {
@@ -739,6 +743,81 @@ class WC_Gateway_GestPay_Helper {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Ensure the status persisted for this order uses the wc- prefix when required.
+     *
+     * Admin order lists filter on registered statuses (wc-processing, ...).
+     * Completing an order from an S2S or early-bootstrap context can persist a
+     * bare status and hide the order. Scoped to the given order id only.
+     *
+     * @param WC_Order $order Order just updated by this gateway.
+     */
+    public function maybe_normalize_persisted_order_status( $order ) {
+
+        if ( ! $order || ! is_a( $order, 'WC_Order' ) ) {
+            return;
+        }
+
+        $order_id = $order->get_id();
+        if ( empty( $order_id ) ) {
+            return;
+        }
+
+        global $wpdb;
+
+        $hpos_enabled = class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' )
+            && OrderUtil::custom_orders_table_usage_is_enabled();
+
+        if ( $hpos_enabled ) {
+            $table  = $wpdb->prefix . 'wc_orders';
+            $status = $wpdb->get_var( $wpdb->prepare( "SELECT status FROM {$table} WHERE id = %d", $order_id ) );
+        } else {
+            $status = $wpdb->get_var( $wpdb->prepare( "SELECT post_status FROM {$wpdb->posts} WHERE ID = %d", $order_id ) );
+        }
+
+        if ( ! is_string( $status ) || '' === $status ) {
+            return;
+        }
+
+        if ( 0 === strpos( $status, 'wc-' ) ) {
+            return;
+        }
+
+        $skip = array( 'auto-draft', 'trash', 'draft' );
+        if ( in_array( $status, $skip, true ) ) {
+            return;
+        }
+
+        $new_status = 'wc-' . $status;
+
+        if ( $hpos_enabled ) {
+            $wpdb->update(
+                $wpdb->prefix . 'wc_orders',
+                array( 'status' => $new_status ),
+                array( 'id' => $order_id ),
+                array( '%s' ),
+                array( '%d' )
+            );
+        } else {
+            $wpdb->update(
+                $wpdb->posts,
+                array( 'post_status' => $new_status ),
+                array( 'ID' => $order_id ),
+                array( '%s' ),
+                array( '%d' )
+            );
+        }
+
+        clean_post_cache( $order_id );
+        if ( function_exists( 'wc_delete_shop_order_transients' ) ) {
+            wc_delete_shop_order_transients( $order_id );
+        }
+
+        if ( ! empty( $this->gw ) ) {
+            $this->log_add( 'Normalized persisted order status for order #' . $order_id . ' to ' . $new_status );
         }
     }
 
