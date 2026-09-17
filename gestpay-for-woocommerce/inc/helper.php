@@ -19,6 +19,11 @@ if ( ! class_exists( 'WC_Gateway_GestPay_Helper' ) ) :
 
 class WC_Gateway_GestPay_Helper {
 
+    /**
+     * Maximum length of the customInfo string accepted by Fabrick Payment Orchestra.
+     */
+    const CUSTOMINFO_MAX_LENGTH = 1000;
+
     public $plugin_url;
     public $plugin_path;
     public $plugin_slug;
@@ -277,6 +282,131 @@ class WC_Gateway_GestPay_Helper {
         return str_replace( array(
             "&"," ","§","(",")","*","<",">",",",";",":","*P1*","/","/*","[","]","?","%"
         ), "", $in_string );
+    }
+
+    /**
+     * Append CMS/module diagnostics to customInfo without exceeding the 1000-character limit.
+     *
+     * Fields: CMS_Type, CMS_Version, Module_Version, WP_Version, PHP_Version, Auto_Update.
+     * If the combined string would exceed the limit, the original value is returned unchanged.
+     * Failures are swallowed so encryption and checkout are never blocked.
+     *
+     * @param string $existing Existing customInfo string (may be empty).
+     * @return string Combined customInfo, or the original string if the limit would be exceeded.
+     */
+    public function append_module_custominfo( $existing ) {
+
+        $existing = is_string( $existing ) ? $existing : '';
+
+        try {
+            $pairs = array(
+                'CMS_Type=' . $this->get_clean_param( 'WooCommerce' ),
+                'CMS_Version=' . $this->get_clean_param( defined( 'WC_VERSION' ) ? WC_VERSION : '' ),
+                'Module_Version=' . $this->get_clean_param( $this->get_module_version() ),
+                'WP_Version=' . $this->get_clean_param( get_bloginfo( 'version' ) ),
+                'PHP_Version=' . $this->get_clean_param( PHP_VERSION ),
+                'Auto_Update=' . ( $this->is_plugin_auto_update_enabled() ? '1' : '0' ),
+            );
+
+            $extra = implode( '*P1*', $pairs );
+            $candidate = ( '' === $existing ) ? $extra : $existing . '*P1*' . $extra;
+
+            if ( strlen( $candidate ) > self::CUSTOMINFO_MAX_LENGTH ) {
+                return $existing;
+            }
+
+            return $candidate;
+        } catch ( \Throwable $e ) {
+            // Diagnostics must never block encryption or checkout.
+            return $existing;
+        }
+    }
+
+    /**
+     * Plugin version from the main file header.
+     *
+     * @return string
+     */
+    private function get_module_version() {
+
+        static $version = null;
+
+        if ( null === $version ) {
+            $plugin_data = get_file_data( GESTPAY_MAIN_FILE, array( 'Version' => 'Version' ), 'plugin' );
+            $version     = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : '';
+        }
+
+        return $version;
+    }
+
+    /**
+     * Whether automatic updates are enabled for this plugin only.
+     *
+     * Follows the WordPress decision path without loading wp-admin classes:
+     * file mods, AUTOMATIC_UPDATER_DISABLED, automatic_updater_disabled,
+     * plugins_auto_update_enabled, the auto_update_plugins option, then
+     * auto_update_plugin. Filter or API failures fall back to constants
+     * plus the option, so checkout is never affected.
+     *
+     * @return bool
+     */
+    private function is_plugin_auto_update_enabled() {
+
+        static $enabled = null;
+
+        if ( null !== $enabled ) {
+            return $enabled;
+        }
+
+        $plugin_file = plugin_basename( GESTPAY_MAIN_FILE );
+        $in_list     = in_array( $plugin_file, (array) get_site_option( 'auto_update_plugins', array() ), true );
+
+        try {
+            if ( function_exists( 'wp_is_file_mod_allowed' ) && ! wp_is_file_mod_allowed( 'automatic_updater' ) ) {
+                $enabled = false;
+                return $enabled;
+            }
+
+            $disabled = defined( 'AUTOMATIC_UPDATER_DISABLED' ) && AUTOMATIC_UPDATER_DISABLED;
+            if ( apply_filters( 'automatic_updater_disabled', $disabled ) ) {
+                $enabled = false;
+                return $enabled;
+            }
+
+            if ( ! apply_filters( 'plugins_auto_update_enabled', true ) ) {
+                $enabled = false;
+                return $enabled;
+            }
+
+            $item = (object) array(
+                'id'            => $plugin_file,
+                'slug'          => dirname( $plugin_file ),
+                'plugin'        => $plugin_file,
+                'new_version'   => '',
+                'url'           => '',
+                'package'       => '',
+                'icons'         => array(),
+                'banners'       => array(),
+                'banners_rtl'   => array(),
+                'tested'        => '',
+                'requires_php'  => '',
+                'compatibility' => new \stdClass(),
+            );
+
+            $enabled = (bool) apply_filters( 'auto_update_plugin', $in_list, $item );
+            return $enabled;
+        } catch ( \Throwable $e ) {
+            if ( defined( 'AUTOMATIC_UPDATER_DISABLED' ) && AUTOMATIC_UPDATER_DISABLED ) {
+                $enabled = false;
+                return $enabled;
+            }
+            if ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS ) {
+                $enabled = false;
+                return $enabled;
+            }
+            $enabled = $in_list;
+            return $enabled;
+        }
     }
 
     /**
