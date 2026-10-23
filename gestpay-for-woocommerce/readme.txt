@@ -4,15 +4,19 @@ Tags: woocommerce, payment gateway, fabrick, credit card, axerve
 Requires at least: 4.7
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 20260917
+Stable tag: 20261022
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 6.9
-WC tested up to: 11.0.1
+WC tested up to: 11.2.1
 
 Fabrick Free Plugin for WooCommerce extends WooCommerce by providing the Fabrick Payment Orchestra payment gateway.
 
 == Description ==
+
+= Action required =
+
+**Action required:** the Ecommerce Fabrick plugin (Gestpay Payment) is EOL (end-of-life) and will only be supported until January 31, 2027. Plan and complete the installation of the new payment plugin [Fabrick Payment Orchestra](https://wordpress.org/plugins/fabrick-payment-orchestra/) as soon as possible. For further details and the migration guide, read the official documentation: [https://docs.paymentorchestra.fabrick.com/it/plugin/woocommerce/](https://docs.paymentorchestra.fabrick.com/it/plugin/woocommerce/)
 
 Fabrick offers solutions to meet and anticipate payment acceptance needs across physical and digital channels. The offering is based on a single platform to accept payments through POS and e-commerce gateways, Banking-as-a-Service (BaaS), and omnichannel solutions that continuously evolve with market changes.
 
@@ -108,6 +112,14 @@ Here is a list of filters and actions used in this plugin:
 3. Read the [usage documentation on Fabrick](https://docs.axerve.com/it/plugin/woocommerce/ "Fabrick for WooCommerce - Usage Documentation").
 
 == Changelog ==
+= 20261022 =
+* Note: End-of-life notice: this plugin is supported until 31 January 2027. Install the separate plugin Fabrick Payment Orchestra from WordPress.org.
+* Docs: Marketplace description now includes the end-of-life notice and links to the successor plugin and the migration guide.
+* Docs: Marketplace end-of-life notice uses Markdown so the successor plugin and migration guide links are clickable.
+* Update: WooCommerce tested up to 11.2.1.
+* Tested: WordPress 7.1.3, WooCommerce 11.2.1, PHP 8.5.
+* Security: Nothing added.
+
 = 20260917 =
 * Feature: Payment requests now send CMS, module, WordPress, PHP version and plugin auto-update status in customInfo (all account types; omitted only if the 1000-character limit would be exceeded).
 * Security: Nothing added.
@@ -615,3 +627,8 @@ Questo plugin si connette ai seguenti servizi esterni:
 
 Server di test e sviluppo
 Nel codice di esempio (directory `sample/`) sono presenti riferimenti a domini fittizi (`site1.it` e `site2.it`) utilizzati solo come esempio per dimostrare la configurazione multi-sito. Questi domini sono puramente dimostrativi e non sono utilizzati nel codice di produzione.
+
+== Upgrade Notice ==
+
+= 20261022 =
+Action required: the Ecommerce Fabrick plugin (Gestpay Payment) is EOL (end-of-life) and will only be supported until January 31, 2027. Plan and complete the installation of the new payment plugin Fabrick Payment Orchestra (https://wordpress.org/plugins/fabrick-payment-orchestra/) as soon as possible. For further details and the migration guide, read the official documentation: https://docs.paymentorchestra.fabrick.com/it/plugin/woocommerce/

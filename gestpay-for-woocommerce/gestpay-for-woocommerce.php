@@ -3,7 +3,7 @@
  * Plugin Name: Ecommerce Fabrick
  * Plugin URI: http://wordpress.org/plugins/gestpay-for-woocommerce/
  * Description: Abilita il sistema di pagamento Ecommerce Fabrick for Woocommerce.
- * Version: 20260917
+ * Version: 20261022
  * Requires at least: 4.7
  * Requires PHP: 7.4
  * Tested up to: 7.1
@@ -11,7 +11,7 @@
  * Author URI: https://www.fabrick.com
  *
  * WC requires at least: 6.9
- * WC tested up to: 11.0.1
+ * WC tested up to: 11.2.1
  * Requires Plugins: woocommerce
  *
  * Copyright: © 2013-2016 Mauro Mascia (info@mauromascia.com)
@@ -72,6 +72,9 @@ require_once 'inc/class-gestpay-endpoint.php';
 require_once 'inc/class-wc-settings-tab-gestpay.php';
 require_once 'inc/class-gestpay-cards.php';
 require_once 'inc/class-gestpay-3DS2.php';
+require_once 'inc/class-gestpay-eol-notice.php';
+
+Gestpay_Eol_Notice::init();
 
 add_action( 'plugins_loaded', 'gestpay_init_wc_gateway_gestpay' );
 

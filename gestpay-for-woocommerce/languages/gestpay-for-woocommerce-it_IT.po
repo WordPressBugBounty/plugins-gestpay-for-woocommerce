@@ -222,3 +222,6 @@ msgstr "Errore Fabrick Payment Orchestra S2S: %s"
 
 msgid "Via %s"
 msgstr "Con %s"
+
+msgid "Action required: the Ecommerce Fabrick plugin (Gestpay Payment) is EOL (end-of-life) and will only be supported until January 31, 2027. Plan and complete the installation of the new payment plugin Fabrick Payment Orchestra (https://wordpress.org/plugins/fabrick-payment-orchestra/) as soon as possible. For further details and the migration guide, read the official documentation: https://docs.paymentorchestra.fabrick.com/it/plugin/woocommerce/"
+msgstr "Azione richiesta: il plugin Ecommerce Fabrick (Gestpay Payment) è EOL (end-of-life) e sarà supportato solo fino al 31 gennaio 2027. Pianificate e completate quanto prima l'installazione del nuovo plugin di pagamento Fabrick Payment Orchestra (https://wordpress.org/plugins/fabrick-payment-orchestra/). Per i dettagli e la guida alla migrazione, consultate la documentazione ufficiale: https://docs.paymentorchestra.fabrick.com/it/plugin/woocommerce/"
